@@ -1,12 +1,12 @@
 [package]
-name = "cortex-a"
-version = "8.1.0"
+name = "aarch64-cpu"
+version = "9.0.0"
 authors = ["Andre Richter <andre.o.richter@gmail.com>"]
-description = "Low level access to Cortex-A processors"
-homepage = "https://github.com/rust-embedded/cortex-a"
-repository = "https://github.com/rust-embedded/cortex-a"
+description = "Low level access to processors using the AArch64 execution state"
+homepage = "https://github.com/rust-embedded/aarch64-cpu"
+repository = "https://github.com/rust-embedded/aarch64-cpu"
 readme = "README.md"
-keywords = ["arm", "aarch64", "cortex-a", "register"]
+keywords = ["arm", "aarch64", "cpu", "register"]
 categories = ["embedded", "hardware-support", "no-std"]
 license = "MIT/Apache-2.0"
 edition = "2018"

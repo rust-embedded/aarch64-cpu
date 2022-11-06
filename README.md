@@ -1,14 +1,9 @@
-[![crates.io](https://img.shields.io/crates/d/cortex-a.svg)](https://crates.io/crates/cortex-a)
-[![crates.io](https://img.shields.io/crates/v/cortex-a.svg)](https://crates.io/crates/cortex-a)
+[![crates.io](https://img.shields.io/crates/d/aarch64-cpu.svg)](https://crates.io/crates/aarch64-cpu)
+[![crates.io](https://img.shields.io/crates/v/aarch64-cpu.svg)](https://crates.io/crates/aarch64-cpu)
 
-# cortex-a
+# aarch64-cpu
 
-Low level access to Cortex-A processors.
-
-## Currently Supported Execution States
-
-- [x] AArch64
-- [ ] AArch32
+Low level access to processors using the AArch64 execution state.
 
 ## Minimum Supported Rust Version
 
@@ -18,14 +13,14 @@ register access module is not available.
 ## Usage
 
 Please note that for using this crate's [register definitions](src/registers) (as provided by
-`cortex_a::registers::*`), you need to also include
+`aarch64_cpu::registers::*`), you need to also include
 [`tock-registers`](https://crates.io/crates/tock-registers) in your project. This is because the
 `interface` traits provided by `tock-registers` are implemented by this crate. You should include
 the same version of `tock-registers` as is being used by this crate to ensure sane
 interoperatbility.
 
 For example, in the following snippet, `X.Y.Z` should be the same version of `tock-registers` that
-is mentioned in `cortex-a`'s [`Cargo.toml`](Cargo.toml#L27).
+is mentioned in `aarch64-cpu`'s [`Cargo.toml`](Cargo.toml#L27).
 
 ```toml
 [package]
@@ -35,7 +30,7 @@ name = "Your embedded project"
 
 [dependencies]
 tock-registers = "X.Y.Z"
-cortex-a = "A.B.C"       # <-- Includes tock-registers itself.
+aarch64-cpu = "A.B.C"       # <-- Includes tock-registers itself.
 ```
 
 ### Example
@@ -44,7 +39,7 @@ Check out https://github.com/rust-embedded/rust-raspberrypi-OS-tutorials for usa
 below is a snippet of `rust-raspberrypi-OS-tutorials`'s early boot code.
 
 ```rust
-use cortex_a::{asm, registers::*};
+use aarch64_cpu::{asm, registers::*};
 use tock_registers::interfaces::Writeable; // <-- Trait needed to use `write()` and `set()`.
 
 // Some parts omitted for brevity.
@@ -70,6 +65,7 @@ unsafe fn prepare_el2_to_el1_transition(
             + SPSR_EL2::F::Masked
             + SPSR_EL2::M::EL1h,
     );
+}
 ```
 
 ## Disclaimer

@@ -15,7 +15,7 @@ use core::arch::asm;
 /// # Example
 ///
 /// ```no_run
-/// use cortex_a::asm::random::ArmRng;
+/// use aarch64_cpu::asm::random::ArmRng;
 /// if let Some(rng) = ArmRng::new() {
 ///     let rand_num = rng.rndr();
 /// }
