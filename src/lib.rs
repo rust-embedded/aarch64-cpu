@@ -7,11 +7,6 @@
 
 //! Low level access to processors using the AArch64 execution state.
 //!
-//! ## Minimum Supported Rust Version
-//!
-//! Requires a recent nightly of Rust if the (default) `nightly` feature is enabled. Without this
-//! the register access module is not available.
-//!
 //! ## Usage
 //!
 //! Please note that for using this crate's [register definitions](src/registers) (as provided by
@@ -46,7 +41,6 @@
 //!
 //! // Some parts omitted for brevity.
 //!
-//! # #[cfg(feature = "nightly")]
 //! unsafe fn prepare_el2_to_el1_transition(
 //!     virt_boot_core_stack_end_exclusive_addr: u64,
 //!     virt_kernel_init_addr: u64,
@@ -77,10 +71,8 @@
 //! ARMv8, for ARMv8-A architecture
 //! profile](https://static.docs.arm.com/ddi0487/ca/DDI0487C_a_armv8_arm.pdf?_ga=2.266626254.1122218691.1534883460-1326731866.1530967873).
 
-#![cfg_attr(feature = "nightly", feature(core_intrinsics))]
-#![cfg_attr(feature = "nightly", feature(custom_inner_attributes))]
 #![no_std]
 
 pub mod asm;
-#[cfg(feature = "nightly")]
+#[cfg(feature = "tock-registers")]
 pub mod registers;

@@ -1,7 +1,6 @@
 //! Processor core registers
 
 #![allow(unused_attributes)]
-#![rustfmt::skip]
 
 #[macro_use]
 mod macros;
@@ -22,10 +21,10 @@ mod cntv_cval_el0;
 mod cntv_tval_el0;
 mod cntvct_el0;
 mod cntvoff_el2;
-mod csselr_el1;
 mod cpacr_el1;
-mod dacr32_el2;
+mod csselr_el1;
 mod currentel;
+mod dacr32_el2;
 mod daif;
 mod elr_el1;
 mod elr_el2;
@@ -36,8 +35,8 @@ mod far_el1;
 mod far_el2;
 mod fp;
 mod hcr_el2;
-mod id_aa64mmfr0_el1;
 mod id_aa64isar0_el1;
+mod id_aa64mmfr0_el1;
 mod id_aa64mmfr1_el1;
 mod id_aa64mmfr2_el1;
 mod lr;
@@ -86,10 +85,10 @@ pub use cntv_cval_el0::CNTV_CVAL_EL0;
 pub use cntv_tval_el0::CNTV_TVAL_EL0;
 pub use cntvct_el0::CNTVCT_EL0;
 pub use cntvoff_el2::CNTVOFF_EL2;
-pub use csselr_el1::CSSELR_EL1;
 pub use cpacr_el1::CPACR_EL1;
-pub use dacr32_el2::DACR32_EL2;
+pub use csselr_el1::CSSELR_EL1;
 pub use currentel::CurrentEL;
+pub use dacr32_el2::DACR32_EL2;
 pub use daif::DAIF;
 pub use elr_el1::ELR_EL1;
 pub use elr_el2::ELR_EL2;
@@ -100,8 +99,8 @@ pub use far_el1::FAR_EL1;
 pub use far_el2::FAR_EL2;
 pub use fp::FP;
 pub use hcr_el2::HCR_EL2;
-pub use id_aa64mmfr0_el1::ID_AA64MMFR0_EL1;
 pub use id_aa64isar0_el1::ID_AA64ISAR0_EL1;
+pub use id_aa64mmfr0_el1::ID_AA64MMFR0_EL1;
 pub use id_aa64mmfr1_el1::ID_AA64MMFR1_EL1;
 pub use id_aa64mmfr2_el1::ID_AA64MMFR2_EL1;
 pub use lr::LR;
