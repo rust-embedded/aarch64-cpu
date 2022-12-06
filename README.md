@@ -5,11 +5,6 @@
 
 Low level access to processors using the AArch64 execution state.
 
-## Minimum Supported Rust Version
-
-Requires a recent nightly of Rust if the (default) `nightly` feature is enabled. Without this the
-register access module is not available.
-
 ## Usage
 
 Please note that for using this crate's [register definitions](src/registers) (as provided by

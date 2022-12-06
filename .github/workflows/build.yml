@@ -43,9 +43,6 @@ jobs:
     - name: Set Rustup profile to minimal
       run: rustup set profile minimal
 
-    - name: Switch to Rust nightly
-      run: rustup default nightly
-
     - name: Install Target Support
       run: |
         rustup target add ${{ matrix.target }}
@@ -70,9 +67,7 @@ jobs:
     timeout-minutes: 2
     steps:
     - uses: actions/checkout@v1
-    - run: rustup toolchain install nightly --profile minimal --component rustfmt
-    - run: rustup default nightly
-    - run: cargo +nightly fmt -- --check
+    - run: cargo fmt -- --check
 
   clippy:
     name: Clippy
@@ -91,7 +86,5 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - run: rustup toolchain install nightly --profile minimal --component clippy
-    - run: rustup default nightly
     - run: rustup target add ${{ matrix.target }}
     - run: cargo clippy --target=${{ matrix.target }}

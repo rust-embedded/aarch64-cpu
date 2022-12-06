@@ -121,4 +121,3 @@ impl Writeable for Reg {
 }
 
 pub const VTCR_EL2: Reg = Reg {};
-
