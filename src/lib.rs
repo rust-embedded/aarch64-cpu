@@ -74,5 +74,4 @@
 #![no_std]
 
 pub mod asm;
-#[cfg(feature = "tock-registers")]
 pub mod registers;
