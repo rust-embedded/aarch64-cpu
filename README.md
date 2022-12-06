@@ -15,7 +15,7 @@ the same version of `tock-registers` as is being used by this crate to ensure sa
 interoperatbility.
 
 For example, in the following snippet, `X.Y.Z` should be the same version of `tock-registers` that
-is mentioned in `aarch64-cpu`'s [`Cargo.toml`](Cargo.toml#L27).
+is mentioned in `aarch64-cpu`'s [`Cargo.toml`](Cargo.toml#L23).
 
 ```toml
 [package]
