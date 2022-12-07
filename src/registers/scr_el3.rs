@@ -62,6 +62,38 @@ register_bitfields! {u64,
             SmcDisabled = 1
         ],
 
+        /// External Abort and SError interrupt routing.
+        /// 0 When executing at Exception levels below EL3, External aborts and SError interrupts are not taken to EL3.
+        ///     In addition, when executing at EL3:
+        ///       SError interrupts are not taken.
+        ///       External aborts are taken to EL3.
+        ///
+        /// 1 When executing at any Exception level, External aborts and SError interrupts are taken to EL3.
+        EA  OFFSET(3) NUMBITS(1) [
+            NotTaken = 0,
+            Taken = 1
+        ],
+
+        /// Physical FIQ Routing.
+        /// 0 When executing at Exception levels below EL3, physical FIQ interrupts are not taken
+        ///   to EL3. When executing at EL3, physical FIQ interrupts are not taken.
+        ///
+        /// 1 When executing at any Exception level, physical FIQ interrupts are taken to EL3.
+        FIQ OFFSET(2) NUMBITS(1) [
+            NotTaken = 0,
+            Taken = 1
+        ],
+
+        /// Physical IRQ Routing.
+        /// 0 When executing at Exception levels below EL3, physical IRQ interrupts are not taken
+        ///   to EL3. When executing at EL3, physical IRQ interrupts are not taken.
+        ///
+        /// 1 When executing at any Exception level, physical IRQ interrupts are taken to EL3.
+        IRQ OFFSET(1) NUMBITS(1) [
+            NotTaken = 0,
+            Taken = 1
+        ],
+
         /// Non-secure bit.
         /// 0 Indicates that EL0 and EL1 are in Secure state.
         ///
@@ -69,7 +101,7 @@ register_bitfields! {u64,
         ///   accesses from those Exception levels cannot access Secure memory.
         ///
         /// When SCR_EL3.{EEL2, NS} == {1, 0}, then EL2 is using AArch64 and in Secure state.
-        NS   OFFSET(0) NUMBITS(1) [
+        NS  OFFSET(0) NUMBITS(1) [
             Secure = 0,
             NonSecure = 1
         ]
