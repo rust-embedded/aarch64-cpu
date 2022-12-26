@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 //
-// Copyright (c) 2022 Amazon.com, Inc. or its affiliates.
+// Copyright (c) 2022-2023 Amazon.com, Inc. or its affiliates.
 //
 // Author(s):
 //   - Ali Saidi <alisaidi@amazon.com>
