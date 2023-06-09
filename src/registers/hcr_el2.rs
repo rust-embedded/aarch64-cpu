@@ -170,14 +170,6 @@ register_bitfields! {u64,
         /// state.
         TIDCP OFFSET(20) NUMBITS(1) [],
 
-        /// Trap ID group 3. Traps EL1 reads of group 3 ID registers to EL2, when EL2 is enabled
-        /// in the current Security state.
-        ///
-        /// 0 This control does not cause any instructions to be trapped.
-        /// 1 The specified EL1 read accesses to ID group 3 registers are trapped to EL2, when EL2
-        /// is enabled in the current Security state.
-        TID3  OFFSET(18) NUMBITS(1) [],
-
         /// Trap SMC instructions. Traps EL1 execution of SMC instructions to EL2, when EL2 is
         /// enabled in the current Security state.
         ///
@@ -215,6 +207,14 @@ register_bitfields! {u64,
             DisableTrapEl1SmcToEl2 = 0,
             EnableTrapEl1SmcToEl2 = 1,
         ],
+
+        /// Trap ID group 3. Traps EL1 reads of group 3 ID registers to EL2, when EL2 is enabled
+        /// in the current Security state.
+        ///
+        /// 0 This control does not cause any instructions to be trapped.
+        /// 1 The specified EL1 read accesses to ID group 3 registers are trapped to EL2, when EL2
+        /// is enabled in the current Security state.
+        TID3  OFFSET(18) NUMBITS(1) [],
 
         /// Default Cacheability.
         ///
