@@ -11,7 +11,10 @@
 //!
 //! Holds syndrome information for an exception taken to EL2.
 
-use tock_registers::{interfaces::Readable, register_bitfields};
+use tock_registers::{
+    interfaces::{Readable, Writeable},
+    register_bitfields,
+};
 
 register_bitfields! {u64,
     pub ESR_EL2 [
@@ -89,6 +92,13 @@ impl Readable for Reg {
     type R = ESR_EL2::Register;
 
     sys_coproc_read_raw!(u64, "ESR_EL2", "x");
+}
+
+impl Writeable for Reg {
+    type T = u64;
+    type R = ();
+
+    sys_coproc_write_raw!(u64, "ESR_EL2", "x");
 }
 
 pub const ESR_EL2: Reg = Reg {};
