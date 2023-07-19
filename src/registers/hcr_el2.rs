@@ -128,6 +128,44 @@ register_bitfields! {u64,
             EnableTrapGeneralExceptionsToEl2 = 1,
         ],
 
+        /// Trap SMC instructions. Traps EL1 execution of SMC instructions to EL2, when EL2 is
+        /// enabled in the current Security state.
+        ///
+        /// If execution is in AArch64 state, the trap is reported using EC syndrome value 0x17.
+        ///
+        /// HCR_EL2.TSC traps execution of the SMC instruction. It is not a routing control for
+        /// the SMC exception. Trap exceptions and SMC exceptions have different preferred return
+        /// addresses.
+        ///
+        /// If disabled, this control does not cause any instructions to be trapped.
+        ///
+        /// If enabled:
+        ///   - If EL3 is implemented, then any attempt to execute an SMC instruction at EL1 is
+        ///     trapped to EL2, when EL2 is enabled in the current Security state, regardless of
+        ///     the value of SCR_EL3.SMD.
+        ///   - If EL3 is not implemented, FEAT_NV is implemented, and HCR_EL2.NV is 1, then any
+        ///     attempt to execute an SMC instruction at EL1 using AArch64 is trapped to EL2,
+        ///     when EL2 is enabled in the current Security state.
+        ///   - If EL3 is not implemented, and either FEAT_NV is not implemented or HCR_EL2.NV is 0,
+        ///     then it is IMPLEMENTATION DEFINED whether:
+        ///       - Any attempt to execute an SMC instruction at EL1 is trapped to EL2, when EL2 is
+        ///         enabled in the current Security state.
+        ///       - Any attempt to execute an SMC instruction is UNDEFINED.
+        ///
+        /// SMC instructions are UNDEFINED at EL0.
+        ///
+        /// If EL3 is not implemented, and either FEAT_NV is not implemented or HCR_EL2.NV is 0,
+        /// then it is IMPLEMENTATION DEFINED whether this bit is:
+        ///   - RES0.
+        ///   - Implemented with the functionality as described in HCR_EL2.TSC.
+        ///
+        /// When HCR_EL2.TGE is 1, the PE ignores the value of this field for all purposes other
+        /// than a direct read of this field.
+        TSC   OFFSET(19) NUMBITS(1) [
+            DisableTrapEl1SmcToEl2 = 0,
+            EnableTrapEl1SmcToEl2 = 1,
+        ],
+
         /// Default Cacheability.
         ///
         /// 0 This control has no effect on the Non-secure EL1&0 translation regime.
