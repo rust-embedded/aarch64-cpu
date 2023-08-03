@@ -19,7 +19,7 @@ register_bitfields! {u64,
         VMID  OFFSET(48) NUMBITS(16) [],
 
         /// Translation table base address
-        BADDR OFFSET(1) NUMBITS(48) [],
+        BADDR OFFSET(1) NUMBITS(47) [],
 
         /// Common not Private
         CnP   OFFSET(0) NUMBITS(1) []
