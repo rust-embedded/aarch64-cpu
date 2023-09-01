@@ -178,3 +178,6 @@ pub use vbar_el2::VBAR_EL2;
 pub use vbar_el3::VBAR_EL3;
 pub use vtcr_el2::VTCR_EL2;
 pub use vttbr_el2::VTTBR_EL2;
+
+#[doc(inline)]
+pub use tock_registers::interfaces::{Readable, Writeable};
