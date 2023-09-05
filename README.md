@@ -17,25 +17,8 @@ It might compile with older versions but that may change in any new patch releas
 ## Usage
 
 Please note that for using this crate's [register definitions](src/registers) (as provided by
-`aarch64_cpu::registers::*`), you need to also include
-[`tock-registers`](https://crates.io/crates/tock-registers) in your project. This is because the
-`interface` traits provided by `tock-registers` are implemented by this crate. You should include
-the same version of `tock-registers` as is being used by this crate to ensure sane
-interoperatbility.
-
-For example, in the following snippet, `X.Y.Z` should be the same version of `tock-registers` that
-is mentioned in `aarch64-cpu`'s [`Cargo.toml`](Cargo.toml#L23).
-
-```toml
-[package]
-name = "Your embedded project"
-
-# Some parts omitted for brevity.
-
-[dependencies]
-tock-registers = "X.Y.Z"
-aarch64-cpu = "A.B.C"       # <-- Includes tock-registers itself.
-```
+`aarch64_cpu::registers::*`), you need to also import
+`aarch64_cpu::registers::{Readable, Writeable}`.
 
 ### Example
 
@@ -44,7 +27,6 @@ below is a snippet of `rust-raspberrypi-OS-tutorials`'s early boot code.
 
 ```rust
 use aarch64_cpu::{asm, registers::*};
-use tock_registers::interfaces::Writeable; // <-- Trait needed to use `write()` and `set()`.
 
 // Some parts omitted for brevity.
 
