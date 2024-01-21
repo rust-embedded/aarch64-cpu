@@ -9,15 +9,19 @@
 
 mod sealed {
     pub trait Dmb {
-        fn __dmb(&self);
+        fn dmb();
     }
 
     pub trait Dsb {
-        fn __dsb(&self);
+        fn dsb();
     }
 
     pub trait Isb {
-        fn __isb(&self);
+        fn isb();
+    }
+
+    pub trait Tlbi {
+        fn __tlbi();
     }
 }
 
@@ -25,7 +29,7 @@ macro_rules! dmb_dsb {
     ($A:ident) => {
         impl sealed::Dmb for $A {
             #[inline(always)]
-            fn __dmb(&self) {
+            fn dmb() {
                 match () {
                     #[cfg(target_arch = "aarch64")]
                     () => unsafe {
@@ -39,7 +43,7 @@ macro_rules! dmb_dsb {
         }
         impl sealed::Dsb for $A {
             #[inline(always)]
-            fn __dsb(&self) {
+            fn dsb() {
                 match () {
                     #[cfg(target_arch = "aarch64")]
                     () => unsafe {
@@ -53,6 +57,9 @@ macro_rules! dmb_dsb {
         }
     };
 }
+
+
+
 
 pub struct SY;
 pub struct ST;
@@ -82,7 +89,7 @@ dmb_dsb!(OSHLD);
 
 impl sealed::Isb for SY {
     #[inline(always)]
-    fn __isb(&self) {
+    fn isb() {
         match () {
             #[cfg(target_arch = "aarch64")]
             () => unsafe { core::arch::asm!("ISB SY", options(nostack)) },
@@ -93,29 +100,3 @@ impl sealed::Isb for SY {
     }
 }
 
-/// Data Memory Barrier.
-#[inline(always)]
-pub fn dmb<A>(arg: A)
-where
-    A: sealed::Dmb,
-{
-    arg.__dmb()
-}
-
-/// Data Synchronization Barrier.
-#[inline(always)]
-pub fn dsb<A>(arg: A)
-where
-    A: sealed::Dsb,
-{
-    arg.__dsb()
-}
-
-/// Instruction Synchronization Barrier.
-#[inline(always)]
-pub fn isb<A>(arg: A)
-where
-    A: sealed::Isb,
-{
-    arg.__isb()
-}
