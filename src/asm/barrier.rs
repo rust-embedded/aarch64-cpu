@@ -9,27 +9,26 @@
 
 mod sealed {
     pub trait Dmb {
-        fn dmb();
+        fn dmb(&self);
     }
 
     pub trait Dsb {
-        fn dsb();
+        fn dsb(&self);
     }
 
     pub trait Isb {
-        fn isb();
-    }
-
-    pub trait Tlbi {
-        fn __tlbi();
+        fn isb(&self);
     }
 }
 
 macro_rules! dmb_dsb {
-    ($A:ident) => {
-        impl sealed::Dmb for $A {
+    ($A:ident, $T: ident) => {
+        pub struct $T;
+        pub const $A: $T = $T {};
+
+        impl sealed::Dmb for $T {
             #[inline(always)]
-            fn dmb() {
+            fn dmb(&self) {
                 match () {
                     #[cfg(target_arch = "aarch64")]
                     () => unsafe {
@@ -41,9 +40,9 @@ macro_rules! dmb_dsb {
                 }
             }
         }
-        impl sealed::Dsb for $A {
+        impl sealed::Dsb for $T {
             #[inline(always)]
-            fn dsb() {
+            fn dsb(&self) {
                 match () {
                     #[cfg(target_arch = "aarch64")]
                     () => unsafe {
@@ -58,38 +57,22 @@ macro_rules! dmb_dsb {
     };
 }
 
+dmb_dsb!(SY, Sy);
+dmb_dsb!(ST, St);
+dmb_dsb!(LD, Ld);
+dmb_dsb!(ISH, Ish);
+dmb_dsb!(ISHST, Ishst);
+dmb_dsb!(ISHLD, Ishld);
+dmb_dsb!(NSH, Nsh);
+dmb_dsb!(NSHST, Nshst);
+dmb_dsb!(NSHLD, Nshld);
+dmb_dsb!(OSH, Osh);
+dmb_dsb!(OSHST, Oshst);
+dmb_dsb!(OSHLD, Oshld);
 
-
-
-pub struct SY;
-pub struct ST;
-pub struct LD;
-pub struct ISH;
-pub struct ISHST;
-pub struct ISHLD;
-pub struct NSH;
-pub struct NSHST;
-pub struct NSHLD;
-pub struct OSH;
-pub struct OSHST;
-pub struct OSHLD;
-
-dmb_dsb!(SY);
-dmb_dsb!(ST);
-dmb_dsb!(LD);
-dmb_dsb!(ISH);
-dmb_dsb!(ISHST);
-dmb_dsb!(ISHLD);
-dmb_dsb!(NSH);
-dmb_dsb!(NSHST);
-dmb_dsb!(NSHLD);
-dmb_dsb!(OSH);
-dmb_dsb!(OSHST);
-dmb_dsb!(OSHLD);
-
-impl sealed::Isb for SY {
+impl sealed::Isb for Sy {
     #[inline(always)]
-    fn isb() {
+    fn isb(&self) {
         match () {
             #[cfg(target_arch = "aarch64")]
             () => unsafe { core::arch::asm!("ISB SY", options(nostack)) },
@@ -100,3 +83,14 @@ impl sealed::Isb for SY {
     }
 }
 
+pub fn isb(_arg: impl sealed::Isb) {
+    _arg.isb()
+}
+
+pub fn dmb(_arg: impl sealed::Dmb) {
+    _arg.dmb()
+}
+
+pub fn dsb(_arg: impl sealed::Dsb){
+    _arg.dsb()
+}
