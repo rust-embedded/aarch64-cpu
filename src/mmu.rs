@@ -1,2 +1,2 @@
-pub mod entry;
-pub mod table;
+pub mod descriptor;
+pub mod address;

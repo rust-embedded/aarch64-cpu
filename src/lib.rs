@@ -55,5 +55,7 @@
 
 #![no_std]
 
+#![feature(concat_idents)]
 pub mod asm;
+pub mod mmu;
 pub mod registers;
