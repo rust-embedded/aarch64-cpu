@@ -18,6 +18,10 @@ use tock_registers::{
 register_bitfields! {u64,
     pub TCR_EL2 [
 
+        AS OFFSET(36) NUMBITS(1) [
+            Disable = 0,
+            Enable = 1,
+        ],
         /// When FEAT_HAFDBS is implemented hardware can update the dirty flags in the stage1
         /// descriptors
         HD OFFSET(22) NUMBITS(1) [

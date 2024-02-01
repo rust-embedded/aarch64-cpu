@@ -10,6 +10,7 @@
 
 pub mod barrier;
 pub mod random;
+pub mod cache;
 pub mod tlb;
 
 /// The classic no-op
