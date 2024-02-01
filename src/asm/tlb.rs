@@ -1,6 +1,6 @@
 mod sealed {
     pub trait Tlbi {
-        fn invalidate();
+        fn invalidate(&self);
     }
 }
 
@@ -9,11 +9,11 @@ macro_rules! tlbi{
         pub struct $A;
         impl sealed::Tlbi for $A {
             #[inline(always)]
-            fn invalidate(){
+            fn invalidate(&self){
                 match () {
                     #[cfg(target_arch = "aarch64")]
                     () => unsafe {
-                        core::arch::asm!(concat!("tlbi ", stringify!($A)), options(nostack))
+                        core::arch::asm!(concat!("TLBI ", stringify!($A)), options(nostack))
                     },
 
                     #[cfg(not(target_arch = "aarch64"))]
@@ -26,5 +26,10 @@ macro_rules! tlbi{
 
 
 tlbi!(VMALLE1IS);
-tlbi!(VMALLE2IS);
-tlbi!(VMALLE3IS);
+tlbi!(ALLE2IS);
+tlbi!(ALLE3IS);
+
+#[inline(always)]
+pub fn tlb_inv(_arg: impl sealed::Tlbi){
+    _arg.invalidate();
+}
