@@ -32,7 +32,7 @@ macro_rules! dmb_dsb {
                 match () {
                     #[cfg(target_arch = "aarch64")]
                     () => unsafe {
-                        core::arch::asm!(concat!("DMB ", stringify!($A)), options(nostack))
+                        core::arch::asm!(concat!("dmb ", stringify!($A)), options(nostack))
                     },
 
                     #[cfg(not(target_arch = "aarch64"))]
@@ -46,7 +46,7 @@ macro_rules! dmb_dsb {
                 match () {
                     #[cfg(target_arch = "aarch64")]
                     () => unsafe {
-                        core::arch::asm!(concat!("DSB ", stringify!($A)), options(nostack))
+                        core::arch::asm!(concat!("dsb ", stringify!($A)), options(nostack))
                     },
 
                     #[cfg(not(target_arch = "aarch64"))]
@@ -75,7 +75,7 @@ impl sealed::Isb for Sy {
     fn isb(&self) {
         match () {
             #[cfg(target_arch = "aarch64")]
-            () => unsafe { core::arch::asm!("ISB SY", options(nostack)) },
+            () => unsafe { core::arch::asm!("isb sy", options(nostack)) },
 
             #[cfg(not(target_arch = "aarch64"))]
             () => unimplemented!(),
@@ -83,14 +83,59 @@ impl sealed::Isb for Sy {
     }
 }
 
+pub struct None;
+pub const NONE: None = None {};
+
+impl sealed::Dsb for None {
+    #[inline(always)]
+    fn dsb(&self) {
+        match () {
+            #[cfg(target_arch = "aarch64")]
+            () => unsafe { core::arch::asm!("dsb", options(nostack)) },
+
+            #[cfg(not(target_arch = "aarch64"))]
+            () => unimplemented!(),
+        }
+    }
+}
+
+impl sealed::Dmb for None {
+    #[inline(always)]
+    fn dmb(&self) {
+        match () {
+            #[cfg(target_arch = "aarch64")]
+            () => unsafe { core::arch::asm!("dmb", options(nostack)) },
+
+            #[cfg(not(target_arch = "aarch64"))]
+            () => unimplemented!(),
+        }
+    }
+}
+
+impl sealed::Isb for None {
+    #[inline(always)]
+    fn isb(&self) {
+        match () {
+            #[cfg(target_arch = "aarch64")]
+            () => unsafe { core::arch::asm!("isb", options(nostack)) },
+
+            #[cfg(not(target_arch = "aarch64"))]
+            () => unimplemented!(),
+        }
+    }
+}
+
+#[inline(always)]
 pub fn isb(_arg: impl sealed::Isb) {
     _arg.isb()
 }
 
+#[inline(always)]
 pub fn dmb(_arg: impl sealed::Dmb) {
     _arg.dmb()
 }
 
-pub fn dsb(_arg: impl sealed::Dsb){
+#[inline(always)]
+pub fn dsb(_arg: impl sealed::Dsb) {
     _arg.dsb()
 }
