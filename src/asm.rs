@@ -12,6 +12,7 @@ pub mod barrier;
 pub mod random;
 pub mod cache;
 pub mod tlb;
+pub mod at;
 
 /// The classic no-op
 #[inline(always)]
