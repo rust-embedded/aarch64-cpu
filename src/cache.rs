@@ -1,6 +1,6 @@
 use super::asm::barrier::{dsb, isb, NSH, SY};
 use crate::{
-    asm::cache::{ic, dc, CIVAC, CVAC, IALLU, IVAC},
+    asm::cache::{dc, ic, CISW, CIVAC, CSW, CVAC, IALLU, ISW, IVAC},
     irq::IRQ,
     mmu::address::{MMRegion, MMSegment},
     registers::{Readable, Writeable, CCSIDR_EL1, CLIDR_EL1, CSSELR_EL1},
@@ -27,9 +27,9 @@ impl DCache {
     fn get_flush_func(&self, flush_mode: FlushMode, address_mode: AddressMode) -> impl Fn(u64) {
         match address_mode {
             AddressMode::WAYSET => match flush_mode {
-                FlushMode::INV => move |addr: u64| dc(IVAC, addr),
-                FlushMode::CLEAN => move |addr: u64| dc(CVAC, addr),
-                FlushMode::INVCLEAN => move |addr: u64| dc(CIVAC, addr),
+                FlushMode::INV => move |addr: u64| dc(ISW, addr),
+                FlushMode::CLEAN => move |addr: u64| dc(CSW, addr),
+                FlushMode::INVCLEAN => move |addr: u64| dc(CISW, addr),
             },
             AddressMode::VIRTUAL => match flush_mode {
                 FlushMode::INV => move |addr: u64| dc(IVAC, addr),
