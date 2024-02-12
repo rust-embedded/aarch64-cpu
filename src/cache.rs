@@ -1,25 +1,10 @@
-
-use core::arch::global_asm;
-use super::asm::barrier::{NONE, isb, dsb, NSH};
-use super::asm::cache::{ic, IALLUIS};
-use crate::asm::cache::{dc, CVAC, IVAC, CIVAC};
-use crate::mmu::address::Segment;
-
-global_asm!(include_str!("./asm/cache.S"));
-
-mod sealed {
-    use crate::mmu::address::Segment;
-    pub trait Cache {
-        fn clean(&self, seg: Segment);
-        fn inv(&self, seg: Segment);
-        fn inv_all(&self);
-        fn inv_clean(&self, seg: Segment);
-    }
-}
-
-extern "C" {
-    pub fn dcache_invall();
-}
+use super::asm::barrier::{dsb, isb, NSH, SY};
+use crate::{
+    asm::cache::{ic, dc, CIVAC, CVAC, IALLU, IVAC},
+    irq::IRQ,
+    mmu::address::{MMRegion, MMSegment},
+    registers::{Readable, Writeable, CCSIDR_EL1, CLIDR_EL1, CSSELR_EL1},
+};
 
 pub struct ICache {}
 pub struct DCache {}
@@ -27,71 +12,88 @@ pub struct DCache {}
 pub const ICACHE: ICache = ICache {};
 pub const DCACHE: DCache = DCache {};
 
-impl sealed::Cache for DCache {
-
-    #[inline(always)]
-    fn clean(&self, seg: Segment) {
-        dc(IVAC, seg)
-    }
-
-    #[inline(always)]
-    fn inv(&self, seg: Segment) {
-        dc(CVAC, seg)
-    }
-
-    #[inline(always)]
-    fn inv_all(&self) {
-        unsafe {
-            dcache_invall();
-        }
-    }
-
-    #[inline(always)]
-    fn inv_clean(&self, seg: Segment) {
-        dc(CIVAC, seg);
-    }
-}
-
-impl sealed::Cache for ICache{
-    #[inline(always)]
-    fn clean(&self, seg: Segment){
-    }
-
-    #[inline(always)]
-    fn inv(&self, seg:Segment){
-
-    }
-
-    #[inline(always)]
-    fn inv_all(&self){
-        ic(IALLUIS);
-    }
-
-    #[inline(always)]
-    fn inv_clean(&self, seg: Segment) {
-
-    }
-
-}
-
-pub enum CacheFlush {
+pub enum FlushMode {
     INV,
     CLEAN,
     INVCLEAN,
 }
 
-pub fn flush_cache_area(_cache: impl sealed::Cache, seg: Segment, mode: CacheFlush) {
-    match mode {
-        CacheFlush::INV => _cache.inv(seg),
-        CacheFlush::INVCLEAN => _cache.inv_clean(seg),
-        CacheFlush::CLEAN => _cache.clean(seg),
-    }
-    dsb(NSH);
-    isb(NONE);
+pub enum AddressMode {
+    WAYSET,
+    VIRTUAL,
 }
 
-pub fn flush_cache_all(_cache: impl sealed::Cache) {
-    _cache.inv_all();
-    dsb(NSH);
-    isb(NONE);
+impl DCache {
+    fn get_flush_func(&self, flush_mode: FlushMode, address_mode: AddressMode) -> impl Fn(u64) {
+        match address_mode {
+            AddressMode::WAYSET => match flush_mode {
+                FlushMode::INV => move |addr: u64| dc(IVAC, addr),
+                FlushMode::CLEAN => move |addr: u64| dc(CVAC, addr),
+                FlushMode::INVCLEAN => move |addr: u64| dc(CIVAC, addr),
+            },
+            AddressMode::VIRTUAL => match flush_mode {
+                FlushMode::INV => move |addr: u64| dc(IVAC, addr),
+                FlushMode::CLEAN => move |addr: u64| dc(CVAC, addr),
+                FlushMode::INVCLEAN => move |addr: u64| dc(CIVAC, addr),
+            },
+        }
+    }
+
+    #[inline(always)]
+    pub fn flush(&self, addr: u64, mode: FlushMode) {
+        self.get_flush_func(mode, AddressMode::VIRTUAL)(addr);
+        dsb(SY);
+        isb(SY);
+    }
+
+    pub fn flush_region(&self, virt: MMSegment, mode: FlushMode) {
+        MMRegion::new(virt, CCSIDR_EL1.read(CCSIDR_EL1::LineSize) + 4)
+            .into_iter()
+            .for_each(self.get_flush_func(mode, AddressMode::VIRTUAL));
+        dsb(SY);
+        isb(SY);
+    }
+
+    pub fn flush_all(&self, mode: FlushMode) {
+        dsb(SY);
+        let loc = CLIDR_EL1.read(CLIDR_EL1::LoC);
+        let clidr = CLIDR_EL1.get();
+        let _flush = self.get_flush_func(mode, AddressMode::WAYSET);
+        let mut irq = IRQ::new();
+
+        if loc != 0 {
+            for level in (0..loc).step_by(2) {
+                if (clidr >> (level + level >> 1)) & 0b111 < 2 {
+                    continue;
+                }
+
+                irq.save_and_disable();
+                CSSELR_EL1.set(level);
+                isb(SY);
+                let ls = CCSIDR_EL1.read(CCSIDR_EL1::LineSize) + 4; // Notice that linesize needs taken special care of since CCSIDR_EL1
+                                                                    // only offers log2(Words of Cache) instead of granularity of bytes
+                let m = CCSIDR_EL1.read(CCSIDR_EL1::AssociativityWithoutCCIDX);
+                let n = CCSIDR_EL1.read(CCSIDR_EL1::NumSetsWithoutCCIDX);
+                let k = m.leading_zeros();
+
+                irq.restore_and_enable();
+
+                (0..m + 1)
+                    .flat_map(move |i| (0..n + 1).map(move |j| (i << k) | (j << ls)))
+                    .for_each(&_flush);
+            }
+        }
+
+        CSSELR_EL1.set(0);
+        dsb(SY);
+        isb(SY);
+    }
+}
+
+impl ICache {
+    pub fn flush_all(&self) {
+        ic(IALLU);
+        dsb(NSH);
+        isb(SY);
+    }
 }

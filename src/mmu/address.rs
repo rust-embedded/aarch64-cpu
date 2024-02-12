@@ -9,51 +9,58 @@ register_bitfields! {u64,
     ]
 }
 
-#[derive(Clone, Copy)]
-#[repr(transparent)]
-pub struct VirtAddress(pub u64);
-
-#[derive(Clone, Copy)]
-#[repr(transparent)]
-pub struct PhyAddress(pub u64);
-
 pub struct VirtLayout {
     pub indexes: [u64; 4],
     pub offset: u64,
 }
 
-#[derive(Clone, Copy)]
-pub struct Segment(pub u64, pub u64);
+pub type MMSegment = (u64, u64);
 
-impl VirtAddress {
-    pub fn layout(&self) -> VirtLayout {
-        VirtLayout {
-            indexes: [
-                VADescriptor::L0.read(self.0),
-                VADescriptor::L1.read(self.0),
-                VADescriptor::L2.read(self.0),
-                VADescriptor::L3.read(self.0),
-            ],
-            offset: VADescriptor::OFFSET.read(self.0),
+#[derive(Clone, Copy)]
+pub struct MMRegion {
+    pub mem: MMSegment,
+    pub granule: u64,
+}
+
+impl MMRegion {
+    pub fn new(segment: MMSegment, granule: u64) -> Self {
+        MMRegion {
+            mem: (
+                segment.0 & (!(granule - 1)),
+                (segment.1 + granule - 1) & (!(granule - 1)),
+            ),
+            granule,
+        }
+    }
+
+    pub fn inbound(&self, addr: u64) -> bool {
+        return self.mem.0 <= addr && addr < self.mem.1;
+    }
+}
+
+impl Iterator for MMRegion {
+    type Item = u64;
+    fn next(&mut self) -> Option<Self::Item> {
+        let ret = self.mem.0;
+        if self.inbound(ret) {
+            self.mem.0 += self.granule;
+            Some(ret)
+        } else {
+            None
         }
     }
 }
 
-impl Segment {
-    pub fn round(&mut self, sz: u64) {
-        self.0 = self.0 & (!(sz - 1));
-        self.1 = (self.1 + sz - 1) & (!(sz - 1));
-    }
-}
-
-impl From<u64> for VirtAddress {
+impl From<u64> for VirtLayout {
     fn from(value: u64) -> Self {
-        VirtAddress(value)
-    }
-}
-
-impl From<u64> for PhyAddress {
-    fn from(value: u64) -> Self {
-        PhyAddress(value)
+        Self {
+            indexes: [
+                VADescriptor::L0.read(value),
+                VADescriptor::L1.read(value),
+                VADescriptor::L2.read(value),
+                VADescriptor::L3.read(value),
+            ],
+            offset: VADescriptor::OFFSET.read(value),
+        }
     }
 }
