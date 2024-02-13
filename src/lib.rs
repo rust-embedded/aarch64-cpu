@@ -56,5 +56,6 @@
 #![no_std]
 pub mod asm;
 pub mod mmu;
-pub mod registers;
+pub mod irq;
 pub mod cache;
+pub mod registers;

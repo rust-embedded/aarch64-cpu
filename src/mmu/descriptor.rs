@@ -18,9 +18,7 @@ register_bitfields! {u64,
             TRUE = 0b1,
             FALSE = 0b0
         ],
-        L1OUTPUT OFFSET(30) NUMBITS(18) [],
-        L2OUTPUT OFFSET(21) NUMBITS(27) [],
-        L3OUTPUT OFFSET(12) NUMBITS(36) [],
+        OUTPUT OFFSET(0) NUMBITS(48) [],
         NSE_NG OFFSET(11) NUMBITS(1) [
             TRUE = 0b1,
             FALSE = 0b0
@@ -77,7 +75,7 @@ register_bitfields! {u64,
             TRUE = 0b1,
             FALSE = 0b0
         ],
-        OUTPUT OFFSET(12) NUMBITS(36) [],
+        OUTPUT OFFSET(0) NUMBITS(48) [],
         TYPE OFFSET(1) NUMBITS(1) [
             TABLE = 0b1,
             BLOCK = 0b0
