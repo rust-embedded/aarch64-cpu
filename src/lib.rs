@@ -58,4 +58,5 @@ pub mod asm;
 pub mod mmu;
 pub mod irq;
 pub mod cache;
+pub mod exception;
 pub mod registers;
