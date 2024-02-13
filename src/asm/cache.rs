@@ -1,15 +1,11 @@
-use crate::mmu::address::Segment;
-
 mod sealed {
-
-    use crate::mmu::address::Segment;
 
     pub trait Ic {
         fn ic(&self);
     }
 
     pub trait Dc {
-        fn dc(&self, seg: Segment);
+        fn dc(&self, addr: u64);
     }
 }
 
@@ -41,14 +37,11 @@ macro_rules! dc {
         pub const $A: $T = $T{};
         impl sealed::Dc for $T {
             #[inline(always)]
-            fn dc(&self, mut seg: Segment){
-                seg.round(64);
+            fn dc(&self, addr:u64){
                 match() {
                     #[cfg(target_arch = "aarch64")]
                     () => unsafe {
-                        for i in(seg.0 .. seg.1).step_by(64){
-                            core::arch::asm!(concat!("dc ",stringify!($A), ",{}"), in(reg) i, options(nostack))
-                        }
+                        core::arch::asm!(concat!("dc ",stringify!($A), ",{}"), in(reg) addr, options(nostack))
                     },
                     #[cfg(not(target_arch = "aarch64"))]
                     () => unimplemented!(),
@@ -60,9 +53,12 @@ macro_rules! dc {
 
 ic!(IALLU, Iallu);
 ic!(IALLUIS, Ialluis);
-dc!(CVAC, CVac);
-dc!(IVAC, IVac);
-dc!(CIVAC, CIVac);
+dc!(CVAC, Cvac);
+dc!(IVAC, Ivac);
+dc!(CIVAC, Civac);
+dc!(CISW, Cisw);
+dc!(ISW, Isw);
+dc!(CSW, Csw);
 
 #[inline(always)]
 pub fn ic(_arg: impl sealed::Ic) {
@@ -70,6 +66,6 @@ pub fn ic(_arg: impl sealed::Ic) {
 }
 
 #[inline(always)]
-pub fn dc(_arg: impl sealed::Dc, seg: Segment){
-    _arg.dc(seg);
+pub fn dc(_arg: impl sealed::Dc, addr: u64) {
+    _arg.dc(addr);
 }
