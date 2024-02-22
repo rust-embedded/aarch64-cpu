@@ -261,5 +261,12 @@ pub use vbar_el3::VBAR_EL3;
 pub use vtcr_el2::VTCR_EL2;
 pub use vttbr_el2::VTTBR_EL2;
 
+pub trait TTBR {}
+
+impl TTBR for vttbr_el2::Reg{}
+impl TTBR for ttbr0_el1::Reg{}
+impl TTBR for ttbr1_el1::Reg{}
+impl TTBR for ttbr0_el2::Reg{}
+
 #[doc(inline)]
 pub use tock_registers::interfaces::{ReadWriteable, Readable, Writeable};
