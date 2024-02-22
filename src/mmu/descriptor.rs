@@ -43,7 +43,9 @@ register_bitfields! {u64,
             TRUE = 0b1,
             FALSE = 0b0
         ],
-        ATTR OFFSET(2) NUMBITS(2) [],
+        ATTR OFFSET(2) NUMBITS(2) [
+
+        ],
         TYPE OFFSET(1) NUMBITS(1) [
             BLOCK = 0b0,
             PAGE = 0b1

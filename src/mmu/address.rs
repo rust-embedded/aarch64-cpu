@@ -1,4 +1,9 @@
 use tock_registers::register_bitfields;
+use tock_registers::fields::FieldValue;
+use super::descriptor::BlockDescriptor;
+use core::iter::StepBy;
+use core::ops::Range;
+
 register_bitfields! {u64,
     VADescriptor [
         L0 OFFSET(39) NUMBITS(9) [],
@@ -7,6 +12,35 @@ register_bitfields! {u64,
         L3 OFFSET(12) NUMBITS(9) [],
         OFFSET OFFSET(0) NUMBITS(12) []
     ]
+}
+
+#[derive(Copy, Clone)]
+pub enum MMProt {
+    NormalReadOnly,
+    NormalExecOnly,
+    NormalReadWriteAll,
+    NormalReadWriteNoExec,
+    PrivilegedExecOnly,
+    PrivilegedReadOnly,
+    PrivilegedReadWrite,
+    SecureExecOnly,
+    SecureReadOnly,
+    SecureReadWrite,
+}
+
+#[derive(Copy, Clone)]
+pub enum MMType {
+    Device,
+    Normal,
+    NormalNoExec,
+    ReadOnly,
+    Instruction,
+    SystemReserved,
+    SystemReadOnly,
+    SystemInstruction,
+    SecureReadOnly,
+    SecureExecOnly,
+    SecureReadWrite,
 }
 
 pub struct VirtLayout {
@@ -38,16 +72,93 @@ impl MMRegion {
     }
 }
 
-impl Iterator for MMRegion {
-    type Item = u64;
-    fn next(&mut self) -> Option<Self::Item> {
-        let ret = self.mem.0;
-        if self.inbound(ret) {
-            self.mem.0 += self.granule;
-            Some(ret)
-        } else {
-            None
+impl MMType {
+    pub fn default_prot(&self) -> MMProt {
+        match *self {
+            Self::Normal => MMProt::NormalReadWriteAll,
+            Self::NormalNoExec => MMProt::NormalReadWriteNoExec,
+            Self::ReadOnly => MMProt::NormalReadOnly,
+            Self::Instruction => MMProt::NormalExecOnly,
+            Self::Device => MMProt::PrivilegedReadWrite,
+            Self::SystemReserved => MMProt::PrivilegedReadWrite,
+            Self::SystemInstruction => MMProt::PrivilegedExecOnly,
+            Self::SystemReadOnly => MMProt::PrivilegedReadOnly,
+            _ => unimplemented!(),
         }
+    }
+}
+
+impl From<MMProt> for FieldValue<u64, BlockDescriptor::Register> {
+    fn from(value: MMProt) -> Self {
+        match value {
+            MMProt::NormalReadWriteAll => {
+                BlockDescriptor::UXN_XN::FALSE
+                    + BlockDescriptor::PXN::FALSE
+                    + BlockDescriptor::AP::RW_ELx_RW_EL0
+                    + BlockDescriptor::NS::TRUE
+            }
+            MMProt::NormalReadWriteNoExec => {
+                BlockDescriptor::UXN_XN::TRUE
+                    + BlockDescriptor::PXN::TRUE
+                    + BlockDescriptor::AP::RW_ELx_RW_EL0
+                    + BlockDescriptor::NS::TRUE
+            }
+            MMProt::NormalExecOnly => {
+                BlockDescriptor::UXN_XN::FALSE
+                    + BlockDescriptor::PXN::FALSE
+                    + BlockDescriptor::AP::RO_ELx_RO_EL0
+                    + BlockDescriptor::NS::TRUE
+            }
+            MMProt::NormalReadOnly => {
+                BlockDescriptor::UXN_XN::TRUE
+                    + BlockDescriptor::PXN::TRUE
+                    + BlockDescriptor::AP::RO_ELx_RO_EL0
+                    + BlockDescriptor::NS::TRUE
+            }
+            MMProt::PrivilegedReadOnly => {
+                BlockDescriptor::UXN_XN::TRUE
+                    + BlockDescriptor::PXN::TRUE
+                    + BlockDescriptor::AP::RO_ELx_None_EL0
+                    + BlockDescriptor::NS::TRUE
+            }
+            MMProt::PrivilegedExecOnly => {
+                BlockDescriptor::UXN_XN::TRUE
+                    + BlockDescriptor::PXN::FALSE
+                    + BlockDescriptor::AP::RO_ELx_None_EL0
+                    + BlockDescriptor::NS::TRUE
+            }
+            MMProt::PrivilegedReadWrite => {
+                BlockDescriptor::UXN_XN::TRUE
+                    + BlockDescriptor::PXN::TRUE
+                    + BlockDescriptor::AP::RW_ELx_None_EL0
+                    + BlockDescriptor::NS::TRUE
+            }
+            _ => unimplemented!(),
+        }
+    }
+}
+
+impl From<MMType> for FieldValue<u64, BlockDescriptor::Register> {
+    fn from(value: MMType) -> Self {
+        let prot_fields: FieldValue<u64, BlockDescriptor::Register> = value.default_prot().into();
+        let type_fields = match value {
+            MMType::Device => BlockDescriptor::SH::CLEAR,
+            _ => BlockDescriptor::SH::IS,
+        };
+        prot_fields
+            + type_fields
+            + BlockDescriptor::NSE_NG::TRUE
+            + BlockDescriptor::VALID::TRUE
+            + BlockDescriptor::TYPE::BLOCK
+            + BlockDescriptor::AF::TRUE
+    }
+}
+
+impl IntoIterator for MMRegion {
+    type Item = u64;
+    type IntoIter = StepBy<Range<u64>>;
+    fn into_iter(self) -> Self::IntoIter {
+        (self.mem.0..self.mem.1).step_by(self.granule as usize)
     }
 }
 
