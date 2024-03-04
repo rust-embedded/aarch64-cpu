@@ -81,7 +81,158 @@ register_bitfields! {u64,
         /// Instruction Specific Syndrome. Architecturally, this field can be defined independently
         /// for each defined Exception class. However, in practice, some ISS encodings are used for
         /// more than one Exception class.
-        ISS OFFSET(0)  NUMBITS(25) []
+        ISS OFFSET(0)  NUMBITS(25) [],
+
+        // Data Abort Syndrome Register fields
+        // These fields are only valid if EC.DataAbort is set.
+
+        // Is the syndrome valid?
+        ISV OFFSET(24) NUMBITS(1) [
+            /// 0b0: The syndrome information is not valid.
+            NotValid = 0,
+            /// 0b1: The syndrome information is valid.
+            Valid = 1
+        ],
+
+        // Syndrome Access Size
+        SAS OFFSET(22) NUMBITS(2) [
+            /// 0b00: Byte
+            Byte = 0b00,
+            /// 0b01: Half-word
+            HalfWord = 0b01,
+            /// 0b10: Word
+            Word = 0b10,
+            /// 0b11: Double-word
+            DoubleWord = 0b11
+        ],
+
+        // Syndrome Sign-Extend
+        SSE OFFSET(21) NUMBITS(1) [
+            /// 0b0: Zero-extend
+            ZeroExtend = 0,
+            /// 0b1: Sign-extend
+            SignExtend = 1
+        ],
+
+        // Syndrome Register
+        SRT OFFSET(16) NUMBITS(5) [],
+
+        // Syndrome Register Width
+        SF OFFSET(15) NUMBITS(1) [
+            /// 0b0: 32-bit
+            Bit32 = 0,
+            /// 0b1: 64-bit
+            Bit64 = 1
+        ],
+
+        // Acquire-Release
+        AR OFFSET(14) NUMBITS(1) [
+            /// 0b0: Normal memory access
+            Normal = 0,
+            /// 0b1: Acquire or release access
+            AcquireRelease = 1
+        ],
+
+        // Virtual Nested Abort
+        VNCR OFFSET(13) NUMBITS(1) [
+            /// 0b0: Not a virtual nested abort
+            NotVirtualNested = 0,
+            /// 0b1: Virtual nested abort
+            VirtualNested = 1
+        ],
+
+        // Load-Store Type
+        LST OFFSET(11) NUMBITS(2) [
+            /// 0b01: ST64BV
+            ST64BV = 0b01,
+            /// 0b10: LD64B or ST64B
+            LD64BorST64B = 0b10,
+            /// 0b11: ST64BV0
+            ST64BV0 = 0b11
+        ],
+
+        // Is FAR not valid?
+        FnV OFFSET(10) NUMBITS(1) [
+            /// 0b0: FAR is valid
+            Valid = 0,
+            /// 0b1: FAR is not valid
+            NotValid = 1
+        ],
+
+        // External Abort Type
+        EA OFFSET(9) NUMBITS(1) [
+            /// 0b0 Not an external abort
+            NotExternal = 0,
+            /// 0b1: External
+            External = 1
+        ],
+
+        // Cache maintenance operation
+        CM OFFSET(8) NUMBITS(1) [
+            /// 0b0: Not a cache maintenance operation
+            NotCacheMaintenance = 0,
+            /// 0b1: Cache maintenance operation
+            CacheMaintenance = 1
+        ],
+
+        // Which stage caused the stage 2 abort?
+        S1PTW OFFSET(7) NUMBITS(1) [
+            /// 0b0: Stage 1
+            Stage1 = 0,
+            /// 0b1: Stage 2
+            Stage2 = 1
+        ],
+
+        // Write not Read
+        WnR OFFSET(6) NUMBITS(1) [
+            /// 0b0: Read access
+            Read = 0,
+            /// 0b1: Write access
+            Write = 1
+        ],
+
+        // Data Fault Status Code
+        DFSC OFFSET(0) NUMBITS(6) [
+            /// 0b000000: Address size fault, level 0
+            AddressSizeFaultLevel0 = 0b000000,
+            /// 0b000001: Address size fault, level 1
+            AddressSizeFaultLevel1 = 0b000001,
+            /// 0b000010: Address size fault, level 2
+            AddressSizeFaultLevel2 = 0b000010,
+            /// 0b000011: Address size fault, level 3
+            AddressSizeFaultLevel3 = 0b000011,
+
+            /// 0b000100: Translation fault, level 0
+            TranslationFaultLevel0 = 0b000100,
+            /// 0b000101: Translation fault, level 1
+            TranslationFaultLevel1 = 0b000101,
+            /// 0b000110: Translation fault, level 2
+            TranslationFaultLevel2 = 0b000110,
+            /// 0b000111: Translation fault, level 3
+            TranslationFaultLevel3 = 0b000111,
+
+            /// 0b001000: Access flag fault, level 0
+            AccessFlagFaultLevel0 = 0b001000,
+            /// 0b001001: Access flag fault, level 1
+            AccessFlagFaultLevel1 = 0b001001,
+            /// 0b001010: Access flag fault, level 2
+            AccessFlagFaultLevel2 = 0b001010,
+            /// 0b001011: Access flag fault, level 3
+            AccessFlagFaultLevel3 = 0b001011,
+
+            /// 0b001101: Permission fault, level 1
+            PermissionFaultLevel1 = 0b001101,
+            /// 0b001110: Permission fault, level 2
+            PermissionFaultLevel2 = 0b001110,
+            /// 0b001111: Permission fault, level 3
+            PermissionFaultLevel3 = 0b001111,
+
+            /// 0b010000: Synchronous external abort, not on translation table walk or 
+            /// hardware update of translation table
+            SynchronousExternalAbortNotOnTranslationTableWalk = 0b010000
+
+            // ... and many more
+        ]
     ]
 }
 
