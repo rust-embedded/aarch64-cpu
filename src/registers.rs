@@ -92,6 +92,7 @@ mod vbar_el2;
 mod vbar_el3;
 mod vtcr_el2;
 mod vttbr_el2;
+mod vmpidr_el2;
 
 pub use actlr_el1::ACTLR_EL1;
 pub use actlr_el2::ACTLR_EL2;
@@ -180,6 +181,7 @@ pub use vbar_el2::VBAR_EL2;
 pub use vbar_el3::VBAR_EL3;
 pub use vtcr_el2::VTCR_EL2;
 pub use vttbr_el2::VTTBR_EL2;
+pub use vmpidr_el2::VMPIDR_EL2;
 
 pub trait TTBR {}
 
