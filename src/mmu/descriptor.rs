@@ -39,6 +39,12 @@ register_bitfields! {u64,
             RO_ELx_None_EL0 = 0b10,
             RO_ELx_RO_EL0 = 0b11
         ],
+        S2AP OFFSET(6) NUMBITS(2) [
+            NONE = 0b00,
+            RO = 0b01,
+            WO = 0b10,
+            WR = 0b11,
+        ],
         NS OFFSET(5) NUMBITS(1) [
             TRUE = 0b1,
             FALSE = 0b0

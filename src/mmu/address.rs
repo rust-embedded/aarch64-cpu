@@ -23,6 +23,12 @@ pub enum MMProt {
     PrivilegedExecOnly,
     PrivilegedReadOnly,
     PrivilegedReadWrite,
+    VirtNone,
+    VirtWriteOnly,
+    VirtReadOnly,
+    VirtReadOnlyNoExec,
+    VirtReadWrite,
+    VirtReadWriteNoExec,
     SecureExecOnly,
     SecureReadOnly,
     SecureReadWrite,
@@ -41,6 +47,12 @@ pub enum MMType {
     SecureReadOnly,
     SecureExecOnly,
     SecureReadWrite,
+    VirtNone,
+    VirtWriteOnly,
+    VirtReadOnly,
+    VirtReadOnlyNoExec,
+    VirtReadWrite,
+    VirtReadWriteNoExec,
 }
 
 pub struct VirtLayout {
@@ -66,10 +78,6 @@ impl MMRegion {
             granule,
         }
     }
-
-    pub fn inbound(&self, addr: u64) -> bool {
-        return self.mem.0 <= addr && addr < self.mem.1;
-    }
 }
 
 impl MMType {
@@ -83,6 +91,7 @@ impl MMType {
             Self::SystemReserved => MMProt::PrivilegedReadWrite,
             Self::SystemInstruction => MMProt::PrivilegedExecOnly,
             Self::SystemReadOnly => MMProt::PrivilegedReadOnly,
+            Self::VirtReadWrite => MMProt::VirtReadWrite,
             _ => unimplemented!(),
         }
     }
@@ -131,6 +140,12 @@ impl From<MMProt> for FieldValue<u64, BlockDescriptor::Register> {
                 BlockDescriptor::UXN_XN::TRUE
                     + BlockDescriptor::PXN::TRUE
                     + BlockDescriptor::AP::RW_ELx_None_EL0
+                    + BlockDescriptor::NS::TRUE
+            }
+            MMProt::VirtReadWrite => {
+                BlockDescriptor::UXN_XN::FALSE
+                    + BlockDescriptor::PXN::FALSE
+                    + BlockDescriptor::S2AP::WR
                     + BlockDescriptor::NS::TRUE
             }
             _ => unimplemented!(),
