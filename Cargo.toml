@@ -21,3 +21,4 @@ exclude = [
 
 [dependencies]
 tock-registers = { version = "0.9.0", default-features = false } # Use it as interface-only library.
+paste = { version = "1.0" }
