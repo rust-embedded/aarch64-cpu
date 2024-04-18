@@ -84,6 +84,7 @@ register_bitfields! {u64,
             FALSE = 0b0
         ],
         OUTPUT OFFSET(0) NUMBITS(48) [],
+        LOWER OFFSET(0) NUMBITS(2) [],
         TYPE OFFSET(1) NUMBITS(1) [
             TABLE = 0b1,
             BLOCK = 0b0
