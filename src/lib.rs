@@ -60,3 +60,4 @@ pub mod irq;
 pub mod cache;
 pub mod exception;
 pub mod registers;
+pub mod gic;
