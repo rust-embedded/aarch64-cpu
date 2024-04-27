@@ -1,6 +1,5 @@
 mod registers;
 use tock_registers::{
-    fields::FieldValue,
     interfaces::{Readable, Writeable},
     registers::*,
     *,
@@ -35,6 +34,7 @@ pub const GICD_TYPER_CPUNUM_MSK: usize = 0b11111;
 
 register_structs! {
     #[allow(non_snake_case)]
+    #[repr(C)]
     pub GicDistributorInner {
         (0x0000 => pub CTLR: ReadWrite<u32>),
         (0x0004 => pub TYPER: ReadOnly<u32>),
@@ -63,6 +63,7 @@ register_structs! {
 
 register_structs! {
   #[allow(non_snake_case)]
+  #[repr(C)]
   pub GicCpuInterfaceInner {
     (0x0000 => CTLR: ReadWrite<u32>),   // CPU Interface Control Register
     (0x0004 => PMR: ReadWrite<u32>),    // Interrupt Priority Mask Register
@@ -89,6 +90,7 @@ register_structs! {
 
 register_structs! {
     #[allow(non_snake_case)]
+    #[repr(C)]
     pub GicHypervisorInterfaceInner {
         (0x0000 => HCR: ReadWrite<u32>),
         (0x0004 => VTR: ReadOnly<u32>),
@@ -130,6 +132,7 @@ macro_rules! bit_imp {
         }
     };
 }
+
 macro_rules! field_imp {
     ($method: ident, $field: ident, $width: expr, $interface: ident) => {
         pub fn $method(
@@ -150,17 +153,40 @@ macro_rules! field_imp {
 }
 
 impl GicDistributorInner {
-    bit_imp!(enable, ISENABLER, 1);
-    bit_imp!(disable, ICENABLER, 1);
-    bit_imp!(set_pending, ISPENDR, 1);
-    bit_imp!(clear_pending, ICPENDR, 1);
+
+    bit_imp!(set_pend, ISPENDR, 1);
+    bit_imp!(clear_pend, ICPENDR, 1);
     bit_imp!(activate, ISACTIVER, 1);
     bit_imp!(deactivate, ICACTIVER, 1);
     bit_imp!(set_priority, IPRIORITYR, 8);
+    bit_imp!(enable_intr, ISENABLER, 1);
+    bit_imp!(disable_intr, ICENABLER, 1);
+
     field_imp!(set_nsacr, NSACR, 2, GICD_NSCAR);
     field_imp!(set_icfgr, ICFGR, 2, GICD_ICFGR);
 
     pub fn forward(&mut self, id: u32, cpu: u32, interface: u32) {
         self.ITARGETSR[id as usize].set(1 << (interface << (cpu << 3)));
     }
+
+    pub fn enable_gic(&mut self) {
+        self.CTLR
+            .set((GICD_CTLR::ENGrp0::Enable + GICD_CTLR::ENGrp1::Enable).into())
+    }
+
+    pub fn disable_gic(&mut self) {
+        self.CTLR
+            .set((GICD_CTLR::ENGrp0::Disable + GICD_CTLR::ENGrp1::Disable).into())
+    }
+
 }
+
+impl GicCpuInterfaceInner {
+    pub fn enable(&mut self) {
+        self.CTLR.set(GICC_CTLR::EN::Enable.into())
+    }
+    pub fn disable(&mut self) {
+        self.CTLR.set(GICC_CTLR::EN::Disable.into())
+    }
+}
+

@@ -41,5 +41,29 @@ register_bitfields! {u32,
             WO = 0b10,
             WR = 0b11
         ]
-    ]
+    ],
+    pub GICC_CTLR [
+        EN OFFSET(0) NUMBITS(1) [
+            Enable = 0b1,
+            Disable = 0b0
+        ],
+    ],
+    pub GICC_PMR [
+        PRIORITY OFFSET(0) NUMBITS(7)[
+
+        ]
+    ],
+    pub GICC_BPR [
+        BP OFFSET(0) NUMBITS(2) [
+
+        ]
+    ],
+    pub GICC_GENERIC [
+        CPUID OFFSET(10) NUMBITS(2) [
+
+        ],
+        INTRID OFFSET(0) NUMBITS(10) [
+
+        ],
+    ],
 }
