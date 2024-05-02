@@ -164,7 +164,6 @@ impl From<MMType> for FieldValue<u64, BlockDescriptor::Register> {
             + type_fields
             + BlockDescriptor::NSE_NG::TRUE
             + BlockDescriptor::VALID::TRUE
-            + BlockDescriptor::TYPE::BLOCK
             + BlockDescriptor::AF::TRUE
     }
 }

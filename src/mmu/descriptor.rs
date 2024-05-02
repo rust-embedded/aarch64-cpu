@@ -19,6 +19,7 @@ register_bitfields! {u64,
             FALSE = 0b0
         ],
         OUTPUT OFFSET(0) NUMBITS(48) [],
+        LOWER_ATTRS OFFSET(0) NUMBITS(12) [],
         NSE_NG OFFSET(11) NUMBITS(1) [
             TRUE = 0b1,
             FALSE = 0b0
@@ -84,7 +85,7 @@ register_bitfields! {u64,
             FALSE = 0b0
         ],
         OUTPUT OFFSET(0) NUMBITS(48) [],
-        LOWER OFFSET(0) NUMBITS(2) [],
+        LOWER_ATTRS OFFSET(0) NUMBITS(2) [],
         TYPE OFFSET(1) NUMBITS(1) [
             TABLE = 0b1,
             BLOCK = 0b0
@@ -95,6 +96,11 @@ register_bitfields! {u64,
         ]
     ]
 }
+
+pub trait Descriptor {}
+
+impl Descriptor for BlockDescriptor::Register {}
+impl Descriptor for TableDescriptor::Register {}
 
 #[derive(Clone, Copy)]
 #[repr(transparent)]
@@ -121,6 +127,10 @@ impl VADescriptor {
         T: RegisterLongName,
     {
         self.0 = field_value.modify(self.0);
+    }
+
+    pub fn output(&self) -> u64 {
+        TableDescriptor::OUTPUT.read(self.0) & !TableDescriptor::LOWER_ATTRS.mask
     }
 }
 
