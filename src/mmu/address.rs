@@ -14,6 +14,42 @@ register_bitfields! {u64,
     ]
 }
 
+#[derive(Clone, Copy)]
+pub enum PageMode {
+    HugePage,
+    LargePage,
+    SmallPage,
+}
+
+impl PageMode {
+    pub fn levels(&self) -> u8 {
+        match self {
+            PageMode::SmallPage => 3,
+            PageMode::LargePage => 2,
+            PageMode::HugePage => 1,
+        }
+    }
+}
+
+impl Into<u64> for PageMode {
+    fn into(self) -> u64 {
+        match self {
+            Self::SmallPage => 0x1000,
+            Self::LargePage => 0x200000,
+            Self::HugePage => 0x40000000,
+        }
+    }
+}
+
+impl From<PageMode> for FieldValue<u64, BlockDescriptor::Register> {
+    fn from(value: PageMode) -> Self {
+        match value {
+            PageMode::SmallPage => BlockDescriptor::TYPE::PAGE,
+            _ => BlockDescriptor::TYPE::BLOCK,
+        }
+    }
+}
+
 #[derive(Copy, Clone)]
 pub enum MMProt {
     NormalReadOnly,

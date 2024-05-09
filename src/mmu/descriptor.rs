@@ -3,6 +3,7 @@ use tock_registers::{
     fields::{FieldValue, Field},
     RegisterLongName,
 };
+use super::{address::PageMode, MMType};
 
 register_bitfields! {u64,
     pub BlockDescriptor [
@@ -131,6 +132,17 @@ impl VADescriptor {
 
     pub fn output(&self) -> u64 {
         TableDescriptor::OUTPUT.read(self.0) & !TableDescriptor::LOWER_ATTRS.mask
+    }
+
+    pub fn table(output: u64) -> u64 {
+        (TableDescriptor::OUTPUT.val(output)
+            + TableDescriptor::TYPE::TABLE
+            + TableDescriptor::VALID::TRUE)
+            .value
+    }
+
+    pub fn block(output: u64, typ: MMType, mode: PageMode) -> u64 {
+        (BlockDescriptor::OUTPUT.val(output) + typ.into() + mode.into()).value
     }
 }
 
