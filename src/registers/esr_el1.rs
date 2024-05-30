@@ -84,7 +84,7 @@ impl Readable for Reg {
 
 impl Writeable for Reg {
     type T = u64;
-    type R = ();
+    type R = ESR_EL1::Register;
 
     sys_coproc_write_raw!(u64, "ESR_EL1", "x");
 }
