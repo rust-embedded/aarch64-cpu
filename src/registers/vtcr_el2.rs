@@ -16,6 +16,14 @@ use tock_registers::{
 
 register_bitfields! {u64,
     pub VTCR_EL2 [
+        /// Reserved, RES1.
+        RES1 OFFSET(31) NUMBITS(1) [],
+        /// When FEAT_SEL2 is implemented:
+        /// Non-secure stage 2 translation output address space for the Secure EL1&0 translation regime.
+        NSA OFFSET(30) NUMBITS(1) [
+            SecurePASpace = 0,
+            NonSecurePASpace = 1,
+        ],
         /// Hardware dirty flag update in stage2 translations when EL2 is enabled
         HD OFFSET(22) NUMBITS(1) [
             /// Stage2 hardware management of dirty state disabled
@@ -98,7 +106,12 @@ register_bitfields! {u64,
             NormalWBRAnWA = 0b11,
         ],
         /// Starting level of the stage2 translation lookup
-        SL0 OFFSET(6) NUMBITS(2) [],
+        SL0 OFFSET(6) NUMBITS(2) [
+            Granule4KBLevel2 = 0b00,
+            Granule4KBLevel1 = 0b01,
+            Granule4KBLevel0 = 0b10,
+            Granule4KBLevel3 = 0b11,
+        ],
         /// The size of the offest of the memory region addressed by the `VTTBR_EL2`
         T0SZ OFFSET(0) NUMBITS(6) [],
 
