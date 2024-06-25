@@ -1,11 +1,11 @@
 mod registers;
+use paste::paste;
+pub use registers::*;
 use tock_registers::{
-    interfaces::{Readable, Writeable},
+    interfaces::{ReadWriteable, Readable, Writeable},
     registers::*,
     *,
 };
-use paste::paste;
-pub use registers::*;
 
 pub const GICC_CTLR_EN_BIT: usize = 0x1;
 pub const GICC_CTLR_EOIMODENS_BIT: usize = 1 << 9;
@@ -114,8 +114,6 @@ unsafe impl Sync for GicDistributorInner {}
 unsafe impl Sync for GicCpuInterfaceInner {}
 unsafe impl Sync for GicHypervisorInterfaceInner {}
 
-type Field = ReadWrite<u32>;
-
 macro_rules! bit_imp {
     ($method: ident, $field: ident, $width: expr) => {
         pub fn $method(&mut self, id: u32, pos: u32) {
@@ -123,7 +121,7 @@ macro_rules! bit_imp {
             let reg_id = id / field_num;
             let field_id = id & (field_num - 1);
             self.$field[reg_id as usize]
-                .set(self.$field[reg_id as usize].get() | (1 << pos) << field_id << $width);
+                .set(self.$field[reg_id as usize].get() | (1 << pos) << (field_id * $width));
         }
         paste! {
             pub fn [<group_ $method>](&mut self, gid: u32, value: u32){
@@ -145,15 +143,14 @@ macro_rules! field_imp {
             let field_id = id & (field_num - 1);
             let mask = (1 << $width) - 1;
             self.$field[reg_id as usize].set(
-                (self.$field[reg_id as usize].get() & (!(mask << field_id << $width)))
-                    | (field.value << field_id << $width),
+                (self.$field[reg_id as usize].get() & (!(mask << (field_id * $width))))
+                    | (field.value << (field_id * $width)),
             );
         }
     };
 }
 
 impl GicDistributorInner {
-
     bit_imp!(set_pend, ISPENDR, 1);
     bit_imp!(clear_pend, ICPENDR, 1);
     bit_imp!(activate, ISACTIVER, 1);
@@ -165,10 +162,13 @@ impl GicDistributorInner {
     field_imp!(set_nsacr, NSACR, 2, GICD_NSCAR);
     field_imp!(set_icfgr, ICFGR, 2, GICD_ICFGR);
 
-    pub fn forward(&mut self, id: u32, cpu: u32, interface: u32) {
-        self.ITARGETSR[id as usize].set(1 << (interface << (cpu << 3)));
+    pub fn forward(&mut self, id: u32, cpu: u32) {
+        let i = (id / 4) as usize;
+        let j = id % 4;
+        let value = 1 << cpu;
+        let mask = (1 << 8) - 1;
+        self.ITARGETSR[i].set((self.ITARGETSR[i].get() & !(mask << (j << 3))) | value << (j << 3))
     }
-
     pub fn enable_gic(&mut self) {
         self.CTLR
             .set((GICD_CTLR::ENGrp0::Enable + GICD_CTLR::ENGrp1::Enable).into())
@@ -178,15 +178,20 @@ impl GicDistributorInner {
         self.CTLR
             .set((GICD_CTLR::ENGrp0::Disable + GICD_CTLR::ENGrp1::Disable).into())
     }
-
 }
 
 impl GicCpuInterfaceInner {
     pub fn enable(&mut self) {
-        self.CTLR.set(GICC_CTLR::EN::Enable.into())
+        self.CTLR
+            .set((GICC_CTLR::EN::Enable + GICC_CTLR::EOI::EOIR_DIR).into());
     }
     pub fn disable(&mut self) {
         self.CTLR.set(GICC_CTLR::EN::Disable.into())
     }
+    pub fn set_priority_mask(&mut self, mask: u8) {
+        self.PMR.set(GICC_PMR::PRIORITY.val(mask as u32).into())
+    }
+    pub fn set_bpr(&mut self, bpr: u8) {
+        self.BPR.set(GICC_BPR::BP.val(bpr as u32).into())
+    }
 }
-

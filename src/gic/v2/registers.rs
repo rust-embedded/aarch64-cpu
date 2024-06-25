@@ -43,6 +43,20 @@ register_bitfields! {u32,
         ]
     ],
     pub GICC_CTLR [
+        EOI OFFSET(9) NUMBITS(1) [
+            EOIR_DIR = 1,
+            EOIR_ONLY = 0
+        ],
+        FIQBYPDISGRP1 OFFSET(6) NUMBITS(1) [
+            Signal = 1,
+            NoSignal = 0
+        ],
+        IRQBYPDISGRP1 OFFSET(5) NUMBITS(1) [
+    // Bypass FIQ signal whether or not still affects CPU
+    // execution even if the gic is turned off
+            Signal = 1,
+            NoSignal = 0,
+        ],
         EN OFFSET(0) NUMBITS(1) [
             Enable = 0b1,
             Disable = 0b0
