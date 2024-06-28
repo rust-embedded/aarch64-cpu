@@ -124,6 +124,15 @@ macro_rules! bit_imp {
                 .set(self.$field[reg_id as usize].get() | (1 << pos) << (field_id * $width));
         }
         paste! {
+            pub fn [<$method _val>](&mut self, id: u32, val: u32){
+            let field_num = 32 / $width;
+            let reg_id = id / field_num;
+            let field_id = id & (field_num - 1);
+            self.$field[reg_id as usize]
+                .set(self.$field[reg_id as usize].get() | (val << (field_id * $width)));
+            }
+        }
+        paste! {
             pub fn [<group_ $method>](&mut self, gid: u32, value: u32){
                 self.$field[gid as usize].set(value);
             }
