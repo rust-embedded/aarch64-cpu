@@ -279,7 +279,10 @@ register_bitfields! {u64,
         ///     Security state:
         ///     - Physical SError interrupts are taken to EL2, unless they are routed to EL3.
         ///     - When the value of HCR_EL2.TGE is 0, then virtual SError interrupts are enabled.
-        AMO   OFFSET(5) NUMBITS(1) [],
+        AMO   OFFSET(5) NUMBITS(1) [
+            EnableSError = 1,
+            DisableSError= 0,
+        ],
 
         /// Physical IRQ Routing.
         ///
