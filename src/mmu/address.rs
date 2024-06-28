@@ -1,8 +1,6 @@
-use tock_registers::register_bitfields;
-use tock_registers::fields::FieldValue;
 use super::descriptor::BlockDescriptor;
-use core::iter::StepBy;
-use core::ops::Range;
+use core::{iter::StepBy, ops::Range};
+use tock_registers::{fields::FieldValue, register_bitfields};
 
 register_bitfields! {u64,
     VADescriptor [
@@ -31,12 +29,12 @@ impl PageMode {
     }
 }
 
-impl Into<u64> for PageMode {
-    fn into(self) -> u64 {
-        match self {
-            Self::SmallPage => 0x1000,
-            Self::LargePage => 0x200000,
-            Self::HugePage => 0x40000000,
+impl From<PageMode> for u64 {
+    fn from(value: PageMode) -> Self {
+        match value {
+            PageMode::SmallPage => 0x1000,
+            PageMode::LargePage => 0x200000,
+            PageMode::HugePage => 0x40000000,
         }
     }
 }
