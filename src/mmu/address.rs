@@ -12,7 +12,7 @@ register_bitfields! {u64,
     ]
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub enum PageMode {
     HugePage,
     LargePage,
@@ -96,11 +96,12 @@ pub struct VirtLayout {
 
 pub type MMSegment = (u64, u64);
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct MMRegion {
     pub mem: MMSegment,
     pub granule: u64,
 }
+
 
 impl MMRegion {
     pub fn new(segment: MMSegment, granule: u64) -> Self {
