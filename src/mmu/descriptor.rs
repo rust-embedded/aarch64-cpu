@@ -1,9 +1,8 @@
+use super::{address::PageMode, MMAttrIdx, MMType};
 use tock_registers::{
-    register_bitfields,
-    fields::{FieldValue, Field},
-    RegisterLongName,
+    fields::{Field, FieldValue},
+    register_bitfields, RegisterLongName,
 };
-use super::{address::PageMode, MMType};
 
 register_bitfields! {u64,
     pub BlockDescriptor [
@@ -51,7 +50,7 @@ register_bitfields! {u64,
             TRUE = 0b1,
             FALSE = 0b0
         ],
-        ATTR OFFSET(2) NUMBITS(2) [
+        ATTR OFFSET(2) NUMBITS(3) [
 
         ],
         TYPE OFFSET(1) NUMBITS(1) [
@@ -141,8 +140,8 @@ impl VADescriptor {
             .value
     }
 
-    pub fn block(output: u64, typ: MMType, mode: PageMode) -> u64 {
-        (BlockDescriptor::OUTPUT.val(output) + typ.into() + mode.into()).value
+    pub fn block(output: u64, typ: MMType, mode: PageMode, idx: MMAttrIdx) -> u64 {
+        (BlockDescriptor::OUTPUT.val(output) + typ.into() + mode.into() + idx.into()).value
     }
 }
 

@@ -102,7 +102,6 @@ pub struct MMRegion {
     pub granule: u64,
 }
 
-
 impl MMRegion {
     pub fn new(segment: MMSegment, granule: u64) -> Self {
         MMRegion {
@@ -192,14 +191,32 @@ impl From<MMType> for FieldValue<u64, BlockDescriptor::Register> {
     fn from(value: MMType) -> Self {
         let prot_fields: FieldValue<u64, BlockDescriptor::Register> = value.default_prot().into();
         let type_fields = match value {
-            MMType::Device => BlockDescriptor::SH::CLEAR,
-            _ => BlockDescriptor::SH::IS,
+            MMType::Device => BlockDescriptor::SH::CLEAR + BlockDescriptor::ATTR.val(0),
+            _ => BlockDescriptor::SH::IS + BlockDescriptor::ATTR.val(4),
         };
         prot_fields
             + type_fields
             + BlockDescriptor::NSE_NG::TRUE
             + BlockDescriptor::VALID::TRUE
             + BlockDescriptor::AF::TRUE
+    }
+}
+
+#[derive(Copy, Clone)]
+pub enum MMAttrIdx {
+    Attr0 = 0,
+    Attr1 = 1,
+    Attr2 = 2,
+    Attr3 = 3,
+    Attr4 = 4,
+    Attr5 = 5,
+    Attr6 = 6,
+    Attr7 = 7,
+}
+
+impl From<MMAttrIdx> for FieldValue<u64, BlockDescriptor::Register> {
+    fn from(value: MMAttrIdx) -> Self {
+        BlockDescriptor::ATTR.val(value as u64)
     }
 }
 
