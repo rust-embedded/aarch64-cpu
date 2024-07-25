@@ -54,9 +54,10 @@ impl DCache {
         isb(SY);
     }
 
+    #[inline(always)]
     pub fn flush_all(&self, mode: FlushMode) {
         dsb(SY);
-        let loc = CLIDR_EL1.read(CLIDR_EL1::LoC);
+        let loc = CLIDR_EL1.read(CLIDR_EL1::LoC) * 2;
         let clidr = CLIDR_EL1.get();
         let _flush = self.get_flush_func(mode, AddressMode::WAYSET);
         let mut irq = IRQ::new();
@@ -79,7 +80,7 @@ impl DCache {
                 irq.restore_and_enable();
 
                 (0..m + 1)
-                    .flat_map(move |i| (0..n + 1).map(move |j| (i << k) | (j << ls)))
+                    .flat_map(move |i| (0..n + 1).map(move |j| (i << k) | level | (j << ls)))
                     .for_each(&_flush);
             }
         }
