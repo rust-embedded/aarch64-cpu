@@ -28,7 +28,7 @@ macro_rules! ap {
     };
 }
 
-ap!(ICC_AP0R0_EL1, "ICC_AP0R0_EL1");
-ap!(ICC_AP0R1_EL1, "ICC_AP0R1_EL1");
-ap!(ICC_AP0R2_EL1, "ICC_AP0R2_EL1");
-ap!(ICC_AP0R3_EL1, "ICC_AP0R3_EL1");
+ap!(ICC_AP0R0_EL1, "S3_0_C12_C9_4");
+ap!(ICC_AP0R1_EL1, "S3_0_C12_C9_5");
+ap!(ICC_AP0R2_EL1, "S3_0_C12_C9_6");
+ap!(ICC_AP0R3_EL1, "S3_0_C12_C9_7");

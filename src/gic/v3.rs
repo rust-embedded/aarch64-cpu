@@ -1,5 +1,18 @@
+mod registers;
+pub use registers::*;
+use paste::paste;
 use core::mem::size_of;
-use tock_registers::{registers::*, *};
+use tock_registers::{
+    interfaces::{Readable, Writeable},
+    registers::*,
+    *,
+};
+
+use crate::{
+    registers::*,
+    asm::barrier::*,
+};
+
 
 pub const GIC_SGIS_NUM: usize = 16;
 pub const GIC_INTS_MAX: usize = 1024;
@@ -20,12 +33,38 @@ const GIC_TARGET_REGS_NUM: usize = GIC_INTS_MAX * 8 / 32;
 const GIC_CONFIG_REGS_NUM: usize = GIC_INTS_MAX * 2 / 32;
 const GIC_SEC_REGS_NUM: usize = GIC_INTS_MAX * 2 / 32;
 
+macro_rules! bit_imp {
+    ($method: ident, $field: ident, $width: expr) => {
+        pub fn $method(&mut self, id: u32, pos: u32) {
+            let field_num = 32 / $width;
+            let reg_id = id / field_num;
+            let field_id = id & (field_num - 1);
+            self.$field[reg_id as usize]
+                .set(self.$field[reg_id as usize].get() | (1 << pos) << (field_id * $width));
+        }
+        paste! {
+            pub fn [<$method _val>](&mut self, id: u32, val: u32){
+            let field_num = 32 / $width;
+            let reg_id = id / field_num;
+            let field_id = id & (field_num - 1);
+            self.$field[reg_id as usize]
+                .set(self.$field[reg_id as usize].get() | (val << (field_id * $width)));
+            }
+        }
+        paste! {
+            pub fn [<group_ $method>](&mut self, gid: u32, value: u32){
+                self.$field[gid as usize].set(value);
+            }
+        }
+    };
+}
+
 register_structs! {
     #[allow(non_snake_case)]
-    pub GicDistributor {
+    pub GicDistributorInner {
         (0x0000 => CTLR: ReadWrite<u32>), //Distributor Control Register
         (0x0004 => TYPER: ReadOnly<u32>), //Interrupt Controller Type Register
-        (0x0008 => IIDR: ReadOnly<u32>),  //Distributor Implementer Identification Register
+        (0x0008 => pub IIDR: ReadOnly<u32>),  //Distributor Implementer Identification Register
         (0x000c => TYPER2: ReadOnly<u32>), //Interrupt controller Type Register 2
         (0x0010 => STATUSR: ReadWrite<u32>), //Error Reporting Status Register, optional
         (0x0014 => reserved0),
@@ -38,18 +77,18 @@ register_structs! {
         (0x0058 => CLRSPI_SR: WriteOnly<u32>), //Clear SPI, Secure Register
         (0x005c => reserved4),
         (0x0080 => IGROUPR: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Group Registers
-        (0x0100 => ISENABLER: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Set-Enable Registers
-        (0x0180 => ICENABLER: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Clear-Enable Registers
-        (0x0200 => ISPENDR: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Set-Pending Registers
-        (0x0280 => ICPENDR: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Clear-Pending Registers
-        (0x0300 => ISACTIVER: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Set-Active Registers
-        (0x0380 => ICACTIVER: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Clear-Active Registers
-        (0x0400 => IPRIORITYR: [ReadWrite<u32>; GIC_PRIO_REGS_NUM]), //Interrupt Priority Registers
-        (0x0800 => ITARGETSR: [ReadWrite<u32>; GIC_TARGET_REGS_NUM]), //Interrupt Processor Targets Registers
-        (0x0c00 => ICFGR: [ReadWrite<u32>; GIC_CONFIG_REGS_NUM]), //Interrupt Configuration Registers
-        (0x0d00 => IGRPMODR: [ReadWrite<u32>; GIC_CONFIG_REGS_NUM]), //Interrupt Group Modifier Registers
-        (0x0e00 => NSACR: [ReadWrite<u32>; GIC_SEC_REGS_NUM]), //Non-secure Access Control Registers
-        (0x0f00 => SGIR: WriteOnly<u32>),  //Software Generated Interrupt Register
+        (0x0100 => pub ISENABLER: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Set-Enable Registers
+        (0x0180 => pub ICENABLER: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Clear-Enable Registers
+        (0x0200 => pub ISPENDR: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Set-Pending Registers
+        (0x0280 => pub ICPENDR: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Clear-Pending Registers
+        (0x0300 => pub ISACTIVER: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Set-Active Registers
+        (0x0380 => pub ICACTIVER: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Clear-Active Registers
+        (0x0400 => pub IPRIORITYR: [ReadWrite<u32>; GIC_PRIO_REGS_NUM]), //Interrupt Priority Registers
+        (0x0800 => pub ITARGETSR: [ReadWrite<u32>; GIC_TARGET_REGS_NUM]), //Interrupt Processor Targets Registers
+        (0x0c00 => pub ICFGR: [ReadWrite<u32>; GIC_CONFIG_REGS_NUM]), //Interrupt Configuration Registers
+        (0x0d00 => pub IGRPMODR: [ReadWrite<u32>; GIC_CONFIG_REGS_NUM]), //Interrupt Group Modifier Registers
+        (0x0e00 => pub NSACR: [ReadWrite<u32>; GIC_SEC_REGS_NUM]), //Non-secure Access Control Registers
+        (0x0f00 => pub SGIR: WriteOnly<u32>),  //Software Generated Interrupt Register
         (0x0f04 => reserved6),
         (0x0f10 => CPENDSGIR: [ReadWrite<u32>; GIC_SGI_REGS_NUM]), //SGI Clear-Pending Registers
         (0x0f20 => SPENDSGIR: [ReadWrite<u32>; GIC_SGI_REGS_NUM]), //SGI Set-Pending Registers
@@ -63,12 +102,12 @@ register_structs! {
 
 register_structs! {
     #[allow(non_snake_case)]
-    pub GICRedistributer {
+    pub GicRedistributorInner {
         (0x0000 => CTLR: ReadWrite<u32>),   // Redistributor Control Register
         (0x0004 => IIDR: ReadOnly<u32>),    // Implementer Identification Register
         (0x0008 => TYPER: ReadOnly<u64>),   // Redistributor Type Register
         (0x0010 => STATUSR: ReadWrite<u32>),  // Error Reporting Status Register, optional
-        (0x0014 => WAKER: ReadWrite<u32>),     // Redistributor Wake Register
+        (0x0014 => pub WAKER: ReadWrite<u32>),     // Redistributor Wake Register
         (0x0018 => MPAMIDR: ReadOnly<u32>),   // Report maximum PARTID and PMG Register
         (0x001c => PARTIDR: ReadWrite<u32>),   // Set PARTID and PMG Register
         (0x0020 => reserved18),
@@ -86,29 +125,86 @@ register_structs! {
         (0x00c8 => reserved13),
         (0xffd0 => ID: [ReadOnly<u32>; (0x10000 - 0xFFD0) / size_of::<u32>()]),
         (0x10000 => reserved12),
-        (0x10080 => IGROUPR0: ReadWrite<u32>), //SGI_base frame, all below
+        (0x10080 => pub IGROUPR0: ReadWrite<u32>), //SGI_base frame, all below
         (0x10084 => reserved11),
-        (0x10100 => ISENABLER0: ReadWrite<u32>),
+        (0x10100 => pub ISENABLER0: ReadWrite<u32>),
         (0x10104 => reserved10),
-        (0x10180 => ICENABLER0: ReadWrite<u32>),
+        (0x10180 => pub ICENABLER0: ReadWrite<u32>),
         (0x10184 => reserved9),
-        (0x10200 => ISPENDR0: ReadWrite<u32>),
+        (0x10200 => pub ISPENDR0: ReadWrite<u32>),
         (0x10204 => reserved8),
-        (0x10280 => ICPENDR0: ReadWrite<u32>),
+        (0x10280 => pub ICPENDR0: ReadWrite<u32>),
         (0x10284 => reserved7),
-        (0x10300 => ISACTIVER0: ReadWrite<u32>),
+        (0x10300 => pub ISACTIVER0: ReadWrite<u32>),
         (0x10304 => reserved6),
-        (0x10380 => ICACTIVER0: ReadWrite<u32>),
+        (0x10380 => pub ICACTIVER0: ReadWrite<u32>),
         (0x10384 => reserved5),
         (0x10400 => IPRIORITYR: [ReadWrite<u32>;8]),
         (0x10420 => reserved4),
-        (0x10c00 => ICFGR0: ReadWrite<u32>),
-        (0x10c04 => ICFGR1: ReadWrite<u32>),
+        (0x10c00 => pub ICFGR0: ReadWrite<u32>),
+        (0x10c04 => pub ICFGR1: ReadWrite<u32>),
         (0x10c08 => reserved3),
         (0x10d00 => IGRPMODR0: ReadWrite<u32>),
         (0x10d04 => reserved2),
         (0x10e00 => NSACR: ReadWrite<u32>),
         (0x10e04 => reserved1),
         (0x20000 => @END),
+    }
+}
+
+#[repr(C)]
+pub struct GICCpuInterface;
+
+
+unsafe impl Sync for GicDistributorInner {}
+unsafe impl Sync for GicRedistributorInner {}
+unsafe impl Sync for GICCpuInterface {}
+
+impl GicDistributorInner {
+    bit_imp!(set_priority, IPRIORITYR, 8);
+    bit_imp!(deactivate, ICACTIVER, 1);
+    bit_imp!(enable_intr, ISENABLER, 1);
+    bit_imp!(disable_intr, ICENABLER, 1);
+    bit_imp!(clear_pend, ICPENDR, 1);
+    bit_imp!(set_group, IGROUPR, 1);
+    bit_imp!(set_group_mod, IGRPMODR, 1);
+    bit_imp!(configure_intr, ICFGR, 2);
+
+    pub fn forward(&mut self, id: u32, cpu: u32) {
+        // remove this hardcode
+        let cpumask = (cpu & 0x1) + ((cpu >> 1) << 7);
+        self.IROUTER[id as usize].set(cpumask as u64);
+    }
+    pub fn enable_gic(&mut self) {
+        self.CTLR
+            .set((GICD_CTLR::ENGrp1NS::Enable + GICD_CTLR::ARE_NS::Enable).into())
+    }
+
+    pub fn disable_gic(&mut self) {
+        self.CTLR
+            .set((GICD_CTLR::ENGrp1NS::Disable + GICD_CTLR::ARE_NS::Disable).into())
+    }
+
+    pub fn get_nr_lines(&self) -> u32{
+        32 * (1 + GICD_TYPER::ITLines.read(self.TYPER.get()))
+    }
+}
+
+impl GicRedistributorInner {
+    bit_imp!(set_priority, IPRIORITYR, 8);
+
+    pub fn wake_up_redis(&mut self) {
+        self.WAKER.set(GICR_WAKER::ProcessorSleep::NotinLowState.modify(self.WAKER.get()));
+        while GICR_WAKER::ChildrenAsleep.is_set(self.WAKER.get()) {};
+    }
+}
+
+impl GICCpuInterface {
+    pub fn enable_sre_bit(&self) {
+        if !ICC_SRE_EL1.is_set(ICC_SRE_EL1::SRE) {
+            ICC_SRE_EL1.modify(ICC_SRE_EL1::SRE::SR);
+            isb(NONE);
+            assert!(ICC_SRE_EL1.is_set(ICC_SRE_EL1::SRE));
+        }
     }
 }

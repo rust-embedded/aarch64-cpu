@@ -15,7 +15,16 @@ impl Readable for Reg {
     type T = u64;
     type R = ICC_IGPREN1_EL1::Register;
 
-    sys_coproc_read_raw!(u64, "ICC_IGPREN1_EL1", "x");
+    sys_coproc_read_raw!(u64, "S3_0_C12_C12_7", "x");
 }
+
+
+impl Writeable for Reg {
+    type T = u64;
+    type R = ICC_IGPREN1_EL1::Register;
+
+    sys_coproc_write_raw!(u64, "S3_0_C12_C12_7", "x");
+}
+
 
 pub const ICC_IGPREN1_EL1: Reg = Reg {};
