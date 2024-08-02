@@ -190,15 +190,14 @@ impl From<MMProt> for FieldValue<u64, BlockDescriptor::Register> {
 impl From<MMType> for FieldValue<u64, BlockDescriptor::Register> {
     fn from(value: MMType) -> Self {
         let prot_fields: FieldValue<u64, BlockDescriptor::Register> = value.default_prot().into();
+
         let type_fields = match value {
-            MMType::Device => BlockDescriptor::SH::CLEAR + BlockDescriptor::ATTR.val(0),
-            _ => BlockDescriptor::SH::IS + BlockDescriptor::ATTR.val(4),
+            MMType::Device => BlockDescriptor::SH::CLEAR,
+            MMType::VirtReadWrite => BlockDescriptor::SH::OS,
+            _ => BlockDescriptor::SH::IS + BlockDescriptor::NSE_NG::TRUE,
         };
-        prot_fields
-            + type_fields
-            + BlockDescriptor::NSE_NG::TRUE
-            + BlockDescriptor::VALID::TRUE
-            + BlockDescriptor::AF::TRUE
+
+        prot_fields + type_fields + BlockDescriptor::VALID::TRUE + BlockDescriptor::AF::TRUE
     }
 }
 
@@ -217,6 +216,36 @@ pub enum MMAttrIdx {
 impl From<MMAttrIdx> for FieldValue<u64, BlockDescriptor::Register> {
     fn from(value: MMAttrIdx) -> Self {
         BlockDescriptor::ATTR.val(value as u64)
+    }
+}
+
+#[derive(Copy, Clone)]
+#[allow(non_camel_case_types)]
+pub enum S2MemAttrNoFWB {
+    Device_nGnRnE = 0b0000,
+    Device_nGnRE = 0b0001,
+    Device_nGRE = 0b0010,
+    Device_GRE = 0b0011,
+    // this is only for platform supported MTE_PERM,
+    // if not, setting this will cause UNDEFINED BEHAVIOR.
+    Normal_NTA_Outer_WBC_Inner_WBC_FEAT_MTE_PERM = 0b0100,
+
+    Normal_Outer_NC_Inner_NC = 0b0101,
+    Normal_Outer_NC_Inner_WTC = 0b0110,
+    Normal_Outer_NC_Inner_WBC = 0b0111,
+
+    Normal_Outer_WTC_Inner_NC = 0b1001,
+    Normal_Outer_WTC_Inner_WTC = 0b1010,
+    Normal_Outer_WTC_Inner_WBC = 0b1011,
+
+    Normal_OuterWBC_Inner_NC = 0b1101,
+    Normal_OuterWBC_Inner_WTC = 0b1110,
+    Normal_OuterWBC_Inner_WBC = 0b1111,
+}
+
+impl From<S2MemAttrNoFWB> for FieldValue<u64, BlockDescriptor::Register> {
+    fn from(value: S2MemAttrNoFWB) -> Self {
+        BlockDescriptor::S2ATTR.val(value as u64)
     }
 }
 
