@@ -238,9 +238,9 @@ pub enum S2MemAttrNoFWB {
     Normal_Outer_WTC_Inner_WTC = 0b1010,
     Normal_Outer_WTC_Inner_WBC = 0b1011,
 
-    Normal_OuterWBC_Inner_NC = 0b1101,
-    Normal_OuterWBC_Inner_WTC = 0b1110,
-    Normal_OuterWBC_Inner_WBC = 0b1111,
+    Normal_Outer_WBC_Inner_NC = 0b1101,
+    Normal_Outer_WBC_Inner_WTC = 0b1110,
+    Normal_Outer_WBC_Inner_WBC = 0b1111,
 }
 
 impl From<S2MemAttrNoFWB> for FieldValue<u64, BlockDescriptor::Register> {
