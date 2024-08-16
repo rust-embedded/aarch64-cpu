@@ -112,6 +112,9 @@ impl MMRegion {
             granule,
         }
     }
+    pub fn size(&self) -> u64 {
+        self.mem.1 - self.mem.0
+    }
 }
 
 impl MMType {
