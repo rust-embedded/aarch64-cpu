@@ -91,7 +91,9 @@ register_structs! {
         (0x0f30 => reserved7),
         (0x6000 => IROUTER: [ReadWrite<u64>; (0x8000 - 0x6000) / size_of::<u64>()]), //Interrupt Routing Registers for extended SPI range
         (0x8000 => reserved21),
-        (0xffd0 => ID: [ReadOnly<u32>; (0x10000 - 0xffd0) / size_of::<u32>()]), //Reserved for ID registers
+        (0xffd0 => ID_res1: [ReadOnly<u32>; (0xffe8 - 0xffd0) / size_of::<u32>()]), //Reserved for IMPLEMENTATION registers
+        (0xffe8 => pub PIDR2: ReadOnly<u32>),  //Distributor Peripheral ID2 Register
+        (0xffec => ID_res2: [ReadOnly<u32>; (0x10000 - 0xffec) / size_of::<u32>()]), //Reserved for IMPLEMENTATION registers
         (0x10000 => @END),
     }
 }
