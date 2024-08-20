@@ -59,7 +59,7 @@ register_structs! {
     #[allow(non_snake_case)]
     pub GicDistributorInner {
         (0x0000 => CTLR: ReadWrite<u32>), //Distributor Control Register
-        (0x0004 => TYPER: ReadOnly<u32>), //Interrupt Controller Type Register
+        (0x0004 => pub TYPER: ReadOnly<u32>), //Interrupt Controller Type Register
         (0x0008 => pub IIDR: ReadOnly<u32>),  //Distributor Implementer Identification Register
         (0x000c => TYPER2: ReadOnly<u32>), //Interrupt controller Type Register 2
         (0x0010 => STATUSR: ReadWrite<u32>), //Error Reporting Status Register, optional
@@ -101,9 +101,9 @@ register_structs! {
 register_structs! {
     #[allow(non_snake_case)]
     pub GicRedistributorInner {
-        (0x0000 => CTLR: ReadWrite<u32>),   // Redistributor Control Register
-        (0x0004 => IIDR: ReadOnly<u32>),    // Implementer Identification Register
-        (0x0008 => TYPER: ReadOnly<u64>),   // Redistributor Type Register
+        (0x0000 => pub CTLR: ReadWrite<u32>),   // Redistributor Control Register
+        (0x0004 => pub IIDR: ReadOnly<u32>),    // Implementer Identification Register
+        (0x0008 => pub TYPER: ReadOnly<u64>),   // Redistributor Type Register
         (0x0010 => STATUSR: ReadWrite<u32>),  // Error Reporting Status Register, optional
         (0x0014 => pub WAKER: ReadWrite<u32>),     // Redistributor Wake Register
         (0x0018 => MPAMIDR: ReadOnly<u32>),   // Report maximum PARTID and PMG Register
@@ -121,7 +121,9 @@ register_structs! {
         (0x00b8 => reserved14),
         (0x00c0 => SYNCR: ReadOnly<u64>),    // Redistributor Synchronize Register
         (0x00c8 => reserved13),
-        (0xffd0 => ID: [ReadOnly<u32>; (0x10000 - 0xFFD0) / size_of::<u32>()]),
+        (0xffd0 => ID_res1: [ReadOnly<u32>; (0xffe8 - 0xffd0) / size_of::<u32>()]), //Reserved for IMPLEMENTATION registers
+        (0xffe8 => pub PIDR2: ReadOnly<u32>),  //Distributor Peripheral ID2 Register
+        (0xffec => ID_res2: [ReadOnly<u32>; (0x10000 - 0xffec) / size_of::<u32>()]), //Reserved for IMPLEMENTATION registers
         (0x10000 => reserved12),
         (0x10080 => pub IGROUPR0: ReadWrite<u32>), //SGI_base frame, all below
         (0x10084 => reserved11),

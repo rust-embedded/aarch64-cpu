@@ -41,3 +41,11 @@ register_bitfields! {u32,
         IMPDEF OFFSET(0) NUMBITS(1) [],
     ],
 }
+register_bitfields! {u64,
+    pub GICR_TYPER [ 
+        Last OFFSET(4) NUMBITS(1) [
+            NotLast = 0b0,
+            Last = 0b1,
+        ]
+    ]
+}
