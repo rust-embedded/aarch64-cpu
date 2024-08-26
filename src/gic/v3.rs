@@ -58,21 +58,21 @@ macro_rules! bit_imp {
 register_structs! {
     #[allow(non_snake_case)]
     pub GicDistributorInner {
-        (0x0000 => CTLR: ReadWrite<u32>), //Distributor Control Register
+        (0x0000 => pub CTLR: ReadWrite<u32>), //Distributor Control Register
         (0x0004 => pub TYPER: ReadOnly<u32>), //Interrupt Controller Type Register
         (0x0008 => pub IIDR: ReadOnly<u32>),  //Distributor Implementer Identification Register
-        (0x000c => TYPER2: ReadOnly<u32>), //Interrupt controller Type Register 2
-        (0x0010 => STATUSR: ReadWrite<u32>), //Error Reporting Status Register, optional
+        (0x000c => pub TYPER2: ReadOnly<u32>), //Interrupt controller Type Register 2
+        (0x0010 => pub STATUSR: ReadWrite<u32>), //Error Reporting Status Register, optional
         (0x0014 => reserved0),
-        (0x0040 => SETSPI_NSR: WriteOnly<u32>), //Set SPI Register
+        (0x0040 => pub SETSPI_NSR: WriteOnly<u32>), //Set SPI Register
         (0x0044 => reserved1),
-        (0x0048 => CLRSPI_NSR: WriteOnly<u32>), //Clear SPI Register
+        (0x0048 => pub CLRSPI_NSR: WriteOnly<u32>), //Clear SPI Register
         (0x004c => reserved2),
-        (0x0050 => SETSPI_SR: WriteOnly<u32>), //Set SPI, Secure Register
+        (0x0050 => pub SETSPI_SR: WriteOnly<u32>), //Set SPI, Secure Register
         (0x0054 => reserved3),
-        (0x0058 => CLRSPI_SR: WriteOnly<u32>), //Clear SPI, Secure Register
+        (0x0058 => pub CLRSPI_SR: WriteOnly<u32>), //Clear SPI, Secure Register
         (0x005c => reserved4),
-        (0x0080 => IGROUPR: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Group Registers
+        (0x0080 => pub GROUPR: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Group Registers
         (0x0100 => pub ISENABLER: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Set-Enable Registers
         (0x0180 => pub ICENABLER: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Clear-Enable Registers
         (0x0200 => pub ISPENDR: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Set-Pending Registers
@@ -86,10 +86,10 @@ register_structs! {
         (0x0e00 => pub NSACR: [ReadWrite<u32>; GIC_SEC_REGS_NUM]), //Non-secure Access Control Registers
         (0x0f00 => pub SGIR: WriteOnly<u32>),  //Software Generated Interrupt Register
         (0x0f04 => reserved6),
-        (0x0f10 => CPENDSGIR: [ReadWrite<u32>; GIC_SGI_REGS_NUM]), //SGI Clear-Pending Registers
-        (0x0f20 => SPENDSGIR: [ReadWrite<u32>; GIC_SGI_REGS_NUM]), //SGI Set-Pending Registers
+        (0x0f10 => pub CPENDSGIR: [ReadWrite<u32>; GIC_SGI_REGS_NUM]), //SGI Clear-Pending Registers
+        (0x0f20 => pub SPENDSGIR: [ReadWrite<u32>; GIC_SGI_REGS_NUM]), //SGI Set-Pending Registers
         (0x0f30 => reserved7),
-        (0x6000 => IROUTER: [ReadWrite<u64>; (0x8000 - 0x6000) / size_of::<u64>()]), //Interrupt Routing Registers for extended SPI range
+        (0x6000 => pub IROUTER: [ReadWrite<u64>; (0x8000 - 0x6000) / size_of::<u64>()]), //Interrupt Routing Registers for extended SPI range
         (0x8000 => reserved21),
         (0xffd0 => ID_res1: [ReadOnly<u32>; (0xffe8 - 0xffd0) / size_of::<u32>()]), //Reserved for IMPLEMENTATION registers
         (0xffe8 => pub PIDR2: ReadOnly<u32>),  //Distributor Peripheral ID2 Register
