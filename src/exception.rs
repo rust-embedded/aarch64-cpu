@@ -1,5 +1,6 @@
 #[derive(Copy, Clone)]
 pub enum ExceptionReason {
+    HVC64 = 0b010110,
     DataAbortLowerEl = 0b100100,
     DataAbortCurrentEl = 0b100101,
     Unimplemented = 0xff,
