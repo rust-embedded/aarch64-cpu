@@ -72,7 +72,7 @@ register_structs! {
         (0x0054 => reserved3),
         (0x0058 => pub CLRSPI_SR: WriteOnly<u32>), //Clear SPI, Secure Register
         (0x005c => reserved4),
-        (0x0080 => pub GROUPR: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Group Registers
+        (0x0080 => pub IGROUPR: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Group Registers
         (0x0100 => pub ISENABLER: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Set-Enable Registers
         (0x0180 => pub ICENABLER: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Clear-Enable Registers
         (0x0200 => pub ISPENDR: [ReadWrite<u32>; GIC_INT_REGS_NUM]), //Interrupt Set-Pending Registers
