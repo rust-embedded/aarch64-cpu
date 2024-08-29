@@ -104,22 +104,22 @@ register_structs! {
         (0x0000 => pub CTLR: ReadWrite<u32>),   // Redistributor Control Register
         (0x0004 => pub IIDR: ReadOnly<u32>),    // Implementer Identification Register
         (0x0008 => pub TYPER: ReadOnly<u64>),   // Redistributor Type Register
-        (0x0010 => STATUSR: ReadWrite<u32>),  // Error Reporting Status Register, optional
+        (0x0010 => pub STATUSR: ReadWrite<u32>),  // Error Reporting Status Register, optional
         (0x0014 => pub WAKER: ReadWrite<u32>),     // Redistributor Wake Register
-        (0x0018 => MPAMIDR: ReadOnly<u32>),   // Report maximum PARTID and PMG Register
-        (0x001c => PARTIDR: ReadWrite<u32>),   // Set PARTID and PMG Register
+        (0x0018 => pub MPAMIDR: ReadOnly<u32>),   // Report maximum PARTID and PMG Register
+        (0x001c => pub PARTIDR: ReadWrite<u32>),   // Set PARTID and PMG Register
         (0x0020 => reserved18),
-        (0x0040 => SETLPIR: WriteOnly<u64>),    // Set LPI Pending Register
-        (0x0048 => CLRLPIR: WriteOnly<u64>),  // Clear LPI Pending Register
+        (0x0040 => pub SETLPIR: WriteOnly<u64>),    // Set LPI Pending Register
+        (0x0048 => pub CLRLPIR: WriteOnly<u64>),  // Clear LPI Pending Register
         (0x0050 => reserved17),
-        (0x0070 => PROPBASER: ReadWrite<u64>),  //Redistributor Properties Base Address Register
-        (0x0078 => PEDNBASER: ReadWrite<u64>),    //Redistributor LPI Pending Table Base Address Register
+        (0x0070 => pub PROPBASER: ReadWrite<u64>),  //Redistributor Properties Base Address Register
+        (0x0078 => pub PEDNBASER: ReadWrite<u64>),    //Redistributor LPI Pending Table Base Address Register
         (0x0080 => reserved16),
-        (0x00a0 => INVLPIR: WriteOnly<u64>),  // Redistributor Invalidate LPI Register
+        (0x00a0 => pub INVLPIR: WriteOnly<u64>),  // Redistributor Invalidate LPI Register
         (0x00a8 => reserved15),
-        (0x00b0 => INVALLR: WriteOnly<u64>),    // Redistributor Invalidate All Register
+        (0x00b0 => pub INVALLR: WriteOnly<u64>),    // Redistributor Invalidate All Register
         (0x00b8 => reserved14),
-        (0x00c0 => SYNCR: ReadOnly<u64>),    // Redistributor Synchronize Register
+        (0x00c0 => pub SYNCR: ReadOnly<u64>),    // Redistributor Synchronize Register
         (0x00c8 => reserved13),
         (0xffd0 => ID_res1: [ReadOnly<u32>; (0xffe8 - 0xffd0) / size_of::<u32>()]), //Reserved for IMPLEMENTATION registers
         (0xffe8 => pub PIDR2: ReadOnly<u32>),  //Distributor Peripheral ID2 Register
@@ -139,14 +139,14 @@ register_structs! {
         (0x10304 => reserved6),
         (0x10380 => pub ICACTIVER0: ReadWrite<u32>),
         (0x10384 => reserved5),
-        (0x10400 => IPRIORITYR: [ReadWrite<u32>;8]),
+        (0x10400 => pub IPRIORITYR: [ReadWrite<u32>;8]),
         (0x10420 => reserved4),
         (0x10c00 => pub ICFGR0: ReadWrite<u32>),
         (0x10c04 => pub ICFGR1: ReadWrite<u32>),
         (0x10c08 => reserved3),
-        (0x10d00 => IGRPMODR0: ReadWrite<u32>),
+        (0x10d00 => pub IGRPMODR0: ReadWrite<u32>),
         (0x10d04 => reserved2),
-        (0x10e00 => NSACR: ReadWrite<u32>),
+        (0x10e00 => pub NSACR: ReadWrite<u32>),
         (0x10e04 => reserved1),
         (0x20000 => @END),
     }
@@ -175,8 +175,10 @@ impl GicDistributorInner {
         self.IROUTER[id as usize].set(cpumask as u64);
     }
     pub fn enable_gic(&mut self) {
-        self.CTLR
-            .set((GICD_CTLR::ENGrp1NS::Enable + GICD_CTLR::ARE_NS::Enable).into())
+        self.CTLR.set(
+            (GICD_CTLR::ENGrp1NS::Enable + GICD_CTLR::ARE_NS::Enable + GICD_CTLR::ENGrp0::Enable)
+                .into(),
+        )
     }
 
     pub fn disable_gic(&mut self) {
