@@ -111,6 +111,8 @@ register_bitfields! {u64,
         /// 0b0101 | EL1h
         /// 0b1000 | EL2t
         /// 0b1001 | EL2h
+        /// 0b1100 | EL3t
+        /// 0b1101 | EL3h
         ///
         /// Other values are reserved, and returning to an Exception level that is using AArch64
         /// with a reserved value in this field is treated as an illegal exception return.
@@ -126,7 +128,9 @@ register_bitfields! {u64,
             EL1t = 0b0100,
             EL1h = 0b0101,
             EL2t = 0b1000,
-            EL2h = 0b1001
+            EL2h = 0b1001,
+            EL3t = 0b1100,
+            EL3h = 0b1101
         ]
     ]
 }
