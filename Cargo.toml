@@ -16,7 +16,7 @@ exclude = [
         ".rustfmt.toml",
         ".vscode",
         ".editorconfig",
-        "Makefile"
+    "Makefile",
 ]
 
 [dependencies]
