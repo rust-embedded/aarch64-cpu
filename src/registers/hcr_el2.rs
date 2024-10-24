@@ -66,6 +66,21 @@ register_bitfields! {u64,
             EnableTrapSyncExtAbortsToEl2 = 1,
         ],
 
+        /// Trap accesses of Error Record registers. Enables a trap to EL2 on accesses of
+        /// Error Record registers.
+        ///
+        /// 0 Accesses of the specified Error Record registers are not trapped by this mechanism.
+        /// 1 Accesses of the specified Error Record registers at EL1 are trapped to EL2,
+        ///   unless the instruction generates a higher priority exception.
+        TERR  OFFSET(36) NUMBITS(1) [],
+
+        /// Trap LOR registers. Traps Non-secure EL1 accesses to LORSA_EL1, LOREA_EL1, LORN_EL1,
+        /// LORC_EL1, and LORID_EL1 registers to EL2.
+        ///
+        /// 0 This control does not cause any instructions to be trapped.
+        /// 1 Non-secure EL1 accesses to the LOR registers are trapped to EL2.
+        TLOR  OFFSET(35) NUMBITS(1) [],
+
         /// EL2 Host. Enables a configuration where a Host Operating System is running in EL2, and
         /// the Host Operating System's applications are running in EL0.
         E2H   OFFSET(34) NUMBITS(1) [
@@ -127,6 +142,41 @@ register_bitfields! {u64,
             DisableTrapGeneralExceptionsToEl2 = 0,
             EnableTrapGeneralExceptionsToEl2 = 1,
         ],
+
+        /// Trap data or unified cache maintenance instructions that operate by Set/Way.
+        /// Traps execution of those cache maintenance instructions at EL1 to EL2, when
+        /// EL2 is enabled in the current Security state.
+        ///
+        /// 0 This control does not cause any instructions to be trapped.
+        /// 1 Execution of the specified instructions is trapped to EL2, when EL2 is enabled
+        /// in the current Security state.
+        TSW   OFFSET(22) NUMBITS(1) [],
+
+        /// Trap Auxiliary Control Registers. Traps EL1 accesses to the Auxiliary Control Registers
+        /// to EL2, when EL2 is enabled in the current Security state
+        ///
+        /// 0 This control does not cause any instructions to be trapped.
+        /// 1 EL1 accesses to the specified registers are trapped to EL2, when EL2 is enabled in the
+        ///   current Security state.
+        TACR  OFFSET(21) NUMBITS(1) [],
+
+        /// Trap IMPLEMENTATION DEFINED functionality. Traps EL1 accesses to the encodings reserved
+        /// for IMPLEMENTATION DEFINED functionality to EL2, when EL2 is enabled in the current
+        /// Security state
+        ///
+        /// 0 This control does not cause any instructions to be trapped.
+        /// 1 EL1 accesses to or execution of the specified encodings reserved for IMPLEMENTATION
+        /// DEFINED functionality are trapped to EL2, when EL2 is enabled in the current Security
+        /// state.
+        TIDCP OFFSET(20) NUMBITS(1) [],
+
+        /// Trap ID group 3. Traps EL1 reads of group 3 ID registers to EL2, when EL2 is enabled
+        /// in the current Security state.
+        ///
+        /// 0 This control does not cause any instructions to be trapped.
+        /// 1 The specified EL1 read accesses to ID group 3 registers are trapped to EL2, when EL2
+        /// is enabled in the current Security state.
+        TID3  OFFSET(18) NUMBITS(1) [],
 
         /// Trap SMC instructions. Traps EL1 execution of SMC instructions to EL2, when EL2 is
         /// enabled in the current Security state.
@@ -195,6 +245,23 @@ register_bitfields! {u64,
         /// When ARMv8.1-VHE is implemented, and the value of HCR_EL2.{E2H, TGE} is {1, 1}, this
         /// field behaves as 0 for all purposes other than a direct read of the value of this field.
         DC   OFFSET(12) NUMBITS(1) [],
+
+        /// Barrier Shareability upgrade. This field determines the minimum shareability domain that
+        /// is applied to any barrier instruction executed from EL1 or EL0.
+        BSU  OFFSET(10) NUMBITS(2) [
+            NoEffect = 0b00,
+            InnerShareable = 0b01,
+            OuterShareable = 0b10,
+            FullSystem = 0b11
+        ],
+
+        /// Force broadcast. Causes the following instructions to be broadcast within the Inner
+        /// Shareable domain when executed from EL1.
+        ///
+        /// 0 This field has no effect on the operation of the specified instructions.
+        /// 1 When one of the specified instruction is executed at EL1, the instruction is broadcast
+        /// within the Inner Shareable shareability domain.
+        FB    OFFSET(9) NUMBITS(1) [],
 
         /// Physical SError interrupt routing.
         ///   - If bit is 1 when executing at any Exception level, and EL2 is enabled in the current

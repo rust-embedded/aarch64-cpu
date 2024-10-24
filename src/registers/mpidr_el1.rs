@@ -17,6 +17,9 @@ register_bitfields! {u64,
         /// Affinity level 3. See the description of Aff0 for more information.
         Aff3 OFFSET(32) NUMBITS(8) [],
 
+        /// Reserved, RES1.
+        RES1 OFFSET(31) NUMBITS(1) [],
+
         /// Indicates a Uniprocessor system, as distinct from PE 0 in a multiprocessor system.
         U OFFSET(30) NUMBITS(1) [
             MultiprocessorSystem = 0b0,
