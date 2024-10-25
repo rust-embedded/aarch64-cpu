@@ -17,7 +17,7 @@ register_bitfields! {u64,
         NS   OFFSET(63) NUMBITS(1) [],
 
         /// Faulting Intermediate Physical Address.
-        FIPA OFFSET(4) NUMBITS(40) []
+        FIPA OFFSET(4) NUMBITS(48) []
     ]
 }
 
