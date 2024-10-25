@@ -9,8 +9,8 @@
 //! Counter-timer Kernel Control register - EL1
 //!
 //! When FEAT_VHE is implemented and HCR_EL2.{E2H, TGE} is {1, 1}, this register does not
-//! cause any event stream from the virtual counter to be generated, and does not control access to the
-//! counters and timers. The access to counters and timers at EL0 is controlled by CNTHCTL_EL2.
+//! cause any event stream from the virtual counter to be generated, and does not control access to
+//! the counters and timers. The access to counters and timers at EL0 is controlled by CNTHCTL_EL2.
 //!
 //! When FEAT_VHE is not implemented, or when HCR_EL2.{E2H, TGE} is not {1, 1}, this register
 //! controls the generation of an event stream from the virtual counter, and access from EL0 to the

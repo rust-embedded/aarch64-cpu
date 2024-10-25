@@ -77,6 +77,12 @@ register_bitfields! {u64,
             Cacheable = 1
         ],
 
+        /// When FEAT_ExS is implemented Exception exit is a context synchronization event.
+        EOS OFFSET(11) NUMBITS(1) [
+            IsNotSynch = 0,
+            IsSynch = 1
+        ],
+
         /// SP Alignment check enable.
         ///
         /// When set to 1, if a load or store instruction executed at EL2 uses the SP
