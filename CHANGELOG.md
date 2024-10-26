@@ -13,6 +13,29 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 ### Removed
 
+## [v10.0.0] - 2024-10-26
+
+### Breaking
+
+Major version bump due to tock-registers dependency - updated to 0.9 (#26)
+
+### Added
+
+- Add automatic release pipeline (#30)
+- Re-export `tock-registers::interfaces::ReadWriteable` (#23)
+
+- Add register `CNTHP_CTL_EL2` (#24) - "Control register for the EL2 physical timer"
+- Add `EL3h` and `EL3t` fields to register `SPSR_EL3` (#28)
+- Add registers `CNTPOFF_EL2`, `CPTR_EL2`, `HPFAR_EL2`, `ICC_CTLR_EL1`, `ICC_SRE_EL2`, `ICH_AP0R_EL2`, `ICH_AP1R_EL2`, `ICH_HCR_EL2`, `ICH_LR_EL2`, `ICH_MISR_EL2`, `ICH_VMCR_EL2`, `ICH_VTR_EL2`, `ID_AA64AFR0_EL1`, `ID_AA64AFR1_EL1`, `ID_AA64DFR0_EL1`, `ID_AA64DFR1_EL1`, `ID_AA64ISAR1_EL1`, `ID_AA64PFR0_EL1`, `ID_AA64PFR1_EL1` (#27)
+- Add fields `TERR`, `TLOR`, `TSW`, `TACR`, `TIDCP`, `TID3`, `BSU`, `FB` to register `HCR_EL2` (#27)
+- Add fields to register `ICH_LR0_EL2` (#27)
+- Add field `EOS` to register `SCTLR_EL2` (#27)
+- Add fields `NSA` and `SL0` to register `VTCR_EL2` (#27)
+
+### Fixed
+
+- Fix writing ESL_EL1 with register bitfield instead of u64 (#27)
+
 ## [v9.4.0] - 2023-09-19
 
 Minor version bump due to re-export of tock-registers dependency (#20)
