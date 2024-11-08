@@ -83,6 +83,24 @@ register_bitfields! {u64,
             IsSynch = 1
         ],
 
+        /// Non-aligned access. This bit controls generation of Alignment faults under certain
+        /// conditions at EL2, and, when EL2 is enabled in the current Security state and
+        /// HCR_EL2.{E2H, TGE} == {1, 1}, EL0.
+        NAA OFFSET(6) NUMBITS(1) [
+            Allowed = 1,
+            NotAllowed = 0
+        ],
+
+        /// SP Alignment check enable for EL0.
+        ///
+        /// When set to 1, if a load or store instruction executed at EL0 uses the SP
+        /// as the base address and the SP is not aligned to a 16-byte boundary,
+        /// then a SP alignment fault exception is generated.
+        SA0 OFFSET(4) NUMBITS(1) [
+            Disable = 0,
+            Enable = 1
+        ],
+
         /// SP Alignment check enable.
         ///
         /// When set to 1, if a load or store instruction executed at EL2 uses the SP
