@@ -20,7 +20,31 @@ register_bitfields! {u64,
         PREbits OFFSET(26) NUMBITS(3) [],
 
         /// The number of virtual interrupt identifier bits supported.
-        IDbits OFFSET(23) NUMBITS(3) [],
+        IDbits OFFSET(23) NUMBITS(3) [
+            BITS_16 = 0b000,
+            BITS_24 = 0b001
+        ],
+
+        SEIS  OFFSET(22) NUMBITS(1) [
+            Enable = 0b1,
+            Disable = 0b0
+        ],
+        A3V OFFSET(21) NUMBITS(1) [
+            Zero = 0b0,
+            NonZero = 0b1
+        ],
+        NV4 OFFSET(20) NUMBITS(1) [
+            Enable = 0b1,
+            Disable = 0b0
+        ],
+        TDS OFFSET(19) NUMBITS(1) [
+            Enable = 0b1,
+            Disable = 0b0,
+        ],
+        DVIM OFFSET(18) NUMBITS(1) [
+            Enable = 0b1,
+            Disable = 0b0,
+        ],
 
         /// List Registers. Indicates the number of List registers implemented, minus one.
         ListRegs OFFSET(0) NUMBITS(5) [],

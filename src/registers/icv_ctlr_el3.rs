@@ -1,21 +1,8 @@
-// SPDX-License-Identifier: Apache-2.0 OR MIT
-//
-// Copyright (c) 2024 by the author(s)
-//
-// Author(s):
-//   - Sangwan Kwon <sangwan.kwon@samsung.com>
-
-//! Interrupt Controller Control Register - EL1
-//!
-//! Controls aspects of the behavior of the GIC CPU interface and provides information
-//! about the features implemented.
-
-use tock_registers::{interfaces::Readable, register_bitfields};
+use tock_registers::{interfaces::*, register_bitfields};
 
 register_bitfields! {u64,
-    pub ICC_CTLR_EL1 [
-        /// Extended INTID range (read-only).
-        ExtRange OFFSET(19) NUMBITS(1) [
+    pub ICV_CTLR_EL3 [
+        Ext  OFFSET(19) NUMBITS(1) [
             WideUnsupported = 0b0, // support int_id 1024 ... 8191
             WideSupported = 0b1,
         ],
@@ -40,11 +27,27 @@ register_bitfields! {u64,
             Enable = 0b1,
             Disable = 0b0,
         ],
-        EOI  OFFSET(1) NUMBITS(1) [
+        RM  OFFSET(5) NUMBITS(1) [
+            Enable = 0b1,
+            Disable = 0b0
+        ],
+        EOI_EL1S   OFFSET(4) NUMBITS(1) [
             EOIR_DropAndDeactivate = 0b0,
             EOIR_Drop_Dir_Deactivate = 0b1
         ],
-        CBPR OFFSET(0) NUMBITS(1) [
+        EOI_EL1NS  OFFSET(3) NUMBITS(1) [
+            EOIR_DropAndDeactivate = 0b0,
+            EOIR_Drop_Dir_Deactivate = 0b1
+        ],
+        EOI_EL3 OFFSET(2) NUMBITS(1) [
+            EOIR_DropAndDeactivate = 0b0,
+            EOIR_Drop_Dir_Deactivate = 0b1
+        ],
+        CBPR_EL1NS OFFSET(1) NUMBITS(1) [
+            Private = 0b0,
+            Shared = 0b1,
+        ],
+        CBPR_EL1S OFFSET(0) NUMBITS(1) [
             Private = 0b0,
             Shared = 0b1,
         ]
@@ -55,16 +58,16 @@ pub struct Reg;
 
 impl Readable for Reg {
     type T = u64;
-    type R = ICC_CTLR_EL1::Register;
+    type R = ICV_CTLR_EL3::Register;
 
-    sys_coproc_read_raw!(u64, "ICC_CTLR_EL1", "x");
+    sys_coproc_read_raw!(u64, "ICV_CTLR_EL3", "x");
 }
 
 impl Writeable for Reg {
     type T = u64;
-    type R = ICC_CTLR_EL1::Register;
+    type R = ICV_CTLR_EL3::Register;
 
-    sys_coproc_write_raw!(u64, "ICC_CTLR_EL1", "x");
+    sys_coproc_write_raw!(u64, "ICV_CTLR_EL3", "x");
 }
 
-pub const ICC_CTLR_EL1: Reg = Reg {};
+pub const ICV_CTLR_EL3: Reg = Reg {};

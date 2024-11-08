@@ -1,0 +1,34 @@
+use tock_registers::register_bitfields;
+
+register_bitfields! {u64,
+    pub ICC_AP1R_EL1 [
+        FIELDS OFFSET(0) NUMBITS(32) []
+    ]
+}
+
+macro_rules! ap {
+    ($reg: ident, $asm_name: tt) => {
+        #[allow(non_snake_case)]
+        mod $reg {
+            use tock_registers::interfaces::*;
+            use super::*;
+            pub struct Reg;
+            impl Writeable for Reg {
+                type T = u64;
+                type R = ICC_AP1R_EL1::Register;
+                sys_coproc_write_raw!(u64, $asm_name, "x");
+            }
+            impl Readable for Reg {
+                type T = u64;
+                type R = ICC_AP1R_EL1::Register;
+                sys_coproc_read_raw!(u64, $asm_name, "x");
+            }
+        }
+        pub const $reg: $reg::Reg = $reg::Reg {};
+    };
+}
+
+ap!(ICC_AP1R0_EL1, "ICC_AP0R0_EL1");
+ap!(ICC_AP1R1_EL1, "ICC_AP0R1_EL1");
+ap!(ICC_AP1R2_EL1, "ICC_AP0R2_EL1");
+ap!(ICC_AP1R3_EL1, "ICC_AP0R3_EL1");

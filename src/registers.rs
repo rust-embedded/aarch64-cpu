@@ -133,9 +133,61 @@ mod vbar_el3;
 mod vtcr_el2;
 mod vttbr_el2;
 mod vmpidr_el2;
+
+mod icc_ap0r_el1;
+mod icc_ap1r_el1;
+mod icc_asgi1r_el1;
+mod icc_bpr0_el1;
+mod icc_bpr1_el1;
+mod icc_ctlr_el1;
+mod icc_ctlr_el3;
+mod icc_dir_el1;
+mod icc_eoir0_el1;
+mod icc_eoir1_el1;
+mod icc_hppir0_el1;
+mod icc_hppir1_el1;
+mod icc_iar0_el1;
+mod icc_iar1_el1;
+mod icc_igpren0_el1;
+mod icc_igpren1_el1;
+mod icc_igpren1_el3;
+mod icc_nmiar1_el1;
+mod icc_pmr_el1;
+mod icc_rpr_el1;
+mod icc_sgi0r_el1;
+mod icc_sgi1r_el1;
 mod icc_sre_el1;
 mod icc_sre_el2;
 mod icc_sre_el3;
+
+mod ich_hcr_el2;
+mod ich_lr_el2;
+mod ich_vtr_el2;
+mod ich_eisr_el2;
+mod ich_misr_el2;
+mod ich_vmcr_el2;
+mod ich_elrsr_el2;
+
+mod icv_ap0r_el1;
+mod icv_ap1r_el1;
+mod icv_asgi1r_el1;
+mod icv_bpr0_el1;
+mod icv_bpr1_el1;
+mod icv_ctlr_el1;
+mod icv_ctlr_el3;
+mod icv_dir_el1;
+mod icv_eoir0_el1;
+mod icv_eoir1_el1;
+mod icv_hppir0_el1;
+mod icv_hppir1_el1;
+mod icv_iar0_el1;
+mod icv_iar1_el1;
+mod icv_igpren0_el1;
+mod icv_igpren1_el1;
+mod icv_igpren1_el3;
+mod icv_nmiar1_el1;
+mod icv_pmr_el1;
+mod icv_rpr_el1;
 
 pub use actlr_el1::ACTLR_EL1;
 pub use actlr_el2::ACTLR_EL2;
@@ -266,12 +318,65 @@ pub use vtcr_el2::VTCR_EL2;
 pub use vttbr_el2::VTTBR_EL2;
 pub use vmpidr_el2::VMPIDR_EL2;
 
+pub use icc_ap0r_el1::*;
+pub use icc_ap1r_el1::*;
+pub use icc_asgi1r_el1::ICC_ASGI1R_EL1;
+pub use icc_bpr0_el1::ICC_BPR0_EL1;
+pub use icc_bpr1_el1::ICC_BPR1_EL1;
+pub use icc_ctlr_el1::ICC_CTLR_EL1;
+pub use icc_ctlr_el3::ICC_CTLR_EL3;
+pub use icc_eoir1_el1::ICC_EOIR1_EL1;
+pub use icc_eoir0_el1::ICC_EOIR0_EL1;
+pub use icc_hppir0_el1::ICC_HPPIR0_EL1;
+pub use icc_hppir1_el1::ICC_HPPIR1_EL1;
+pub use icc_iar0_el1::ICC_IAR0_EL1;
+pub use icc_iar1_el1::ICC_IAR1_EL1;
+pub use icc_igpren0_el1::ICC_IGPREN0_EL1;
+pub use icc_igpren1_el1::ICC_IGPREN1_EL1;
+pub use icc_igpren1_el3::ICC_IGPREN1_EL3;
+pub use icc_sre_el1::ICC_SRE_EL1;
+pub use icc_sre_el2::ICC_SRE_EL2;
+pub use icc_sre_el3::ICC_SRE_EL3;
+pub use icc_nmiar1_el1::ICC_NMIAR1_EL1;
+pub use icc_pmr_el1::ICC_PMR_EL1;
+pub use icc_rpr_el1::ICC_RPR_EL1;
+pub use icc_sgi0r_el1::ICC_SGI0R_EL1;
+pub use icc_sgi1r_el1::ICC_SGI1R_EL1;
+
+pub use ich_eisr_el2::ICH_EISR_EL2;
+pub use ich_elrsr_el2::ICH_ELRSR_EL2;
+pub use ich_hcr_el2::ICH_HCR_EL2;
+pub use ich_lr_el2::*;
+pub use ich_misr_el2::ICH_MISR_EL2;
+pub use ich_vmcr_el2::ICH_VMCR_EL2;
+pub use ich_vtr_el2::ICH_VTR_EL2;
+
+pub use icv_ap0r_el1::*;
+pub use icv_ap1r_el1::*;
+pub use icv_asgi1r_el1::ICV_ASGI1R_EL1;
+pub use icv_bpr0_el1::ICV_BPR0_EL1;
+pub use icv_bpr1_el1::ICV_BPR1_EL1;
+pub use icv_ctlr_el1::ICV_CTLR_EL1;
+pub use icv_ctlr_el3::ICV_CTLR_EL3;
+pub use icv_eoir1_el1::ICV_EOIR1_EL1;
+pub use icv_eoir0_el1::ICV_EOIR0_EL1;
+pub use icv_hppir0_el1::ICV_HPPIR0_EL1;
+pub use icv_hppir1_el1::ICV_HPPIR1_EL1;
+pub use icv_iar0_el1::ICV_IAR0_EL1;
+pub use icv_iar1_el1::ICV_IAR1_EL1;
+pub use icv_igpren0_el1::ICV_IGPREN0_EL1;
+pub use icv_igpren1_el1::ICV_IGPREN1_EL1;
+pub use icv_igpren1_el3::ICV_IGPREN1_EL3;
+pub use icv_nmiar1_el1::ICV_NMIAR1_EL1;
+pub use icv_pmr_el1::ICV_PMR_EL1;
+pub use icv_rpr_el1::ICV_RPR_EL1;
+
 pub trait TTBR {}
 
-impl TTBR for vttbr_el2::Reg{}
-impl TTBR for ttbr0_el1::Reg{}
-impl TTBR for ttbr1_el1::Reg{}
-impl TTBR for ttbr0_el2::Reg{}
+impl TTBR for vttbr_el2::Reg {}
+impl TTBR for ttbr0_el1::Reg {}
+impl TTBR for ttbr1_el1::Reg {}
+impl TTBR for ttbr0_el2::Reg {}
 
 #[doc(inline)]
 pub use tock_registers::interfaces::{ReadWriteable, Readable, Writeable};
