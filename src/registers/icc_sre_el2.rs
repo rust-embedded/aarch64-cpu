@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 //
-// Copyright (c) 2024 by the author(s)
+// Copyright (c) 2018-2024 by the author(s)
 //
 // Author(s):
 //   - Sangwan Kwon <sangwan.kwon@samsung.com>
+//   - Yiyang Wu <toolmanp@outlook.com>
 
 //! Interrupt Controller System Register Enable Register - EL2
 //!
@@ -23,21 +24,30 @@ register_bitfields! {u64,
         ///   EL1 accesses to ICC_SRE_EL1 trap to EL2.
         ///
         /// 1 EL1 accesses to ICC_SRE_EL1 do not trap to EL2.
-        ENABLE OFFSET(3) NUMBITS(1) [],
+        ENABLE OFFSET(3) NUMBITS(1) [
+            Enabled = 1,
+            Disabled = 0,
+        ],
 
         /// Disable IRQ bypass.
         ///
         /// 0 IRQ bypass enabled.
         ///
         /// 1 IRQ bypass disabled.
-        DIB    OFFSET(2) NUMBITS(1) [],
+        DIB    OFFSET(2) NUMBITS(1) [
+            Enabled = 1,
+            Disabled = 0,
+        ],
 
         /// Disable FIQ bypass.
         ///
         /// 0 FIQ bypass enabled.
         ///
         /// 1 FIQ bypass disabled.
-        DFB    OFFSET(1) NUMBITS(1) [],
+        DFB    OFFSET(1) NUMBITS(1) [
+            Enabled = 1,
+            Disabled = 0,
+        ],
 
         /// System Register Enable.
         ///
@@ -46,7 +56,10 @@ register_bitfields! {u64,
         ///
         /// 1 The System register interface to the ICH_* registers and the EL1 and EL2
         /// ICC_* registers is enabled for EL2.
-        SRE    OFFSET(0) NUMBITS(1) [],
+        SRE    OFFSET(0) NUMBITS(1) [
+            SR = 1,
+            Memory = 0,
+        ]
     ]
 }
 

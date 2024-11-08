@@ -9,27 +9,30 @@
 
 mod sealed {
     pub trait Dmb {
-        fn __dmb(&self);
+        fn dmb(&self);
     }
 
     pub trait Dsb {
-        fn __dsb(&self);
+        fn dsb(&self);
     }
 
     pub trait Isb {
-        fn __isb(&self);
+        fn isb(&self);
     }
 }
 
 macro_rules! dmb_dsb {
-    ($A:ident) => {
-        impl sealed::Dmb for $A {
+    ($A:ident, $T: ident) => {
+        pub struct $T;
+        pub const $A: $T = $T {};
+
+        impl sealed::Dmb for $T {
             #[inline(always)]
-            fn __dmb(&self) {
+            fn dmb(&self) {
                 match () {
                     #[cfg(target_arch = "aarch64")]
                     () => unsafe {
-                        core::arch::asm!(concat!("DMB ", stringify!($A)), options(nostack))
+                        core::arch::asm!(concat!("dmb ", stringify!($A)), options(nostack))
                     },
 
                     #[cfg(not(target_arch = "aarch64"))]
@@ -37,13 +40,13 @@ macro_rules! dmb_dsb {
                 }
             }
         }
-        impl sealed::Dsb for $A {
+        impl sealed::Dsb for $T {
             #[inline(always)]
-            fn __dsb(&self) {
+            fn dsb(&self) {
                 match () {
                     #[cfg(target_arch = "aarch64")]
                     () => unsafe {
-                        core::arch::asm!(concat!("DSB ", stringify!($A)), options(nostack))
+                        core::arch::asm!(concat!("dsb ", stringify!($A)), options(nostack))
                     },
 
                     #[cfg(not(target_arch = "aarch64"))]
@@ -54,38 +57,25 @@ macro_rules! dmb_dsb {
     };
 }
 
-pub struct SY;
-pub struct ST;
-pub struct LD;
-pub struct ISH;
-pub struct ISHST;
-pub struct ISHLD;
-pub struct NSH;
-pub struct NSHST;
-pub struct NSHLD;
-pub struct OSH;
-pub struct OSHST;
-pub struct OSHLD;
+dmb_dsb!(SY, Sy);
+dmb_dsb!(ST, St);
+dmb_dsb!(LD, Ld);
+dmb_dsb!(ISH, Ish);
+dmb_dsb!(ISHST, Ishst);
+dmb_dsb!(ISHLD, Ishld);
+dmb_dsb!(NSH, Nsh);
+dmb_dsb!(NSHST, Nshst);
+dmb_dsb!(NSHLD, Nshld);
+dmb_dsb!(OSH, Osh);
+dmb_dsb!(OSHST, Oshst);
+dmb_dsb!(OSHLD, Oshld);
 
-dmb_dsb!(SY);
-dmb_dsb!(ST);
-dmb_dsb!(LD);
-dmb_dsb!(ISH);
-dmb_dsb!(ISHST);
-dmb_dsb!(ISHLD);
-dmb_dsb!(NSH);
-dmb_dsb!(NSHST);
-dmb_dsb!(NSHLD);
-dmb_dsb!(OSH);
-dmb_dsb!(OSHST);
-dmb_dsb!(OSHLD);
-
-impl sealed::Isb for SY {
+impl sealed::Isb for Sy {
     #[inline(always)]
-    fn __isb(&self) {
+    fn isb(&self) {
         match () {
             #[cfg(target_arch = "aarch64")]
-            () => unsafe { core::arch::asm!("ISB SY", options(nostack)) },
+            () => unsafe { core::arch::asm!("isb sy", options(nostack)) },
 
             #[cfg(not(target_arch = "aarch64"))]
             () => unimplemented!(),
@@ -93,29 +83,59 @@ impl sealed::Isb for SY {
     }
 }
 
-/// Data Memory Barrier.
-#[inline(always)]
-pub fn dmb<A>(arg: A)
-where
-    A: sealed::Dmb,
-{
-    arg.__dmb()
+pub struct None;
+pub const NONE: None = None {};
+
+impl sealed::Dsb for None {
+    #[inline(always)]
+    fn dsb(&self) {
+        match () {
+            #[cfg(target_arch = "aarch64")]
+            () => unsafe { core::arch::asm!("dsb", options(nostack)) },
+
+            #[cfg(not(target_arch = "aarch64"))]
+            () => unimplemented!(),
+        }
+    }
 }
 
-/// Data Synchronization Barrier.
-#[inline(always)]
-pub fn dsb<A>(arg: A)
-where
-    A: sealed::Dsb,
-{
-    arg.__dsb()
+impl sealed::Dmb for None {
+    #[inline(always)]
+    fn dmb(&self) {
+        match () {
+            #[cfg(target_arch = "aarch64")]
+            () => unsafe { core::arch::asm!("dmb", options(nostack)) },
+
+            #[cfg(not(target_arch = "aarch64"))]
+            () => unimplemented!(),
+        }
+    }
 }
 
-/// Instruction Synchronization Barrier.
+impl sealed::Isb for None {
+    #[inline(always)]
+    fn isb(&self) {
+        match () {
+            #[cfg(target_arch = "aarch64")]
+            () => unsafe { core::arch::asm!("isb", options(nostack)) },
+
+            #[cfg(not(target_arch = "aarch64"))]
+            () => unimplemented!(),
+        }
+    }
+}
+
 #[inline(always)]
-pub fn isb<A>(arg: A)
-where
-    A: sealed::Isb,
-{
-    arg.__isb()
+pub fn isb(_arg: impl sealed::Isb) {
+    _arg.isb()
+}
+
+#[inline(always)]
+pub fn dmb(_arg: impl sealed::Dmb) {
+    _arg.dmb()
+}
+
+#[inline(always)]
+pub fn dsb(_arg: impl sealed::Dsb) {
+    _arg.dsb()
 }

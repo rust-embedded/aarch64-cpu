@@ -8,8 +8,11 @@
 
 //! Wrappers around ARMv8-A instructions.
 
+pub mod at;
 pub mod barrier;
+pub mod cache;
 pub mod random;
+pub mod tlb;
 
 /// The classic no-op
 #[inline(always)]

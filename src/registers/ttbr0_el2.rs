@@ -22,7 +22,7 @@ register_bitfields! {u64,
         RES0  OFFSET(48) NUMBITS(16) [],
 
         /// Translation table base address
-        BADDR OFFSET(1) NUMBITS(48) [],
+        BADDR OFFSET(0) NUMBITS(48) [],
 
         /// Common not Private
         CnP   OFFSET(0) NUMBITS(1) []
