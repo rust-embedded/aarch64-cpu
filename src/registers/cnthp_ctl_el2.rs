@@ -4,6 +4,7 @@
 //
 // Author(s):
 //   - tsemo4917 <tsemo4917@users.noreply.github.com>
+//   - Yiyang Wu <toolmanp@tlmp.cc>
 
 //! Counter-timer Hypervisor Physical Timer Control Register - EL2
 //!
@@ -34,13 +35,19 @@ register_bitfields! {u64,
         ///
         /// 0 Timer interrupt is not masked by the IMASK bit.
         /// 1 Timer interrupt is masked by the IMASK bit.
-        IMASK   OFFSET(1) NUMBITS(1) [],
+        IMASK   OFFSET(1) NUMBITS(1) [
+            Masked = 1,
+            Unmasked = 0,
+        ],
 
         /// Enables the timer. Permitted values are:
         ///
         /// 0 Timer disabled.
         /// 1 Timer enabled.
-        ENABLE  OFFSET(0) NUMBITS(1) []
+        ENABLE  OFFSET(0) NUMBITS(1) [
+            Enabled = 1,
+            Disabled = 0
+        ]
     ]
 }
 
