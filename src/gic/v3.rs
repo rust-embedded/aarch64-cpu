@@ -1,18 +1,14 @@
 mod registers;
-pub use registers::*;
-use paste::paste;
 use core::mem::size_of;
+use paste::paste;
+pub use registers::*;
 use tock_registers::{
     interfaces::{Readable, Writeable},
     registers::*,
     *,
 };
 
-use crate::{
-    registers::*,
-    asm::barrier::*,
-};
-
+use crate::{asm::barrier::*, registers::*};
 
 pub const GIC_SGIS_NUM: usize = 16;
 pub const GIC_INTS_MAX: usize = 1024;
@@ -155,7 +151,6 @@ register_structs! {
 #[repr(C)]
 pub struct GICCpuInterface;
 
-
 unsafe impl Sync for GicDistributorInner {}
 unsafe impl Sync for GicRedistributorInner {}
 unsafe impl Sync for GICCpuInterface {}
@@ -185,7 +180,7 @@ impl GicDistributorInner {
             .set((GICD_CTLR::ENGrp1NS::Disable + GICD_CTLR::ARE_NS::Disable).into())
     }
 
-    pub fn get_nr_lines(&self) -> u32{
+    pub fn get_nr_lines(&self) -> u32 {
         32 * (1 + GICD_TYPER::ITLines.read(self.TYPER.get()))
     }
 }
@@ -194,8 +189,9 @@ impl GicRedistributorInner {
     bit_imp!(set_priority, IPRIORITYR, 8);
 
     pub fn wake_up_redis(&mut self) {
-        self.WAKER.set(GICR_WAKER::ProcessorSleep::NotinLowState.modify(self.WAKER.get()));
-        while GICR_WAKER::ChildrenAsleep.is_set(self.WAKER.get()) {};
+        self.WAKER
+            .set(GICR_WAKER::ProcessorSleep::NotinLowState.modify(self.WAKER.get()));
+        while GICR_WAKER::ChildrenAsleep.is_set(self.WAKER.get()) {}
     }
 }
 

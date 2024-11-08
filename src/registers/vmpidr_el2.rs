@@ -1,5 +1,7 @@
-use tock_registers::interfaces::{Readable, Writeable};
-use tock_registers::register_bitfields;
+use tock_registers::{
+    interfaces::{Readable, Writeable},
+    register_bitfields,
+};
 
 register_bitfields! {u64,
     pub VMPIDR_EL2 [

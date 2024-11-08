@@ -10,8 +10,8 @@ macro_rules! ap {
     ($reg: ident, $asm_name: tt) => {
         #[allow(non_snake_case)]
         mod $reg {
-            use tock_registers::interfaces::*;
             use super::*;
+            use tock_registers::interfaces::*;
             pub struct Reg;
             impl Writeable for Reg {
                 type T = u64;

@@ -4,12 +4,12 @@ mod sealed {
     }
 }
 
-macro_rules! tlbi{
+macro_rules! tlbi {
     ($A: ident) => {
         pub struct $A;
         impl sealed::Tlbi for $A {
             #[inline(always)]
-            fn invalidate(&self){
+            fn invalidate(&self) {
                 match () {
                     #[cfg(target_arch = "aarch64")]
                     () => unsafe {
@@ -21,15 +21,14 @@ macro_rules! tlbi{
                 }
             }
         }
-    }
+    };
 }
-
 
 tlbi!(VMALLE1IS);
 tlbi!(ALLE2IS);
 tlbi!(ALLE3IS);
 
 #[inline(always)]
-pub fn tlb_inv(_arg: impl sealed::Tlbi){
+pub fn tlb_inv(_arg: impl sealed::Tlbi) {
     _arg.invalidate();
 }

@@ -1,6 +1,5 @@
 use tock_registers::{interfaces::*, register_bitfields};
 
-
 register_bitfields! {u64,
     pub ICV_CTLR_EL1 [
         Ext  OFFSET(19) NUMBITS(1) [

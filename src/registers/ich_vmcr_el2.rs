@@ -9,7 +9,10 @@
 //!
 //! Enables the hypervisor to save and restore the virtual machine view of the GIC state.
 
-use tock_registers::interfaces::{Readable, Writeable};
+use tock_registers::{
+    interfaces::{Readable, Writeable},
+    register_bitfields,
+};
 
 register_bitfields! {u64,
     pub ICH_VMCR_EL2 [

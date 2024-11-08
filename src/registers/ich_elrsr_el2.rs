@@ -1,5 +1,4 @@
-use tock_registers::register_bitfields;
-use tock_registers::interfaces::*;
+use tock_registers::{interfaces::*, register_bitfields};
 
 register_bitfields! {u64,
     pub ICH_ELRSR_EL2 [

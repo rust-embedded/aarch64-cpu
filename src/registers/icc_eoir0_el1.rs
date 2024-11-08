@@ -1,6 +1,5 @@
 use tock_registers::{interfaces::*, register_bitfields};
 
-
 register_bitfields! {u64,
     pub ICC_EOIR0_EL1 [
         INTID OFFSET(0) NUMBITS(24) []

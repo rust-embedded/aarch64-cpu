@@ -1,5 +1,5 @@
-pub mod v3;
 pub mod v2;
+pub mod v3;
 
 pub enum IRQState {
     Inactive,
@@ -15,7 +15,7 @@ impl From<u64> for IRQState {
             1 => IRQState::Pending,
             2 => IRQState::Active,
             3 => IRQState::PendingActive,
-            _ => panic!("illegal irq state input")
+            _ => panic!("illegal irq state input"),
         }
     }
 }

@@ -1,6 +1,5 @@
 use tock_registers::{interfaces::*, register_bitfields};
 
-
 register_bitfields! {u64,
     pub ICV_RPR_EL1 [
         NMI      OFFSET(63) NUMBITS(1) [],

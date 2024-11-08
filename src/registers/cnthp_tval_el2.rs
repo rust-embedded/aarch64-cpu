@@ -28,4 +28,3 @@ impl Writeable for Reg {
 }
 
 pub const CNTHP_TVAL_EL2: Reg = Reg {};
-

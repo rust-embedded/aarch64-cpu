@@ -227,7 +227,7 @@ register_bitfields! {u64,
             /// 0b001111: Permission fault, level 3
             PermissionFaultLevel3 = 0b001111,
 
-            /// 0b010000: Synchronous external abort, not on translation table walk or 
+            /// 0b010000: Synchronous external abort, not on translation table walk or
             /// hardware update of translation table
             SynchronousExternalAbortNotOnTranslationTableWalk = 0b010000
 
