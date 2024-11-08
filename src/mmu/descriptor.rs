@@ -116,3 +116,15 @@ impl VADescriptor {
         self.0 = field_value.modify(self.0);
     }
 }
+
+impl From<u64> for VADescriptor {
+    fn from(value: u64) -> Self {
+        Self(value)
+    }
+}
+
+impl From<VADescriptor> for u64 {
+    fn from(value: VADescriptor) -> Self {
+        value.0
+    }
+}

@@ -1,3 +1,4 @@
 pub mod descriptor;
-pub mod address;
+mod address;
+pub use address::*;
 

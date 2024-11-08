@@ -44,7 +44,7 @@ pub enum MMType {
 }
 
 pub struct VirtLayout {
-    pub indexes: [u64; 4],
+    pub indexes: [usize; 4],
     pub offset: u64,
 }
 
@@ -166,10 +166,10 @@ impl From<u64> for VirtLayout {
     fn from(value: u64) -> Self {
         Self {
             indexes: [
-                VADescriptor::L0.read(value),
-                VADescriptor::L1.read(value),
-                VADescriptor::L2.read(value),
-                VADescriptor::L3.read(value),
+                VADescriptor::L0.read(value) as usize,
+                VADescriptor::L1.read(value) as usize,
+                VADescriptor::L2.read(value) as usize,
+                VADescriptor::L3.read(value) as usize,
             ],
             offset: VADescriptor::OFFSET.read(value),
         }

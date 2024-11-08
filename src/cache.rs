@@ -2,7 +2,7 @@ use super::asm::barrier::{dsb, isb, NSH, SY};
 use crate::{
     asm::cache::{dc, ic, CISW, CIVAC, CSW, CVAC, IALLU, ISW, IVAC},
     irq::IRQ,
-    mmu::address::{MMRegion, MMSegment},
+    mmu::{MMRegion, MMSegment},
     registers::{Readable, Writeable, CCSIDR_EL1, CLIDR_EL1, CSSELR_EL1},
 };
 
