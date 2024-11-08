@@ -133,6 +133,9 @@ mod vbar_el3;
 mod vtcr_el2;
 mod vttbr_el2;
 mod vmpidr_el2;
+mod icc_sre_el1;
+mod icc_sre_el2;
+mod icc_sre_el3;
 
 pub use actlr_el1::ACTLR_EL1;
 pub use actlr_el2::ACTLR_EL2;
