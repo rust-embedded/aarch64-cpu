@@ -56,4 +56,15 @@
 #![no_std]
 
 pub mod asm;
+pub mod interrupt;
 pub mod registers;
+
+#[cfg(all(target_arch = "aarch64", feature = "critical-section-single-core"))]
+mod critical_section;
+
+/// Used to reexport items for use in macros. Do not use directly.
+/// Not covered by semver guarantees.
+#[doc(hidden)]
+pub mod _export {
+    pub use critical_section;
+}

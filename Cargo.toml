@@ -21,3 +21,8 @@ exclude = [
 
 [dependencies]
 tock-registers = { version = "0.9.0", default-features = false } # Use it as interface-only library.
+critical-section = "1.1.2"
+
+[features]
+critical-section-single-core = ["critical-section/restore-state-bool"]
+
