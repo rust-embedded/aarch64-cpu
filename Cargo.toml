@@ -1,6 +1,6 @@
 [package]
 name = "aarch64-cpu"
-version = "10.0.0"
+version = "10.0.1"
 authors = ["Andre Richter <andre.o.richter@gmail.com>"]
 description = "Low level access to processors using the AArch64 execution state"
 homepage = "https://github.com/rust-embedded/aarch64-cpu"
