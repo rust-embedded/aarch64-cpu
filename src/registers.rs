@@ -133,6 +133,7 @@ mod vbar_el3;
 mod vtcr_el2;
 mod vttbr_el2;
 mod hfgrtr_el2;
+mod hfgitr_el2;
 
 pub use actlr_el1::ACTLR_EL1;
 pub use actlr_el2::ACTLR_EL2;
@@ -262,6 +263,7 @@ pub use vbar_el3::VBAR_EL3;
 pub use vtcr_el2::VTCR_EL2;
 pub use vttbr_el2::VTTBR_EL2;
 pub use hfgrtr_el2::HFGRTR_EL2;
+pub use hfgitr_el2::HFGITR_EL2;
 
 #[doc(inline)]
 pub use tock_registers::interfaces::{ReadWriteable, Readable, Writeable};
