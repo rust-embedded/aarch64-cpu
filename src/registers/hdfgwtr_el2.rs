@@ -4,12 +4,12 @@
 //
 // Author(s):
 //   - lingfuyi. <lingfuyi@kylinos.cn>
-// https://developer.arm.com/documentation/ddi0601/2025-03/AArch64-Registers/HDFGRTR-EL2--Hypervisor-Debug-Fine-Grained-Read-Trap-Register?lang=en
+// https://developer.arm.com/documentation/ddi0601/2025-03/AArch64-Registers/HDFGWTR-EL2--Hypervisor-Debug-Fine-Grained-Write-Trap-Register?lang=en
 
-//! Hypervisor Debug Fine-Grained Read Trap Register - EL2
+//! Hypervisor Debug Fine-Grained Write Trap Register - EL2
 //!
-//! Provides controls for traps of MRS and MRC reads of debug, trace, PMU, and Statistical Profiling
-//! System registers.
+//! Provides controls for traps of MSR and MCR writes of debug, trace, PMU, and Statistical
+//! Profiling System registers.
 
 use tock_registers::{
     interfaces::{Readable, Writeable},
@@ -18,14 +18,14 @@ use tock_registers::{
 
 register_bitfields! {u64,
     pub HDFGWTR_EL2 [
-        // 63: RES0, 保留位，写0
+        // 63: RES0, Reserved bit, write 0
         /// Trap MSR writes of nPMSNEVFR_EL1 at EL1 using AArch64 to EL2.
         nPMSNEVFR_EL1   OFFSET(62) NUMBITS(1) [],
         /// Trap MSR writes of nBRBDATA at EL1 using AArch64 to EL2.
         nBRBDATA        OFFSET(61) NUMBITS(1) [],
         /// Trap MSR writes of nBRBCTL at EL1 using AArch64 to EL2.
         nBRBCTL         OFFSET(60) NUMBITS(1) [],
-        // 59-58: RES0, 保留位，写0
+        // 59-58: RES0, Reserved bit, write 0
         /// Trap MSR writes of PMUSERENR_EL0 at EL1 using AArch64 to EL2.
         PMUSERENR_EL0   OFFSET(57) NUMBITS(1) [],
         /// Trap MSR writes of TRBTRG_EL1 at EL1 using AArch64 to EL2.
@@ -38,40 +38,40 @@ register_bitfields! {u64,
         TRBMAR_EL1      OFFSET(53) NUMBITS(1) [],
         /// Trap MSR writes of TRBLIMITR_EL1 at EL1 using AArch64 to EL2.
         TRBLIMITR_EL1   OFFSET(52) NUMBITS(1) [],
-        // 51: RES0, 保留位，写0
+        // 51: RES0, Reserved bit, write 0
         /// Trap MSR writes of TRBBASER_EL1 at EL1 using AArch64 to EL2.
         TRBBASER_EL1    OFFSET(50) NUMBITS(1) [],
         /// Trap MSR writes of TRFCR_EL1 at EL1 using AArch64 to EL2.
         TRFCR_EL1       OFFSET(49) NUMBITS(1) [],
         /// Trap MSR writes of TRCVICTLR at EL1 using AArch64 to EL2.
         TRCVICTLR       OFFSET(48) NUMBITS(1) [],
-        // 47: RES0, 保留位，写0
+        // 47: RES0, Reserved bit, write 0
         /// Trap MSR writes of TRCSSCSRn at EL1 using AArch64 to EL2.
         TRCSSCSRn       OFFSET(46) NUMBITS(1) [],
         /// Trap MSR writes of TRCSEQSTR at EL1 using AArch64 to EL2.
         TRCSEQSTR       OFFSET(45) NUMBITS(1) [],
         /// Trap MSR writes of TRCPRGCTLR at EL1 using AArch64 to EL2.
         TRCPRGCTLR      OFFSET(44) NUMBITS(1) [],
-        // 43: RES0, 保留位，写0
+        // 43: RES0, Reserved bit, write 0
         /// Trap MSR writes of TRCOSLAR at EL1 using AArch64 to EL2.
         TRCOSLAR        OFFSET(42) NUMBITS(1) [],
         /// Trap MSR writes of TRCIMSPECn at EL1 using AArch64 to EL2.
         TRCIMSPECn      OFFSET(41) NUMBITS(1) [],
-        // 40-38: RES0, 保留位，写0
+        // 40-38: RES0, Reserved bit, write 0
         /// Trap MSR writes of TRCCNTVRn at EL1 using AArch64 to EL2.
         TRCCNTVRn       OFFSET(37) NUMBITS(1) [],
         /// Trap MSR writes of TRCCLAIM at EL1 using AArch64 to EL2.
         TRCCLAIM        OFFSET(36) NUMBITS(1) [],
         /// Trap MSR writes of TRCAUXCTLR at EL1 using AArch64 to EL2.
         TRCAUXCTLR      OFFSET(35) NUMBITS(1) [],
-        // 34: RES0, 保留位，写0
+        // 34: RES0, Reserved bit, write 0
         /// Trap MSR writes of TRC at EL1 using AArch64 to EL2.
         TRC             OFFSET(33) NUMBITS(1) [],
         /// Trap MSR writes of PMSLATFR_EL1 at EL1 using AArch64 to EL2.
         PMSLATFR_EL1    OFFSET(32) NUMBITS(1) [],
         /// Trap MSR writes of PMSIRR_EL1 at EL1 using AArch64 to EL2.
         PMSIRR_EL1      OFFSET(31) NUMBITS(1) [],
-        // 30: RES0, 保留位，写0
+        // 30: RES0, Reserved bit, write 0
         /// Trap MSR writes of PMSICR_EL1 at EL1 using AArch64 to EL2.
         PMSICR_EL1      OFFSET(29) NUMBITS(1) [],
         /// Trap MSR writes of PMSFCR_EL1 at EL1 using AArch64 to EL2.
@@ -86,7 +86,7 @@ register_bitfields! {u64,
         PMBPTR_EL1      OFFSET(24) NUMBITS(1) [],
         /// Trap MSR writes of PMBLIMITR_EL1 at EL1 using AArch64 to EL2.
         PMBLIMITR_EL1   OFFSET(23) NUMBITS(1) [],
-        // 22: RES0, 保留位，写0
+        // 22: RES0, Reserved bit, write 0
         /// Trap MSR writes of PMCR_EL0 at EL1 using AArch64 to EL2.
         PMCR_EL0        OFFSET(21) NUMBITS(1) [],
         /// Trap MSR writes of PMSWINC_EL0 at EL1 using AArch64 to EL2.
@@ -111,12 +111,12 @@ register_bitfields! {u64,
         OSDLR_EL1       OFFSET(11) NUMBITS(1) [],
         /// Trap MSR writes of OSECCR_EL1 at EL1 using AArch64 to EL2.
         OSECCR_EL1      OFFSET(10) NUMBITS(1) [],
-        // 9: RES0, 保留位，写0
+        // 9: RES0, Reserved bit, write 0
         /// Trap MSR writes of OSLAR_EL1 at EL1 using AArch64 to EL2.
         OSLAR_EL1       OFFSET(8) NUMBITS(1) [],
         /// Trap MSR writes of DBGPRCR_EL1 at EL1 using AArch64 to EL2.
         DBGPRCR_EL1     OFFSET(7) NUMBITS(1) [],
-        // 6: RES0, 保留位，写0
+        // 6: RES0, Reserved bit, write 0
         /// Trap MSR writes of DBGCLAIM at EL1 using AArch64 to EL2.
         DBGCLAIM        OFFSET(5) NUMBITS(1) [],
         /// Trap MSR writes of MDSCR_EL1 at EL1 using AArch64 to EL2.
