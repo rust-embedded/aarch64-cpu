@@ -4,6 +4,7 @@
 //
 // Author(s):
 //   - lingfuyi. <lingfuyi@kylinos.cn>
+// https://developer.arm.com/documentation/ddi0601/2025-03/AArch64-Registers/HFGWTR-EL2--Hypervisor-Fine-Grained-Write-Trap-Register?lang=en
 
 //! Hypervisor Fine-Grained Write Trap Register - EL2
 //!

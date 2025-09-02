@@ -46,7 +46,7 @@ register_bitfields! {u64,
         TRBIDR_EL1      OFFSET(51) NUMBITS(1) [],
         /// Trap MRS reads of TRBBASER_EL1 at EL1 using AArch64 to EL2.
         TRBBASER_EL1    OFFSET(50) NUMBITS(1) [],
-        // 49: RES0, 保留位，写0
+        // 49: RES0, Reserved bit, write 0
         /// Trap MRS reads of TRCVICTLR at EL1 using AArch64 to EL2.
         TRCVICTLR       OFFSET(48) NUMBITS(1) [],
         /// Trap MRS reads of TRCSTATR at EL1 using AArch64 to EL2.
@@ -59,12 +59,12 @@ register_bitfields! {u64,
         TRCPRGCTLR      OFFSET(44) NUMBITS(1) [],
         /// Trap MRS reads of TRCOSLSR at EL1 using AArch64 to EL2.
         TRCOSLSR        OFFSET(43) NUMBITS(1) [],
-        // 42: RES0, 保留位，写0
+        // 42: RES0, Reserved bit, write 0
         /// Trap MRS reads of TRCIMSPECn at EL1 using AArch64 to EL2.
         TRCIMSPECn      OFFSET(41) NUMBITS(1) [],
         /// Trap MRS reads of TRCID at EL1 using AArch64 to EL2.
         TRCID           OFFSET(40) NUMBITS(1) [],
-        // 39-38: RES0, 保留位，写0
+        // 39-38: RES0, Reserved bit, write 0
         /// Trap MRS reads of TRCCNTVRn at EL1 using AArch64 to EL2.
         TRCCNTVRn       OFFSET(37) NUMBITS(1) [],
         /// Trap MRS reads of TRCCLAIM at EL1 using AArch64 to EL2.
@@ -97,7 +97,7 @@ register_bitfields! {u64,
         PMBLIMITR_EL1   OFFSET(23) NUMBITS(1) [],
         /// Trap MRS reads of PMMIR_EL1 at EL1 using AArch64 to EL2.
         PMMIR_EL1       OFFSET(22) NUMBITS(1) [],
-        // 21-20: RES0, 保留位，写0
+        // 21-20: RES0, Reserved bit, write 0
         /// Trap MRS reads of PMSELR_EL0 at EL1 using AArch64 to EL2.
         PMSELR_EL0      OFFSET(19) NUMBITS(1) [],
         /// Trap MRS reads of PMOVS at EL1 using AArch64 to EL2.
@@ -120,7 +120,7 @@ register_bitfields! {u64,
         OSECCR_EL1      OFFSET(10) NUMBITS(1) [],
         /// Trap MRS reads of OSLSR_EL1 at EL1 using AArch64 to EL2.
         OSLSR_EL1       OFFSET(9) NUMBITS(1) [],
-        // 8: RES0, 保留位，写0
+        // 8: RES0, Reserved bit, write 0
         /// Trap MRS reads of DBGPRCR_EL1 at EL1 using AArch64 to EL2.
         DBGPRCR_EL1     OFFSET(7) NUMBITS(1) [],
         /// Trap MRS reads of DBGAUTHSTATUS_EL1 at EL1 using AArch64 to EL2.

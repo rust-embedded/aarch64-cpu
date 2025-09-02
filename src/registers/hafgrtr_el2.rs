@@ -4,7 +4,7 @@
 //
 // Author(s):
 //   - lingfuyi. <lingfuyi@kylinos.cn>
-// https://developer.arm.com/documentation/ddi0601/2025-03/AArch64-Registers/HDFGRTR-EL2--Hypervisor-Debug-Fine-Grained-Read-Trap-Register?lang=en
+// https://developer.arm.com/documentation/ddi0601/2025-03/AArch64-Registers/HAFGRTR-EL2--Hypervisor-Activity-Monitors-Fine-Grained-Read-Trap-Register?lang=en
 
 //! Hypervisor Activity Monitors Fine-Grained Read Trap Register - EL2
 //!
@@ -17,7 +17,7 @@ use tock_registers::{
 
 register_bitfields! {u64,
     pub HAFGRTR_EL2 [
-        // 63-50: RES0, 保留位，写0
+        // 63-50: RES0, Reserved bits, write 0
         /// Trap MRS reads of AMEVTYPER115_EL0 at EL1/EL0 using AArch64 or MRC at EL0 using AArch32 to EL2.
         AMEVTYPER115_EL0 OFFSET(49) NUMBITS(1) [],
         /// Trap MRS reads of AMEVCNTR115_EL0 at EL1/EL0 using AArch64 or MRC at EL0 using AArch32 to EL2.
@@ -84,7 +84,7 @@ register_bitfields! {u64,
         AMEVCNTR10_EL0   OFFSET(18) NUMBITS(1) [],
         /// Trap MRS reads of AMCNTEN1 at EL1/EL0 using AArch64 or MRC at EL0 using AArch32 to EL2.
         AMCNTEN1        OFFSET(17) NUMBITS(1) [],
-        // 16-5: RES0, 保留位，写0
+        // 16-5: RES0, Reserved bits, write 0
         /// Trap MRS reads of AMEVCNTR03_EL0 at EL1/EL0 using AArch64 or MRC at EL0 using AArch32 to EL2.
         AMEVCNTR03_EL0  OFFSET(4) NUMBITS(1) [],
         /// Trap MRS reads of AMEVCNTR02_EL0 at EL1/EL0 using AArch64 or MRC at EL0 using AArch32 to EL2.
