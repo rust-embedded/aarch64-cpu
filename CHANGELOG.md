@@ -1,9 +1,9 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/)
-and this project adheres to [Semantic Versioning](http://semver.org/).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
@@ -12,6 +12,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 ### Changed
 ### Removed
+
+## [11.0.0](https://github.com/rust-embedded/aarch64-cpu/compare/v10.0.0...v11.0.0) - 2025-10-12
+
+### Breaking changes
+
+Major version bump due to tock-registers dependency - updated to 0.10
+
+### Added
+
+- Add stackpointer registers SP_EL2 and SP_EL3
+- Add hypervisor register support (#41)
+
+### Fixed
+
+- Update HCR_EL2 reorder TSC and TID3 correctly
 
 ## [v10.0.0] - 2024-10-26
 
