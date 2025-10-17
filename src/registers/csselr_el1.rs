@@ -17,9 +17,9 @@ use tock_registers::{
 
 register_bitfields! {u64,
     pub CSSELR_EL1 [
-        /// ** When `FEAT_MTE2` is implemented:**
-        ///
         /// Allocation Tag not Data bit.
+        ///
+        /// **When `FEAT_MTE2` is implemented:**
         ///
         /// When [`CSSELR_EL1::InD`] is set, this bit is considered reserved.
         ///
