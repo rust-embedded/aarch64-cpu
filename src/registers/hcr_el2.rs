@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 //
-// Copyright (c) 2018-2023 by the author(s)
+// Copyright (c) 2018-2025 by the author(s)
 //
 // Author(s):
 //   - Andre Richter <andre.o.richter@gmail.com>
 //   - Bradley Landherr <landhb@users.noreply.github.com>
 //   - Javier Alvarez <javier.alvarez@allthingsembedded.com>
+//   - Yan Tan <tanyan@kylinos.cn>
 
 //! Hypervisor Configuration Register - EL2
 //!
@@ -20,7 +21,7 @@ use tock_registers::{
 register_bitfields! {u64,
     pub HCR_EL2 [
         /// When FEAT_S2FWB is implemented Forced Write-back changes the combined cachability of stage1
-        /// and stage2 attributes
+        /// and stage2 attributes.
         FWB OFFSET(46) NUMBITS(1) [
            /// Stage2 memory type and cacheability attributes are in bits[5:2] of the stage2 PTE
            Disabled = 0,
@@ -28,7 +29,7 @@ register_bitfields! {u64,
            Enabled = 1,
         ],
 
-        /// Controls the use of instructions related to Pointer Authentication:
+        /// Controls the use of instructions related to Pointer Authentication.
         ///
         ///   - In EL0, when HCR_EL2.TGE==0 or HCR_EL2.E2H==0, and the associated SCTLR_EL1.En<N><M>==1.
         ///   - In EL1, the associated SCTLR_EL1.En<N><M>==1.
@@ -46,9 +47,10 @@ register_bitfields! {u64,
             DisableTrapPointerAuthInstToEl2 = 1
         ],
 
-        /// Trap registers holding "key" values for Pointer Authentication. Traps accesses to the
-        /// following registers from EL1 to EL2, when EL2 is enabled in the current Security state,
-        /// reported using EC syndrome value 0x18:
+        /// Trap registers holding "key" values for Pointer Authentication.
+        ///
+        /// Traps accesses to the following registers from EL1 to EL2,
+        /// when EL2 is enabled in the current Security state, reported using EC syndrome value 0x18:
         ///
         /// `APIAKeyLo_EL1`, `APIAKeyHi_EL1`, `APIBKeyLo_EL1`, `APIBKeyHi_EL1`, `APDAKeyLo_EL1`,
         /// `APDAKeyHi_EL1`, `APDBKeyLo_EL1`, `APDBKeyHi_EL1`, `APGAKeyLo_EL1`, and `APGAKeyHi_EL1`.
@@ -58,8 +60,9 @@ register_bitfields! {u64,
         ],
 
         /// Route synchronous External abort exceptions to EL2.
-        ///   if 0: This control does not cause exceptions to be routed from EL0 and EL1 to EL2.
-        ///   if 1: Route synchronous External abort exceptions from EL0 and EL1 to EL2, when EL2 is
+        ///
+        ///   - if 0: This control does not cause exceptions to be routed from EL0 and EL1 to EL2.
+        ///   - if 1: Route synchronous External abort exceptions from EL0 and EL1 to EL2, when EL2 is
         ///         enabled in the current Security state, if not routed to EL3.
         TEA   OFFSET(37) NUMBITS(1) [
             DisableTrapSyncExtAbortsToEl2 = 0,
@@ -69,16 +72,16 @@ register_bitfields! {u64,
         /// Trap accesses of Error Record registers. Enables a trap to EL2 on accesses of
         /// Error Record registers.
         ///
-        /// 0 Accesses of the specified Error Record registers are not trapped by this mechanism.
-        /// 1 Accesses of the specified Error Record registers at EL1 are trapped to EL2,
+        /// - 0 Accesses of the specified Error Record registers are not trapped by this mechanism.
+        /// - 1 Accesses of the specified Error Record registers at EL1 are trapped to EL2,
         ///   unless the instruction generates a higher priority exception.
         TERR  OFFSET(36) NUMBITS(1) [],
 
         /// Trap LOR registers. Traps Non-secure EL1 accesses to LORSA_EL1, LOREA_EL1, LORN_EL1,
         /// LORC_EL1, and LORID_EL1 registers to EL2.
         ///
-        /// 0 This control does not cause any instructions to be trapped.
-        /// 1 Non-secure EL1 accesses to the LOR registers are trapped to EL2.
+        /// - 0: This control does not cause any instructions to be trapped.
+        /// - 1: Non-secure EL1 accesses to the LOR registers are trapped to EL2.
         TLOR  OFFSET(35) NUMBITS(1) [],
 
         /// EL2 Host. Enables a configuration where a Host Operating System is running in EL2, and
@@ -88,10 +91,10 @@ register_bitfields! {u64,
             EnableOsAtEl2 = 1
         ],
 
-        /// Execution state control for lower Exception levels:
+        /// Execution state control for lower Exception levels.
         ///
-        /// 0 Lower levels are all AArch32.
-        /// 1 The Execution state for EL1 is AArch64. The Execution state for EL0 is determined by
+        /// - 0 Lower levels are all AArch32.
+        /// - 1 The Execution state for EL1 is AArch64. The Execution state for EL0 is determined by
         ///   the current value of PSTATE.nRW when executing at EL0.
         ///
         /// If all lower Exception levels cannot use AArch32 then this bit is RAO/WI.
@@ -143,34 +146,83 @@ register_bitfields! {u64,
             EnableTrapGeneralExceptionsToEl2 = 1,
         ],
 
+        /// Trap Virtual Memory controls.
+        ///
+        /// Traps writes to the virtual memory control registers to EL2,
+        /// when EL2 is enabled in the current Security state, as follows:
+        ///
+        /// If EL1 is using AArch64, the following registers are trapped to EL2 and reported using EC
+        /// syndrome value 0x18 for MSR and 0x14 for MSRR:
+        ///   - `SCTLR_EL1`, `TTBR0_EL1`, `TTBR1_EL1`, `TCR_EL1`, `ESR_EL1`, `FAR_EL1`, `AFSR0_EL1`,
+        ///     `AFSR1_EL1`, `MAIR_EL1`, `AMAIR_EL1`, and `CONTEXTIDR_EL1`.
+        ///   - If FEAT_AIE is implemented, `MAIR2_EL1` and `AMAIR2_EL1`.
+        ///   - If FEAT_S1PIE is implemented, `PIRE0_EL1` and `PIR_EL1`.
+        ///   - If FEAT_S1POE is implemented, `POR_EL0` and `POR_EL1`.
+        ///   - If FEAT_S2POE is implemented, `S2POR_EL1`.
+        ///   - If FEAT_TCR2 is implemented, `TCR2_EL1`.
+        ///   - If FEAT_SCTLR2 is implemented, `SCTLR2_EL1`.
+        ///
+        /// If the Effective value of HCR_EL2.{E2H, TGE} is not {1, 1}, and EL0 is using AArch64, EL0
+        /// accesses to the following registers are trapped to EL2 and reported using EC syndrome value
+        /// 0x18 for MSR:
+        ///   - If FEAT_S1POE is implemented, `POR_EL0`.
+        ///
+        /// If EL1 is using AArch32, EL1 accesses using MCR to the following registers are trapped to
+        /// EL2 and reported using EC syndrome value 0x03, accesses using MCRR are trapped to EL2 and
+        /// reported using EC syndrome value 0x04:
+        ///   - `SCTLR`, `TTBR0`, `TTBR1`, `TTBCR`, `TTBCR2`, `DACR`, `DFSR`, `IFSR`, `DFAR`, `IFAR`,
+        ///     `ADFSR`, `AIFSR`, `PRRR`, `NMRR`, `MAIR0`, `MAIR1`, `AMAIR0`, `AMAIR1`, and `CONTEXTIDR`.
+        ///
+        /// Meaning:
+        /// - 0: This control does not cause any instructions to be trapped.
+        /// - 1: Write accesses to the specified Virtual Memory control registers are trapped to EL2,
+        ///      when EL2 is enabled in the current Security state.
+        ///
+        /// When the Effective value of HCR_EL2.{E2H, TGE} is {1, 1}, the PE ignores the value of this
+        /// field for all purposes other than a direct read of this field.
+        ///
+        /// The reset behavior of this field is:
+        ///   - On a Warm reset, this field resets to an architecturally UNKNOWN value.
+        TVM OFFSET(26) NUMBITS(1) [
+            DisableTrapTVM = 0,
+            EnableTrapTVM = 1,
+        ],
+
         /// Trap data or unified cache maintenance instructions that operate by Set/Way.
+        ///
         /// Traps execution of those cache maintenance instructions at EL1 to EL2, when
         /// EL2 is enabled in the current Security state.
         ///
-        /// 0 This control does not cause any instructions to be trapped.
-        /// 1 Execution of the specified instructions is trapped to EL2, when EL2 is enabled
+        /// - 0: This control does not cause any instructions to be trapped.
+        /// - 1: Execution of the specified instructions is trapped to EL2, when EL2 is enabled
         /// in the current Security state.
         TSW   OFFSET(22) NUMBITS(1) [],
 
-        /// Trap Auxiliary Control Registers. Traps EL1 accesses to the Auxiliary Control Registers
+        /// Trap Auxiliary Control Registers.
+        ///
+        /// Traps EL1 accesses to the Auxiliary Control Registers
         /// to EL2, when EL2 is enabled in the current Security state
         ///
-        /// 0 This control does not cause any instructions to be trapped.
-        /// 1 EL1 accesses to the specified registers are trapped to EL2, when EL2 is enabled in the
+        /// - 0: This control does not cause any instructions to be trapped.
+        /// - 1: EL1 accesses to the specified registers are trapped to EL2, when EL2 is enabled in the
         ///   current Security state.
         TACR  OFFSET(21) NUMBITS(1) [],
 
-        /// Trap IMPLEMENTATION DEFINED functionality. Traps EL1 accesses to the encodings reserved
+        /// Trap IMPLEMENTATION DEFINED functionality.
+        ///
+        /// Traps EL1 accesses to the encodings reserved
         /// for IMPLEMENTATION DEFINED functionality to EL2, when EL2 is enabled in the current
         /// Security state
         ///
-        /// 0 This control does not cause any instructions to be trapped.
-        /// 1 EL1 accesses to or execution of the specified encodings reserved for IMPLEMENTATION
-        /// DEFINED functionality are trapped to EL2, when EL2 is enabled in the current Security
-        /// state.
+        /// - 0: This control does not cause any instructions to be trapped.
+        /// - 1: EL1 accesses to or execution of the specified encodings reserved for IMPLEMENTATION
+        ///     DEFINED functionality are trapped to EL2, when EL2 is enabled in the current Security
+        ///     state.
         TIDCP OFFSET(20) NUMBITS(1) [],
 
-        /// Trap SMC instructions. Traps EL1 execution of SMC instructions to EL2, when EL2 is
+        /// Trap SMC instructions.
+        ///
+        /// Traps EL1 execution of SMC instructions to EL2, when EL2 is
         /// enabled in the current Security state.
         ///
         /// If execution is in AArch64 state, the trap is reported using EC syndrome value 0x17.
@@ -208,19 +260,21 @@ register_bitfields! {u64,
             EnableTrapEl1SmcToEl2 = 1,
         ],
 
-        /// Trap ID group 3. Traps EL1 reads of group 3 ID registers to EL2, when EL2 is enabled
+        /// Trap ID group 3.
+        ///
+        /// Traps EL1 reads of group 3 ID registers to EL2, when EL2 is enabled
         /// in the current Security state.
         ///
-        /// 0 This control does not cause any instructions to be trapped.
-        /// 1 The specified EL1 read accesses to ID group 3 registers are trapped to EL2, when EL2
+        /// - 0 This control does not cause any instructions to be trapped.
+        /// - 1 The specified EL1 read accesses to ID group 3 registers are trapped to EL2, when EL2
         /// is enabled in the current Security state.
         TID3  OFFSET(18) NUMBITS(1) [],
 
         /// Default Cacheability.
         ///
-        /// 0 This control has no effect on the Non-secure EL1&0 translation regime.
+        /// - 0 This control has no effect on the Non-secure EL1&0 translation regime.
         ///
-        /// 1 In Non-secure state:
+        /// - 1 In Non-secure state:
         ///   - When EL1 is using AArch64, the PE behaves as if the value of the SCTLR_EL1.M field
         ///     is 0 for all purposes other than returning the value of a direct read of SCTLR_EL1.
         ///
@@ -246,7 +300,9 @@ register_bitfields! {u64,
         /// field behaves as 0 for all purposes other than a direct read of the value of this field.
         DC   OFFSET(12) NUMBITS(1) [],
 
-        /// Barrier Shareability upgrade. This field determines the minimum shareability domain that
+        /// Barrier Shareability upgrade.
+        ///
+        /// This field determines the minimum shareability domain that
         /// is applied to any barrier instruction executed from EL1 or EL0.
         BSU  OFFSET(10) NUMBITS(2) [
             NoEffect = 0b00,
@@ -255,13 +311,31 @@ register_bitfields! {u64,
             FullSystem = 0b11
         ],
 
-        /// Force broadcast. Causes the following instructions to be broadcast within the Inner
+        /// Force broadcast.
+        ///
+        /// Causes the following instructions to be broadcast within the Inner
         /// Shareable domain when executed from EL1.
         ///
-        /// 0 This field has no effect on the operation of the specified instructions.
-        /// 1 When one of the specified instruction is executed at EL1, the instruction is broadcast
+        /// - 0 This field has no effect on the operation of the specified instructions.
+        /// - 1 When one of the specified instruction is executed at EL1, the instruction is broadcast
         /// within the Inner Shareable shareability domain.
         FB    OFFSET(9) NUMBITS(1) [],
+
+        /// Virtual SError exception.
+        ///
+        /// Meaning:
+        /// - 0: This mechanism is not making a virtual SError exception pending.
+        /// - 1: A virtual SError exception is pending because of this mechanism.
+        ///
+        /// The virtual SError exception is enabled only when HCR_EL2.TGE is 0 and either HCR_EL2.AMO
+        /// is 1 or FEAT_DoubleFault2 is implemented and the Effective value of HCRX_EL2.TMEA is 1.
+        ///
+        /// When FEAT_E3DSE is implemented, virtual SError exceptions pended by this field have
+        /// priority over delegated SError exceptions pended by SCR_EL3.DSE.
+        ///
+        /// The reset behavior of this field is:
+        ///   - On a Warm reset, this field resets to an architecturally UNKNOWN value.
+        VSE   OFFSET(8) NUMBITS(1) [],
 
         /// Physical SError interrupt routing.
         ///   - If bit is 1 when executing at any Exception level, and EL2 is enabled in the current
@@ -301,6 +375,7 @@ register_bitfields! {u64,
         ],
 
         /// Physical FIQ Routing.
+        ///
         /// If this bit is 0:
         ///   - When executing at Exception levels below EL2, and EL2 is enabled in the current
         ///     Security state:
@@ -329,21 +404,23 @@ register_bitfields! {u64,
             EnableVirtualFIQ = 1,
         ],
 
-        /// Set/Way Invalidation Override. Causes Non-secure EL1 execution of the data cache
+        /// Set/Way Invalidation Override.
+        ///
+        /// Causes Non-secure EL1 execution of the data cache
         /// invalidate by set/way instructions to perform a data cache clean and invalidate by
         /// set/way:
         ///
-        /// 0 This control has no effect on the operation of data cache invalidate by set/way
+        /// - 0: This control has no effect on the operation of data cache invalidate by set/way
         ///   instructions.
         ///
-        /// 1 Data cache invalidate by set/way instructions perform a data cache clean and
+        /// - 1: Data cache invalidate by set/way instructions perform a data cache clean and
         ///   invalidate by set/way.
         ///
         /// When the value of this bit is 1:
         ///
-        /// AArch32: DCISW performs the same invalidation as a DCCISW instruction.
+        /// - AArch32: DCISW performs the same invalidation as a DCCISW instruction.
         ///
-        /// AArch64: DC ISW performs the same invalidation as a DC CISW instruction.
+        /// - AArch64: DC ISW performs the same invalidation as a DC CISW instruction.
         ///
         /// This bit can be implemented as RES 1.
         ///
@@ -355,11 +432,13 @@ register_bitfields! {u64,
         /// than a direct read of this field.
         SWIO OFFSET(1) NUMBITS(1) [],
 
-        /// Virtualization enable. Enables stage 2 address translation for the EL1&0 translation regime,
+        /// Virtualization enable.
+        ///
+        /// Enables stage 2 address translation for the EL1&0 translation regime,
         /// when EL2 is enabled in the current Security state. The possible values are:
         ///
-        /// 0    EL1&0 stage 2 address translation disabled.
-        /// 1    EL1&0 stage 2 address translation enabled.
+        /// - 0: EL1&0 stage 2 address translation disabled.
+        /// - 1: EL1&0 stage 2 address translation enabled.
         ///
         /// When the value of this bit is 1, data cache invalidate instructions executed at EL1 perform
         /// a data cache clean and invalidate. For the invalidate by set/way instruction this behavior
