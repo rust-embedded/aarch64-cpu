@@ -19,9 +19,11 @@ use tock_registers::{
 
 register_bitfields! {u64,
     pub CLIDR_EL1 [
+        /// Tag cache type 7.
+        ///
         /// **When FEAT_MTE2 is implemented:**
         ///
-        /// Tag cache type 7. Indicates the type of cache that is implemented and can be
+        /// Indicates the type of cache that is implemented and can be
         /// managed using the architected cache maintenance instructions that operate
         /// by set/way at each level, from Level 1 up to a maximum of seven levels of
         /// cache hierarchy.
@@ -40,9 +42,11 @@ register_bitfields! {u64,
             UnifiedAllocationTagDataSeparated = 0b11
         ],
 
+        /// Tag cache type 6.
+        ///
         /// **When FEAT_MTE2 is implemented:**
         ///
-        /// Tag cache type 6. Indicates the type of cache that is implemented and can be
+        /// Indicates the type of cache that is implemented and can be
         /// managed using the architected cache maintenance instructions that operate
         /// by set/way at each level, from Level 1 up to a maximum of seven levels of
         /// cache hierarchy.
@@ -61,9 +65,11 @@ register_bitfields! {u64,
             UnifiedAllocationTagDataSeparated = 0b11
         ],
 
+        /// Tag cache type 5.
+        ///
         /// **When FEAT_MTE2 is implemented:**
         ///
-        /// Tag cache type 5. Indicates the type of cache that is implemented and can be
+        /// Indicates the type of cache that is implemented and can be
         /// managed using the architected cache maintenance instructions that operate
         /// by set/way at each level, from Level 1 up to a maximum of seven levels of
         /// cache hierarchy.
@@ -82,9 +88,11 @@ register_bitfields! {u64,
             UnifiedAllocationTagDataSeparated = 0b11
         ],
 
+        /// Tag cache type 4.
+        ///
         /// **When FEAT_MTE2 is implemented:**
         ///
-        /// Tag cache type 4. Indicates the type of cache that is implemented and can be
+        /// Indicates the type of cache that is implemented and can be
         /// managed using the architected cache maintenance instructions that operate
         /// by set/way at each level, from Level 1 up to a maximum of seven levels of
         /// cache hierarchy.
@@ -103,9 +111,11 @@ register_bitfields! {u64,
             UnifiedAllocationTagDataSeparated = 0b11
         ],
 
+        /// Tag cache type 3.
+        ///
         /// **When FEAT_MTE2 is implemented:**
         ///
-        /// Tag cache type 3. Indicates the type of cache that is implemented and can be
+        /// Indicates the type of cache that is implemented and can be
         /// managed using the architected cache maintenance instructions that operate
         /// by set/way at each level, from Level 1 up to a maximum of seven levels of
         /// cache hierarchy.
@@ -124,9 +134,11 @@ register_bitfields! {u64,
             UnifiedAllocationTagDataSeparated = 0b11
         ],
 
+        /// Tag cache type 2.
+        ///
         /// **When FEAT_MTE2 is implemented:**
         ///
-        /// Tag cache type 2. Indicates the type of cache that is implemented and can be
+        /// Indicates the type of cache that is implemented and can be
         /// managed using the architected cache maintenance instructions that operate
         /// by set/way at each level, from Level 1 up to a maximum of seven levels of
         /// cache hierarchy.
@@ -145,9 +157,11 @@ register_bitfields! {u64,
             UnifiedAllocationTagDataSeparated = 0b11
         ],
 
+        /// Tag cache type 1.
+        ///
         /// **When FEAT_MTE2 is implemented:**
         ///
-        /// Tag cache type 1. Indicates the type of cache that is implemented and can be
+        /// Indicates the type of cache that is implemented and can be
         /// managed using the architected cache maintenance instructions that operate
         /// by set/way at each level, from Level 1 up to a maximum of seven levels of
         /// cache hierarchy.

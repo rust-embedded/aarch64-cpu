@@ -79,11 +79,11 @@ register_bitfields! {u64,
             TrapNothing = 0b11
         ],
 
-        /// **When FEAT_SVE is implemented:**
-        ///
         /// Traps execution at EL1 and EL0 of SVE instructions and instructions that directly
         /// access the ZCR_EL1 Systme register to EL1, or to EL2 when El2 is implemented in the
         /// current Security state and HCR_EL2.TGE is 1.
+        ///
+        /// **When FEAT_SVE is implemented:**
         ///
         /// The exception is reported using ESR_ELx.EC value 0x19.
         ///
