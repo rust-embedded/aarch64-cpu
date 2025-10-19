@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Breaking changes
+## [11.1.0](https://github.com/rust-embedded/aarch64-cpu/compare/v11.0.0...v11.1.0) - 2025-10-19
+
 ### Added
-### Fixed
+
+- Add TCR2_EL1 register
+- Add AMAIR_EL1 register
+- Add more fields to HCR_EL2
+
 ### Changed
-### Removed
+
+- Fix register documentation
 
 ## [11.0.0](https://github.com/rust-embedded/aarch64-cpu/compare/v10.0.0...v11.0.0) - 2025-10-12
 
