@@ -140,6 +140,7 @@ mod ttbr1_el1;
 mod vbar_el1;
 mod vbar_el2;
 mod vbar_el3;
+mod vmpidr_el2;
 mod vtcr_el2;
 mod vttbr_el2;
 
@@ -278,6 +279,7 @@ pub use ttbr1_el1::TTBR1_EL1;
 pub use vbar_el1::VBAR_EL1;
 pub use vbar_el2::VBAR_EL2;
 pub use vbar_el3::VBAR_EL3;
+pub use vmpidr_el2::VMPIDR_EL2;
 pub use vtcr_el2::VTCR_EL2;
 pub use vttbr_el2::VTTBR_EL2;
 
