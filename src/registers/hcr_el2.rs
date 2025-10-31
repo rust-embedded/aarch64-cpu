@@ -7,6 +7,7 @@
 //   - Bradley Landherr <landhb@users.noreply.github.com>
 //   - Javier Alvarez <javier.alvarez@allthingsembedded.com>
 //   - Yan Tan <tanyan@kylinos.cn>
+//   - Callum Thomson <callumthom11@gmail.com>
 
 //! Hypervisor Configuration Register - EL2
 //!
@@ -20,6 +21,72 @@ use tock_registers::{
 
 register_bitfields! {u64,
     pub HCR_EL2 [
+        /// TWE Delay.
+        ///
+        /// Requires FEAT_TWED
+        TWEDEL   OFFSET(60) NUMBITS(4) [],
+
+        /// TWE Delay Enable.
+        ///
+        /// Requires FEAT_TWED
+        TWEDEn   OFFSET(59) NUMBITS(1) [],
+
+        /// Trap ID group 5.
+        ///
+        /// Requires FEAT_MTE2
+        TID5   OFFSET(58) NUMBITS(1) [],
+
+        /// Default Cacheability Tagging.
+        ///
+        /// Requires FEAT_MTE2
+        DCT   OFFSET(57) NUMBITS(1) [],
+
+        /// Allocation Tag Access
+        ///
+        /// Requires FEAT_MTE2
+        ATA   OFFSET(56) NUMBITS(1) [],
+
+        /// Trap TLB Maintenance (Outer Shareable)
+        ///
+        /// Requires FEAT_EVT
+        TTLBOS   OFFSET(55) NUMBITS(1) [],
+
+        /// Trap TBL Maintenance (Inner Shareable).
+        ///
+        /// Requires FEAT_EVT
+        TTLBIS  OFFSET(54) NUMBITS(1) [],
+
+        /// Enable `SCXTNUM_EL1` and `SCXTNUM_EL0` registers.
+        ///
+        /// Requires FEAT_CSV2_2 or FEAT_CSV2_1p2
+        EnSCXT   OFFSET(53) NUMBITS(1) [],
+
+        /// Trap Cache Maintenance to Unification
+        ///
+        /// Requires FEAT_EVT
+        TOCU   OFFSET(52) NUMBITS(1) [],
+
+        /// Activity Monitors Virtual Offset Enable.
+        ///
+        /// Requires FEAT_AMUv1p1
+        AMVOFFEN   OFFSET(51) NUMBITS(1) [],
+
+        /// Trap `ICIALLUIS` and `IC IALLUIS`
+        ///
+        /// Requires FEAT_EVT
+        TICAB   OFFSET(50) NUMBITS(1) [],
+
+        /// Trap ID group 4
+        TID4   OFFSET(49) NUMBITS(1) [],
+
+        /// Granule Protection Fault routing control.
+        GPF   OFFSET(48) NUMBITS(1) [],
+
+        /// Fault Injection Enable.
+        ///
+        /// Requires FEAT_RASv1p1
+        FIEN   OFFSET(47) NUMBITS(1) [],
+
         /// When FEAT_S2FWB is implemented Forced Write-back changes the combined cachability of stage1
         /// and stage2 attributes.
         FWB OFFSET(46) NUMBITS(1) [
@@ -28,6 +95,25 @@ register_bitfields! {u64,
            /// Stage1 memory type can be overridden by Stage2 descriptor
            Enabled = 1,
         ],
+
+        /// Nested Virtualization.
+        ///
+        /// Requires FEAT_NV2
+        NV2   OFFSET(45) NUMBITS(1) [],
+
+        /// Address Translation.
+        ///
+        /// Requires FEAT_NV
+        ///
+        /// Traps use of `AT S1E0R`, `AT S1E0W`, `AT S1E1R`, `AT S1E1W`, `AT S1E1RP` and `AT S1E1WP`
+        /// Traps use of `AT S1E1A` if FEAT_ATS1A is present
+        AT    OFFSET(44) NUMBITS(1) [],
+
+        /// Nested Virtualization.
+        NV1   OFFSET(43) NUMBITS(1) [],
+
+        /// Nested Virtualization.
+        NV   OFFSET(42) NUMBITS(1) [],
 
         /// Controls the use of instructions related to Pointer Authentication.
         ///
@@ -58,6 +144,11 @@ register_bitfields! {u64,
             EnableTrapPointerAuthKeyRegsToEl2 = 0,
             DisableTrapPointerAuthKeyRegsToEl2 = 1,
         ],
+
+        /// TME.
+        ///
+        /// Requires FEAT_TME.
+        TME   OFFSET(39) NUMBITS(1) [],
 
         /// Route synchronous External abort exceptions to EL2.
         ///
@@ -91,6 +182,12 @@ register_bitfields! {u64,
             EnableOsAtEl2 = 1
         ],
 
+        /// Instruction Cache Disable (Stage 2).
+        ID   OFFSET(33) NUMBITS(1) [],
+
+        /// Data Cache Disable (Stage 2).
+        CD   OFFSET(32) NUMBITS(1) [],
+
         /// Execution state control for lower Exception levels.
         ///
         /// - 0 Lower levels are all AArch32.
@@ -111,6 +208,15 @@ register_bitfields! {u64,
             AllLowerELsAreAarch32 = 0,
             EL1IsAarch64 = 1
         ],
+
+        /// Trap Read of Virtual Memory registers.
+        TRVM OFFSET(30) NUMBITS(1) [],
+
+        /// HVC instruction Disable.
+        HCD  OFFSET(29) NUMBITS(1) [],
+
+        /// Trap DC ZVA.
+        TDZ  OFFSET(28) NUMBITS(1) [],
 
         /// Trap General Exceptions, from EL0.
         ///
@@ -187,6 +293,16 @@ register_bitfields! {u64,
             DisableTrapTVM = 0,
             EnableTrapTVM = 1,
         ],
+        /// Trap TLB Maintenance instructions.
+        TTLB OFFSET(25) NUMBITS(1) [],
+
+        /// Trap Cache Maintenance to Unification.
+        TPU  OFFSET(24) NUMBITS(1) [],
+
+        /// Trap Cache Maintenance to Coherency.
+        TPCP OFFSET(23) NUMBITS(1) [],
+
+
 
         /// Trap data or unified cache maintenance instructions that operate by Set/Way.
         ///
@@ -270,6 +386,21 @@ register_bitfields! {u64,
         /// is enabled in the current Security state.
         TID3  OFFSET(18) NUMBITS(1) [],
 
+        /// Trap ID group 2.
+        TID2  OFFSET(17) NUMBITS(1) [],
+
+        /// Trap ID group 1.
+        TID1  OFFSET(16) NUMBITS(1) [],
+
+        /// Trap ID group 0.
+        TID0  OFFSET(15) NUMBITS(1) [],
+
+        /// Trap WFE Instructions.
+        TWE  OFFSET(14) NUMBITS(1) [],
+
+        /// Trap WFI Instructions.
+        TWI  OFFSET(13) NUMBITS(1) [],
+
         /// Default Cacheability.
         ///
         /// - 0 This control has no effect on the Non-secure EL1&0 translation regime.
@@ -337,6 +468,12 @@ register_bitfields! {u64,
         ///   - On a Warm reset, this field resets to an architecturally UNKNOWN value.
         VSE   OFFSET(8) NUMBITS(1) [],
 
+        /// Virtual IRQ Interrupt.
+        VI    OFFSET(7) NUMBITS(1) [],
+
+        /// Virtual FIQ Interrupt.
+        VF    OFFSET(6) NUMBITS(1) [],
+
         /// Physical SError interrupt routing.
         ///   - If bit is 1 when executing at any Exception level, and EL2 is enabled in the current
         ///     Security state:
@@ -403,6 +540,9 @@ register_bitfields! {u64,
             DisableVirtualFIQ = 0,
             EnableVirtualFIQ = 1,
         ],
+
+        /// Protected Table Walk.
+        PTW   OFFSET(2) NUMBITS(1) [],
 
         /// Set/Way Invalidation Override.
         ///
