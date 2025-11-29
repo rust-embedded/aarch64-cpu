@@ -77,9 +77,13 @@ register_bitfields! {u64,
         TICAB   OFFSET(50) NUMBITS(1) [],
 
         /// Trap ID group 4
+        ///
+        /// Requires FEAT_EVT
         TID4   OFFSET(49) NUMBITS(1) [],
 
         /// Granule Protection Fault routing control.
+        ///
+        /// Requires FEAT_RME
         GPF   OFFSET(48) NUMBITS(1) [],
 
         /// Fault Injection Enable.
@@ -110,9 +114,13 @@ register_bitfields! {u64,
         AT    OFFSET(44) NUMBITS(1) [],
 
         /// Nested Virtualization.
+        ///
+        /// Changes meaning depending on if FEAT_NV2 or FEAT_NV is implemented.
         NV1   OFFSET(43) NUMBITS(1) [],
 
         /// Nested Virtualization.
+        ///
+        /// Changes meaning depending on if FEAT_NV2 or FEAT_NV is implemented.
         NV   OFFSET(42) NUMBITS(1) [],
 
         /// Controls the use of instructions related to Pointer Authentication.
@@ -148,6 +156,8 @@ register_bitfields! {u64,
         /// TME.
         ///
         /// Requires FEAT_TME.
+        ///
+        /// Enables access to the TSTART, TCOMMIT, TTEST, and TCANCEL instructions at EL0 and EL1.
         TME   OFFSET(39) NUMBITS(1) [],
 
         /// Route synchronous External abort exceptions to EL2.
@@ -209,10 +219,12 @@ register_bitfields! {u64,
             EL1IsAarch64 = 1
         ],
 
-        /// Trap Read of Virtual Memory registers.
+        /// Trap Read of Virtual Memory control registers.
         TRVM OFFSET(30) NUMBITS(1) [],
 
         /// HVC instruction Disable.
+        ///
+        /// Requires EL3 _not_ implemented
         HCD  OFFSET(29) NUMBITS(1) [],
 
         /// Trap DC ZVA.
@@ -293,6 +305,7 @@ register_bitfields! {u64,
             DisableTrapTVM = 0,
             EnableTrapTVM = 1,
         ],
+
         /// Trap TLB Maintenance instructions.
         TTLB OFFSET(25) NUMBITS(1) [],
 
@@ -301,8 +314,6 @@ register_bitfields! {u64,
 
         /// Trap Cache Maintenance to Coherency.
         TPCP OFFSET(23) NUMBITS(1) [],
-
-
 
         /// Trap data or unified cache maintenance instructions that operate by Set/Way.
         ///
@@ -393,12 +404,18 @@ register_bitfields! {u64,
         TID1  OFFSET(16) NUMBITS(1) [],
 
         /// Trap ID group 0.
+        ///
+        /// Requires FEAT_AA32
         TID0  OFFSET(15) NUMBITS(1) [],
 
         /// Trap WFE Instructions.
+        ///
+        /// Additionally applies to WFET when FEAT_WFxT is implemented.
         TWE  OFFSET(14) NUMBITS(1) [],
 
         /// Trap WFI Instructions.
+        ///
+        /// Additionally applies to WFIT when FEAT_WFxT is implemented.
         TWI  OFFSET(13) NUMBITS(1) [],
 
         /// Default Cacheability.
