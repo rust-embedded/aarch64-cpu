@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [11.2.0](https://github.com/rust-embedded/aarch64-cpu/compare/v11.1.0...v11.2.0) - 2025-11-29
+
+### Added
+
+- Add VMPIDR_EL2, MDSCR_EL1, MDCR_EL2 (thanks @CUB3D)
+- Add missing fields to HCR_EL2 (thanks @CUB3D)
+- Add AFSR0_EL1, AFSR1_EL1, CONTEXTIDR_EL1 (thanks @kisum9)
+- Add up-to-date enumeration for EC field to ESR_EL1 and ESR_EL2 (thanks @kisum9)
+
+### Changed
+
+- Improve registers documentation
+
 ## [11.1.0](https://github.com/rust-embedded/aarch64-cpu/compare/v11.0.0...v11.1.0) - 2025-10-19
 
 ### Added
