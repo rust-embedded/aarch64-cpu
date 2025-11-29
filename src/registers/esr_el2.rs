@@ -62,7 +62,7 @@ register_bitfields! {u64,
             TrappedMRRC = 0b00_1100,
             /// Branch Target Exception (FEAT_BTI)
             BranchTarget = 0b00_1101,
-            /// Illegal Execution state (FEAT_BTI)
+            /// Illegal Execution state
             IllegalExecutionState = 0b00_1110,
             /// SVC instruction execution in AArch32 state
             SVC32 = 0b01_0001,
