@@ -30,25 +30,25 @@ register_bitfields! {u64,
             Unknown = 0b00_0000,
             /// Trapped WF* instruction execution
             TrappedWFIorWFE = 0b00_0001,
-            /// Trapped MCR or MRC access with (coproc==0b1111)
+            /// Trapped MCR or MRC access with (coproc==0b1111) (FEAT_AA32)
             TrappedMCRorMRC = 0b00_0011,
-            /// Trapped MCRR or MRRC access with (coproc==0b1111)
+            /// Trapped MCRR or MRRC access with (coproc==0b1111) (FEAT_AA32)
             TrappedMCRRorMRRC = 0b00_0100,
-            /// Trapped MCR or MRC access with (coproc==0b1110)
+            /// Trapped MCR or MRC access with (coproc==0b1110) (FEAT_AA32)
             TrappedMCRorMRC2 = 0b00_0101,
-            /// Trapped LDC or STC access
+            /// Trapped LDC or STC access (FEAT_AA32)
             TrappedLDCorSTC = 0b00_0110,
             /// Access to SME, SVE, Advanced SIMD or floating-point functionality trapped
             TrappedFP = 0b00_0111,
             /// Trapped execution of any instruction not covered by other EC values (FEAT_LS64)
             TrappedNotCovered = 0b00_1010,
-            /// Trapped MRRC access with (coproc==0b1110)
+            /// Trapped MRRC access with (coproc==0b1110) (FEAT_AA32)
             TrappedMRRC = 0b00_1100,
             /// Branch Target Exception (FEAT_BTI)
             BranchTarget = 0b00_1101,
             /// Illegal Execution state (FEAT_BTI)
             IllegalExecutionState = 0b00_1110,
-            /// SVC instruction execution in AArch32 state
+            /// SVC instruction execution in AArch32 state (FEAT_AA32)
             SVC32 = 0b01_0001,
             /// Trapped MSRR, MRRS or System instruction execution in AArch64 state (FEAT_SYSREG128/FEAT_SYSINSTR128)
             TrappedMSRR_MRRS = 0b01_0100,
@@ -82,7 +82,7 @@ register_bitfields! {u64,
             SPAlignmentFault = 0b10_0110,
             /// Memory Operation Exception (FEAT_MOPS)
             MemoryOperationException = 0b10_0111,
-            /// Trapped floating-point exception taken from AArch32 state
+            /// Trapped floating-point exception taken from AArch32 state (FEAT_AA32)
             TrappedFP32 = 0b10_1000,
             /// Trapped floating-point exception taken from AArch64 state
             TrappedFP64 = 0b10_1100,
@@ -102,7 +102,7 @@ register_bitfields! {u64,
             WatchpointLowerEL = 0b11_0100,
             /// Watchpoint exception taken without a change in Exception level
             WatchpointCurrentEL = 0b11_0101,
-            /// BKPT instruction execution in AArch32 state
+            /// BKPT instruction execution in AArch32 state (FEAT_AA32)
             Bkpt32 = 0b11_1000,
             /// BRK instruction execution in AArch64 state
             Brk64 = 0b11_1100,
