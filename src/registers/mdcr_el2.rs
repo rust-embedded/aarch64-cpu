@@ -60,7 +60,7 @@ register_bitfields! {u64,
 
         /// Multi-Threaded PMU Enable.
         ///
-        /// Requires FEAT_MTPMU
+        /// Requires FEAT_MTPMU implemented, requires EL3 _not_ implemented
         MTPME OFFSET(28) NUMBITS(1) [],
 
         /// Trap Debug Comms Channel.
@@ -77,6 +77,8 @@ register_bitfields! {u64,
 
         /// EL2 Trace Buffer.
         ///
+        /// Requires FEAT_TRBE
+        ///
         /// Controls the owning exception level of the Trace Buffer.
         E2TB OFFSET(24) NUMBITS(2) [
             EL1OrEL2OwnerTrapToEL2 = 0b00,
@@ -85,6 +87,8 @@ register_bitfields! {u64,
         ],
 
         /// Hypervisor Cycle Counter Disable.
+        ///
+        /// Requires FEAT_PMUv3p5
         ///
         /// Stops PMCCNTR_EL0 from counting at EL2.
         HCCD OFFSET(23) NUMBITS(1) [],
@@ -98,7 +102,7 @@ register_bitfields! {u64,
 
         /// HPMD.
         ///
-        /// Requires FEAT_PMUv3p1
+        /// Requires FEAT_PMUv3p1, meaning changes when FEAT_Debugv8p2 is also implemented
         ///
         /// Controls access to guets performance monitors.
         HPMD OFFSET(17) NUMBITS(1) [],
@@ -130,10 +134,10 @@ register_bitfields! {u64,
 
         /// TDRA.
         ///
-        /// Trap access to Debug ROM registers.
+        /// Trap access to Debug ROM Address registers.
         TDRA OFFSET(11) NUMBITS(1) [],
 
-        /// TDA.
+        /// TDOSA.
         ///
         /// Requires FEAT_DoubleLock
         ///
