@@ -64,21 +64,21 @@ register_bitfields! {u64,
             BranchTarget = 0b00_1101,
             /// Illegal Execution state
             IllegalExecutionState = 0b00_1110,
-            /// SVC instruction execution in AArch32 state
+            /// SVC instruction execution in AArch32 state (FEAT_AA32)
             SVC32 = 0b01_0001,
-            /// HVC instruction execution in AArch32 state
+            /// HVC instruction execution in AArch32 state (FEAT_AA32)
             HVC32 = 0b01_0010,
-            /// SMC instruction execution in AArch32 state
+            /// SMC instruction execution in AArch32 state (FEAT_AA32)
             SMC32 = 0b01_0011,
             /// Trapped MSRR, MRRS or System instruction execution in AArch64 state (FEAT_SYSREG128/FEAT_SYSINSTR128)
             TrappedMSRR_MRRS = 0b01_0100,
-            /// SVC instruction execution in AArch64 state
+            /// SVC instruction execution in AArch64 state (FEAT_AA64)
             SVC64 = 0b01_0101,
-            /// HVC instruction execution in AArch64 state
+            /// HVC instruction execution in AArch64 state (FEAT_AA64)
             HVC64 = 0b01_0110,
-            /// SMC instruction execution in AArch64 state
+            /// SMC instruction execution in AArch64 state (FEAT_AA64)
             SMC64 = 0b01_0111,
-            /// Trapped MSR, MRS or System instruction execution in AArch64 state
+            /// Trapped MSR, MRS or System instruction execution in AArch64 state (FEAT_AA64)
             TrappedMsrMrs = 0b01_1000,
             /// Access to SVE functionality trapped (FEAT_SVE)
             TrappedSve = 0b01_1001,
@@ -104,9 +104,9 @@ register_bitfields! {u64,
             SPAlignmentFault = 0b10_0110,
             /// Memory Operation Exception (FEAT_MOPS)
             MemoryOperationException = 0b10_0111,
-            /// Trapped floating-point exception taken from AArch32 state
+            /// Trapped floating-point exception taken from AArch32 state (FEAT_AA32)
             TrappedFP32 = 0b10_1000,
-            /// Trapped floating-point exception taken from AArch64 state
+            /// Trapped floating-point exception taken from AArch64 state (FEAT_AA64)
             TrappedFP64 = 0b10_1100,
             /// GCS exception (FEAT_GCS)
             GCSException = 0b10_1101,
@@ -124,11 +124,11 @@ register_bitfields! {u64,
             WatchpointLowerEL = 0b11_0100,
             /// Watchpoint exception taken without a change in Exception level
             WatchpointCurrentEL = 0b11_0101,
-            /// BKPT instruction execution in AArch32 state
+            /// BKPT instruction execution in AArch32 state (FEAT_AA32)
             Bkpt32 = 0b11_1000,
-            /// Vector Catch exception from AArch32 state
+            /// Vector Catch exception from AArch32 state (FEAT_AA32)
             VectorCatch32 = 0b11_1010,
-            /// BRK instruction execution in AArch64 state
+            /// BRK instruction execution in AArch64 state (FEAT_AA64)
             Brk64 = 0b11_1100,
             /// Profiling exception (FEAT_EBEP/FEAT_SPE_EXC/FEAT_TRBE_EXC)
             ProfilingException = 0b11_1101
