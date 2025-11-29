@@ -120,9 +120,9 @@ register_bitfields! {u64,
             SoftwareStepLowerEL = 0b11_0010,
             /// Software Step exception taken without a change in Exception level
             SoftwareStepCurrentEL = 0b11_0011,
-            /// Watchpoint from a lower Exception level
+            /// Watchpoint exception from a lower Exception level
             WatchpointLowerEL = 0b11_0100,
-            /// Watchpoint exceptions without a change in Exception level
+            /// Watchpoint exception taken without a change in Exception level
             WatchpointCurrentEL = 0b11_0101,
             /// BKPT instruction execution in AArch32 state
             Bkpt32 = 0b11_1000,
