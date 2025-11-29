@@ -21,6 +21,8 @@ register_bitfields! {u64,
         /// Software step control bit.
         ///
         /// Enables execution from MDSTEPOP_EL1
+        ///
+        /// Requires FEAT_STEP2 to be implemented.
         EnSTEPOP OFFSET(50) NUMBITS(1) [],
 
         /// Extended Halting Breakpoint and Watchpoint Enable.
@@ -29,7 +31,7 @@ register_bitfields! {u64,
         /// Enable use of System PMU registers.
         EnSPM OFFSET(34) NUMBITS(1) [
             TrapSystemPMUAccess = 0,
-            AllocSystemPMUAccess = 1,
+            AllowSystemPMUAccess = 1,
         ],
 
         /// Trap Trace Accesses.
