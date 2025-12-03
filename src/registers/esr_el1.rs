@@ -38,7 +38,7 @@ register_bitfields! {u64,
             TrappedMCRorMRC2 = 0b00_0101,
             /// Trapped LDC or STC access (FEAT_AA32)
             TrappedLDCorSTC = 0b00_0110,
-            /// Access to SME, SVE, Advanced SIMD or floating-point functionality trapped
+            /// Access to SME, SVE, Advanced SIMD or floating-point functionality trapped (FEAT_AA32)
             TrappedFP = 0b00_0111,
             /// Trapped execution of any instruction not covered by other EC values (FEAT_LS64)
             TrappedNotCovered = 0b00_1010,
