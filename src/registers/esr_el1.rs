@@ -54,10 +54,6 @@ register_bitfields! {u64,
             TrappedMSRR_MRRS = 0b01_0100,
             /// SVC instruction execution in AArch64 state
             SVC64 = 0b01_0101,
-            /// HVC instruction execution in AArch64 state
-            HVC64 = 0b01_0110,
-            /// SMC instruction execution in AArch64 state
-            SMC64 = 0b01_0111,
             /// Trapped MSR, MRS or System instruction execution in AArch64 state
             TrappedMsrMrs = 0b01_1000,
             /// Access to SVE functionality trapped (FEAT_SVE)
