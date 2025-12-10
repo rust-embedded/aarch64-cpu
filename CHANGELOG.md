@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [11.2.1](https://github.com/rust-embedded/aarch64-cpu/compare/v11.2.0...v11.2.1) - 2025-12-10
+
+### Other
+
+- Merge pull request #65 from kisum9/remove-esr_el1-unused-value
+- Remove unused HVC64 and SMC64 values
+
 ## [11.2.0](https://github.com/rust-embedded/aarch64-cpu/compare/v11.1.0...v11.2.0) - 2025-11-29
 
 ### Added
