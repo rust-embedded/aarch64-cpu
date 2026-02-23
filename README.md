@@ -78,8 +78,8 @@ additional terms or conditions.
 ## Code of Conduct
 
 Contribution to this crate is organized under the terms of the [Rust Code of
-Conduct][CoC], the maintainer of this crate, the [Cortex-A team][team], promises
-to intervene to uphold that code of conduct.
+Conduct][CoC], the maintainer of this crate, the [Embedded Devices Working
+Group's Arm Team][team], promises to intervene to uphold that code of conduct.
 
 [CoC]: CODE_OF_CONDUCT.md
-[team]: https://github.com/rust-embedded/wg#the-cortex-a-team
+[team]: https://github.com/rust-embedded/wg#the-arm-team
