@@ -91,6 +91,7 @@ jobs:
     - run: cargo clippy --target=${{ matrix.target }}
 
   armv8r-examples:
+    runs-on: ubuntu-latest
     name: Build Armv8-R Examples
     steps:
     - uses: actions/checkout@v6
