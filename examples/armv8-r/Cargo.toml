@@ -1,0 +1,13 @@
+[package]
+edition = "2024"
+name = "armv8-r"
+# these examples should not be published to crates.io
+publish = false
+
+[dependencies]
+aarch64-rt = { version = "=0.4.0", default-features = false }
+aarch64-cpu.path = "../.."
+semihosting = { version = "0.1.24", default-features = false, features = [
+    "panic-handler",
+    "stdio",
+] }

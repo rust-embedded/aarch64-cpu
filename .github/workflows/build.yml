@@ -32,7 +32,7 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v1
+      uses: actions/checkout@v6
 
     - name: Install Rustup (macOS)
       run: |
@@ -66,8 +66,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v6
     - run: cargo fmt -- --check
+    - run: cd examples/armv8-r && cargo fmt -- --check
 
   clippy:
     name: Clippy
@@ -85,6 +86,12 @@ jobs:
     timeout-minutes: 10
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v6
     - run: rustup target add ${{ matrix.target }}
     - run: cargo clippy --target=${{ matrix.target }}
+
+  armv8r-examples:
+    name: Build Armv8-R Examples
+    steps:
+    - uses: actions/checkout@v6
+    - run: cd examples/armv8-r && cargo build --bins
