@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [11.2.1](https://github.com/rust-embedded/aarch64-cpu/compare/v11.2.0...v11.2.1) - 2026-03-05
+
+### Other
+
+- Add missing runs-on: line to CI
+- Update MIT file copyright line to 2026.
+- Adds an example program for Armv8-R AArch64 - the 64-bit version of Armv8-R.
+- Reflect the owning team's name change from Cortex-A Team to Arm Team.
+- Merge pull request #65 from kisum9/remove-esr_el1-unused-value
+- Remove unused HVC64 and SMC64 values
+
 - Noted change from Cortex-A Team to Arm Team in README
 - Added Armv8-R AArch64 example program
 
