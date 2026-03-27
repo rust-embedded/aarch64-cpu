@@ -8,6 +8,7 @@
 //! Performance Monitors User Enable Register - EL1
 
 use tock_registers::interfaces::Readable;
+use tock_registers::register_bitfields;
 
 pub struct Reg;
 
@@ -17,25 +18,25 @@ register_bitfields! {u64,
         IR OFFSET(5) NUMBITS(1) [
             WritesUnaffected = 0,
             WritesIgnored = 1,
-        ]
+        ],
 
         /// User Enable
         UEN OFFSET(4) NUMBITS(1) [
             Disabled = 0,
             Enabled = 1,
-        ]
+        ],
 
         /// Event counters Read enable or Read-only
         ER OFFSET(3) NUMBITS(1) [
             Disabled = 0,
             Enabled = 1,
-        ]
+        ],
 
         /// Cycle counter Read enable or Read-only
         CR OFFSET(2) NUMBITS(1) [
             Disabled = 0,
             Enabled = 1,
-        ]
+        ],
 
         /// Software increment register Write enable.
         SW OFFSET(1) NUMBITS(1) [
@@ -47,7 +48,7 @@ register_bitfields! {u64,
         EN OFFSET(0) NUMBITS(1) [
             TrappedUnlessEnabled = 0,
             Enabled = 1,
-        ]
+        ],
     ]
 }
 

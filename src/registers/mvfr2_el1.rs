@@ -8,6 +8,7 @@
 //! AArch32 Media and VFP Feature Register 2 - EL1
 
 use tock_registers::interfaces::Readable;
+use tock_registers::register_bitfields;
 
 pub struct Reg;
 
@@ -20,7 +21,7 @@ register_bitfields! {u64,
             FloatingPointSelectionConvToIntDirectRound = 0b0010,
             FloatingPointSelectionConvToIntDirectRoundAndRoundToInt = 0b0011,
             FloatingPointSelectionConvToIntDirectRoundAndRoundToIntAndMaxMinNum = 0b0100,
-        ]
+        ],
 
         /// Support for miscellaneous Advanced SIMD features.
         SIMDMisc OFFSET(0) NUMBITS(4) [
@@ -28,7 +29,7 @@ register_bitfields! {u64,
             FloatingPointToIntWithDirectRounding = 0b0001,
             FloatingPointToIntWithDirectRoundingAndFloatingPointRoundToInt = 0b0010,
             FloatingPointToIntWithDirectRoundingAndFloatingPointRoundToIntAndMaxMinNum = 0b0011,
-        ]
+        ],
     ]
 }
 
