@@ -3,15 +3,15 @@ edition = "2024"
 name = "armv8-r"
 # these examples should not be published to crates.io
 publish = false
+default-run = "hello"
 
 [dependencies]
-aarch64-rt = { version = "=0.4.0", default-features = false, features = [
-    "exceptions",
-] }
+aarch64-pmsa-rt = { path = "../../packages/aarch64-pmsa-rt" }
 # Use a git hash until a release is put out
 arm-fvp-base-pac = { git = "https://github.com/ArmFirmwareCrates/arm-fvp-base-pac/", rev = "9547f29c26cece16434d536b05ca50007e24c0aa", features = [
     "base-r",
 ] }
+arm-generic-timer = "0.1.1"
 arm-gic = "0.7.2"
 aarch64-cpu = { path = "../../packages/aarch64-cpu", features = [
     "critical-section-single-core",
@@ -22,3 +22,7 @@ semihosting = { version = "0.1.24", default-features = false, features = [
     "panic-handler",
     "stdio",
 ] }
+tock-registers = { version = "0.10.0", default-features = false }
+
+[workspace]
+

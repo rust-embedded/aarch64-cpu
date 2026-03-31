@@ -21,7 +21,12 @@ exclude = [
 
 [dependencies]
 tock-registers = { version = "0.10.0", default-features = false } # Use it as interface-only library.
-critical-section = { version = "1.2.0", features = ["restore-state-u8"], optional = true }
+critical-section = { version = "1.2.0", features = [
+    "restore-state-u8",
+], optional = true }
+
+[build-dependencies]
+arm-targets = "0.4.1"
 
 [features]
 critical-section-single-core = ["critical-section"]

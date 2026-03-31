@@ -57,4 +57,8 @@
 
 pub mod asm;
 mod critical_section;
+pub mod generic_timer;
 pub mod registers;
+
+#[cfg(arm_architecture = "v8-r")]
+pub mod pmsav8;

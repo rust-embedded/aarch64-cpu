@@ -7,8 +7,8 @@ on:
   pull_request:
 
 jobs:
-  test:
-    name: Test
+  build:
+    name: Build
 
     strategy:
       fail-fast: false
@@ -20,7 +20,7 @@ jobs:
         ]
         target: [
           aarch64-unknown-none-softfloat,
-          x86_64-unknown-linux-gnu
+          aarch64-unknown-none,
         ]
         variant: [
           "",           # debug
@@ -57,9 +57,32 @@ jobs:
       env:
         RUSTFLAGS: "-D warnings"
 
-    # this needs QEMU and test-runner setup, TBD
-    # - name: Run Tests
-    #   run: cargo test ${{ matrix.variant }} --target=${{ matrix.target }}
+  test:
+    name: Test
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v6
+
+    - name: Install QEMU
+      run: |
+        sudo apt-get -y update
+        sudo apt-get -y install libpixman-1-0 libfdt1 libglib2.0-0t64
+        curl -sSL https://github.com/jonathanpallant/qemu9-for-ubuntu-2404/releases/download/qemu-10.2.2%2Bbuild0/qemu-10.2.2-ubuntu-24.04.tar.gz | sudo tar xvzf - -C /
+
+    - name: Install just
+      run: sudo apt-get install just
+
+    - name: Install FVP
+      run: |
+        mkdir /tmp/fvp
+        cd /tmp/fvp && curl -LO https://developer.arm.com/-/cdn-downloads/permalink/FVPs-Architecture/FM-11.30/FVP_Base_AEMv8R_11.30_27_Linux64.tgz
+        cd /tmp/fvp && tar xf FVP_Base_AEMv8R_11.30_27_Linux64.tgz
+
+    - name: Run Tests
+      run: PATH="/tmp/fvp/AEMv8R_base_pkg/models/Linux64_GCC-9.3/:/opt/qemu/bin:$PATH" just test
 
   check_formatting:
     name: Check Formatting
@@ -79,7 +102,7 @@ jobs:
       matrix:
         target: [
           aarch64-unknown-none-softfloat,
-          x86_64-unknown-linux-gnu
+          aarch64-unknown-none,
         ]
 
     runs-on: ubuntu-latest

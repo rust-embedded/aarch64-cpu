@@ -1,0 +1,10 @@
+[workspace]
+members = ["packages/*"]
+resolver = "3"
+
+[workspace.dependencies]
+aarch64-cpu = "11.2.0"
+semihosting = { version = "0.1.24", default-features = false, features = [
+    "panic-handler",
+    "stdio",
+] }
