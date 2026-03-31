@@ -13,7 +13,9 @@ arm-fvp-base-pac = { git = "https://github.com/ArmFirmwareCrates/arm-fvp-base-pa
     "base-r",
 ] }
 arm-gic = "0.7.2"
-aarch64-cpu = { path = "../..", features = ["critical-section-single-core"] }
+aarch64-cpu = { path = "../../packages/aarch64-cpu", features = [
+    "critical-section-single-core",
+] }
 critical-section = "1.2.0"
 defmt = "1.0.1"
 semihosting = { version = "0.1.24", default-features = false, features = [
