@@ -35,13 +35,13 @@ register_bitfields! {u64,
 
         /// RPRFM hint instruction
         RPRFM OFFSET(48) NUMBITS(4) [
-            NotImplmented = 0b0000,
+            NotImplemented = 0b0000,
             Implmented = 0b0001,
         ],
 
         /// Indicates support for producer-consumer data placement hints
         PCDPHINT OFFSET(44) NUMBITS(4) [
-            NotImplmented = 0b0000,
+            NotImplemented = 0b0000,
             Implemented = 0b0001,
         ],
 
@@ -53,7 +53,7 @@ register_bitfields! {u64,
 
         /// Indicates support for system instructions that can take 128-bit inputs
         SYSINSTR_128 OFFSET(36) NUMBITS(4) [
-            NotImplmented = 0b0000,
+            NotImplemented = 0b0000,
             Implmented = 0b0001,
         ],
 
@@ -65,7 +65,7 @@ register_bitfields! {u64,
 
         /// Indicates support for the CLRBHB instruction
         CLRBHB OFFSET(28) NUMBITS(4) [
-            NotImplmented = 0b0000,
+            NotImplemented = 0b0000,
             Implmented = 0b0001,
         ],
 
@@ -77,13 +77,13 @@ register_bitfields! {u64,
 
         /// Support for the BC instruction
         BC OFFSET(20) NUMBITS(4) [
-            NotImplmented = 0b0000,
+            NotImplemented = 0b0000,
             Implmented = 0b0001,
         ],
 
         /// Support for Memory Copy and Memory Set instructions
         MOPS OFFSET(16) NUMBITS(4) [
-            NotImplmented = 0b0000,
+            NotImplemented = 0b0000,
             Implmented = 0b0001,
         ],
 
@@ -100,7 +100,7 @@ register_bitfields! {u64,
 
         /// Indicates support for QARMA3 for generic code authentication
         GPA3 OFFSET(8) NUMBITS(4) [
-            NotImplmented = 0b0000,
+            NotImplemented = 0b0000,
             Implmented = 0b0001,
         ],
 
