@@ -40,21 +40,21 @@ register_bitfields! {u64,
 
         /// Address Breakpoint Linking Extension
         ABLE OFFSET(40) NUMBITS(4) [
-            NotImplmented = 0b0000,
-            Implmented = 0b0001,
+            NotImplemented = 0b0000,
+            Implemented = 0b0001,
         ],
 
         /// PMU fixed-function instruction counter
         PMICNTR OFFSET(36) NUMBITS(4) [
-            NotImplmented = 0b0000,
-            Implmented = 0b0001,
+            NotImplemented = 0b0000,
+            Implemented = 0b0001,
         ],
 
         /// System PMU extension
         SPMU OFFSET(32) NUMBITS(4) [
             NotImplemented = 0b0000,
-            Implmented = 0b0001,
-            ImplmentedWithSPMZR = 0b0010,
+            Implemented = 0b0001,
+            ImplementedWithSPMZR = 0b0010,
         ],
 
         /// Context-aware breakpoints

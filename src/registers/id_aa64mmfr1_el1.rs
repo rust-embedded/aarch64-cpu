@@ -21,7 +21,7 @@ register_bitfields! {u64,
             CannotBeUsed = 0b0001,
         ],
 
-        /// Support for cache maintencance instruction permission
+        /// Support for cache maintenance instruction permission
         CMOW OFFSET(56) NUMBITS(4) [
             NotImplemented = 0b0000,
             Implemented = 0b0001,

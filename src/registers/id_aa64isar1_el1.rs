@@ -42,7 +42,7 @@ register_bitfields! {u64,
         ],
 
         /// Support for advanced SIMD and floating-point BFloat16 instructions
-        SPECRES OFFSET(44) NUMBITS(4) [
+        BF16 OFFSET(44) NUMBITS(4) [
             NotImplemented = 0b0000,
             InstructionOnly = 0b0001,
             WithEBF = 0b0010,
@@ -94,12 +94,11 @@ register_bitfields! {u64,
             Implemented = 0b0001,
         ],
 
-        /// Support for the JavaSCript convertsion from double-precision floating-point values to integers
+        /// Support for the JavaScript conversion from double-precision floating-point values to integers
         JSCVT OFFSET(12) NUMBITS(4) [
             NotImplemented = 0b0000,
             Implemented = 0b0001,
         ],
-
 
         /// Indicates whether an IMPLEMENTATION DEFINED algorithm is implemented in the PE for
         /// address authentication, in AArch64 state. This applies to all Pointer Authentication
