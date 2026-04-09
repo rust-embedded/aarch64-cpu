@@ -24,7 +24,7 @@ register_bitfields! {u64,
             Supported = 0b0001,
             NotSupported = 0b0000,
         ],
-       
+
         /// Support for Outer Sharable and TLB range maintenance instructions
         TLB OFFSET(56) NUMBITS(4) [
             NotImplemented = 0b0000,
