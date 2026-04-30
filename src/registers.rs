@@ -298,4 +298,6 @@ pub use vtcr_el2::VTCR_EL2;
 pub use vttbr_el2::VTTBR_EL2;
 
 #[doc(inline)]
+pub use tock_registers::fields::{FieldValue, TryFromValue};
+#[doc(inline)]
 pub use tock_registers::interfaces::{ReadWriteable, Readable, Writeable};
