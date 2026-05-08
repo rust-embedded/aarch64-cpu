@@ -4,7 +4,7 @@
 use core::sync::atomic::{self, AtomicU64};
 
 use aarch64_cpu::registers::{self, Readable};
-use aarch64_rt::entry;
+use aarch64_rt::{ExceptionHandlers, entry, exception_handlers};
 use semihosting::{println, process};
 
 static X: AtomicU64 = AtomicU64::new(0);
@@ -26,3 +26,8 @@ fn main(_arg0: u64, _arg1: u64, _arg2: u64, _arg3: u64) -> ! {
 
     process::exit(0)
 }
+
+// needed by aarch64-rt even when not used
+exception_handlers!(Exceptions);
+struct Exceptions;
+impl ExceptionHandlers for Exceptions {}

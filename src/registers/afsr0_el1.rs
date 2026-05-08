@@ -7,7 +7,8 @@
 
 //! Auxiliary Fault Status Register 0 - EL1
 //!
-//! Provides IMPLEMENTATION DEFINED fault status information for synchronous aborts that are taken to EL1.
+//! Provides IMPLEMENTATION DEFINED fault status information for synchronous aborts that are taken
+//! to EL1.
 
 use tock_registers::interfaces::{Readable, Writeable};
 

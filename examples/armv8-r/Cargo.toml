@@ -5,8 +5,17 @@ name = "armv8-r"
 publish = false
 
 [dependencies]
-aarch64-rt = { version = "=0.4.0", default-features = false }
-aarch64-cpu.path = "../.."
+aarch64-rt = { version = "=0.4.0", default-features = false, features = [
+    "exceptions",
+] }
+# Use a git hash until a release is put out
+arm-fvp-base-pac = { git = "https://github.com/ArmFirmwareCrates/arm-fvp-base-pac/", rev = "9547f29c26cece16434d536b05ca50007e24c0aa", features = [
+    "base-r",
+] }
+arm-gic = "0.7.2"
+aarch64-cpu = { path = "../..", features = ["critical-section-single-core"] }
+critical-section = "1.2.0"
+defmt = "1.0.1"
 semihosting = { version = "0.1.24", default-features = false, features = [
     "panic-handler",
     "stdio",

@@ -56,4 +56,5 @@
 #![no_std]
 
 pub mod asm;
+mod critical_section;
 pub mod registers;

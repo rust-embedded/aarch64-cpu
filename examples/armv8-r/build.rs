@@ -12,6 +12,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // linker script provided by aarch64-rt
     println!("cargo:rustc-link-arg=-Timage.ld");
+    // linker script provided by defmt
+    println!("cargo:rustc-link-arg=-Tdefmt.x");
 
     Ok(())
 }

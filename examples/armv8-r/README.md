@@ -18,6 +18,13 @@ This folder contains example programs for the Armv8-R AArch64 architecture.
 
 [1]: https://developer.arm.com/Tools%20and%20Software/Fixed%20Virtual%20Platforms/Arm%20Architecture%20FVPs
 
+* (Optional) `defmt-print` to decode the defmt logs produced by some examples.
+  The tool can be installed with the following command:
+
+``` console
+$ cargo install defmt-print --version 1.0.0 --locked
+```
+
 ## Running the examples
 
 All commands in this section are meant to be executed using this directory as the working directory.
@@ -31,6 +38,54 @@ It also validates that static variables are initialized before the start of `mai
 $ cargo run --bin hello
 Hello, world! running from EL2
 static variables: X=0, Y=1
+```
+
+### `interrupts`
+
+This program showcases nested interrupt handling.
+
+``` console
+$ cargo run --bin interrupts
+start of main
+  > irq_current()
+  Handling SGI 1
+  SGI1 handler
+  before raising SGI0
+    > irq_current()
+    Handling SGI 0
+    SGI0 handler
+    Handled SGI 0
+    < irq_current()
+  after raising SGI0
+  Handled SGI 1
+  < irq_current()
+end of main
+```
+
+### `defmt`
+
+This program showcases defmt logging.
+The defmt logs are output via UART0 (serial port 0) and not printed to the console.
+
+``` console
+$ cargo run --bin defmt
+before defmt log
+before raise SGI0
+after raise SGI0
+  > irq_current()
+  Handling SGI 0
+  Handled SGI 0
+  < irq_current()
+after defmt log
+```
+
+The FVP will create a file named `uart0.out` in the current directory that contains the UART0 output of the program.
+This file is defmt-encoded and can be decoded with the following command:
+
+``` console
+$ cat uart0.out | defmt-print -e target/aarch64v8r-unknown-none/debug/defmt
+INFO  >>> 42 <<<
+INFO  SGI0 handler
 ```
 
 ## License

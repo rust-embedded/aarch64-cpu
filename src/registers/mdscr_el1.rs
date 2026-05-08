@@ -9,7 +9,8 @@
 //!
 //! Main control register for debug functions.
 //!
-//! This register is present only when FEAT_AA64 is implemented. Otherwise, direct accesses to MDSCR_EL1 are UNDEFINED.
+//! This register is present only when FEAT_AA64 is implemented. Otherwise, direct accesses to
+//! MDSCR_EL1 are UNDEFINED.
 
 use tock_registers::{
     interfaces::{Readable, Writeable},

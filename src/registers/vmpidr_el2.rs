@@ -9,8 +9,10 @@
 //!
 //! Holds the value returned for EL1 reads of MPIDR_EL1.
 
-use tock_registers::interfaces::Writeable;
-use tock_registers::{interfaces::Readable, register_bitfields};
+use tock_registers::{
+    interfaces::{Readable, Writeable},
+    register_bitfields,
+};
 
 register_bitfields! {u64,
     pub VMPIDR_EL2 [
