@@ -13,6 +13,19 @@ use tock_registers::{interfaces::Readable, register_bitfields};
 
 register_bitfields! {u64,
     pub ID_AA64DFR0_EL1 [
+
+        /// Zero PMU event counters for Guest
+        HPMN0 OFFSET(60) NUMBITS(4) [
+            Unpredictable = 0b0000,
+            Defined = 0b00001,
+        ],
+
+        /// Trace Buffer External Mode Extension
+        ExtTrcBuff OFFSET(56) NUMBITS(4) [
+            NotImplemented = 0b0000,
+            Implemented = 0b00001,
+        ],
+
         /// Branch Record Buffer Extension.
         ///
         /// - 0000 Branch Record Buffer Extension not implemented.
@@ -65,14 +78,32 @@ register_bitfields! {u64,
             Implemented = 0b0001,
         ],
 
+        /// OS Double Lock implemented
+        DoubleLock OFFSET(36) NUMBITS(4) [
+            Implemented = 0b0000,
+            NotImplemented = 0b1111,
+        ],
+
         /// Statistical Profiling Extension version.
         PMSVer OFFSET(32) NUMBITS(4) [],
 
         /// Number of context-aware breakpoints, minus 1.
         CTX_CMPs OFFSET(28) NUMBITS(4) [],
 
+        /// Synchronous-exception-based event profiling
+        SEBEP OFFSET(24) NUMBITS(4) [
+            NotImplemented = 0b0000,
+            Implemented = 0b00001,
+        ],
+
         /// Number of watchpoints, minus 1.
         WRPs OFFSET(20) NUMBITS(4) [],
+
+        /// PMU Snapshot extension
+        PMSS OFFSET(16) NUMBITS(4) [
+            NotImplemented = 0b0000,
+            Implemented = 0b00001,
+        ],
 
         /// Number of breakpoints, minus 1.
         BRPs OFFSET(12) NUMBITS(4) [],

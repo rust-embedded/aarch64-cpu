@@ -4,6 +4,7 @@
 //
 // Author(s):
 //   - Ali Saidi <alisaidi@amazon.com>
+//   - Callum Thomson <callumthom11@gmail.com>
 
 //! AArch64 Memory Model Feature Register 1 - EL1
 //!
@@ -14,6 +15,50 @@ use tock_registers::{interfaces::Readable, register_bitfields};
 
 register_bitfields! {u64,
     pub ID_AA64MMFR1_EL1 [
+        /// Support for restrictions on branch history speculation around exceptions
+        ECBHB OFFSET(60) NUMBITS(4) [
+            Undisclosed = 0b0000,
+            CannotBeUsed = 0b0001,
+        ],
+
+        /// Support for cache maintenance instruction permission
+        CMOW OFFSET(56) NUMBITS(4) [
+            NotImplemented = 0b0000,
+            Implemented = 0b0001,
+        ],
+
+        /// Support for SCTLR_EL1.TIDCP and SCTLR_EL2.TIDCP
+        TIDCP1 OFFSET(52) NUMBITS(4) [
+            NotImplemented = 0b0000,
+            Implemented = 0b0001,
+        ],
+
+        /// Support for intermediate caching of translation table walks
+        nTLBPA OFFSET(48) NUMBITS(4) [
+            MayIncludeNonCoherentCaches = 0b0000,
+            DoesNotIncludeNonCoherentCaches = 0b0001,
+        ],
+
+        /// Support for FPCR.{AH, FIZ, NEP}
+        AFP OFFSET(44) NUMBITS(4) [
+            NotSupported = 0b0000,
+            Supported = 0b0001,
+        ],
+
+        /// Support for HCRX_EL2
+        HCX OFFSET(40) NUMBITS(4) [
+            NotSupported = 0b0000,
+            Supported = 0b0001,
+        ],
+
+        /// Support for Enhanced Translation Synchronization
+        ETS OFFSET(36) NUMBITS(4) [
+            NotSupported = 0b0000,
+            NotSupported2 = 0b0001,
+            ETS2 = 0b0010,
+            ETS3 = 0b0011,
+        ],
+
         /// Support for configurable trapping delay of WFE instructions
         TWED OFFSET(32) NUMBITS(4) [
             /// Delaying the trapping of WFE instructions isn't supported
