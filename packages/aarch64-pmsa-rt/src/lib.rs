@@ -10,11 +10,10 @@
 
 #![no_std]
 
-use core::{
-    arch::{asm, naked_asm},
-    mem,
-};
+#[cfg(target_arch = "aarch64")]
+use core::arch::{asm, naked_asm};
 
+#[cfg(target_arch = "aarch64")]
 use aarch64_cpu::registers::{self, DAIF, Readable as _, Writeable as _};
 
 mod sections;
@@ -25,6 +24,7 @@ pub use sections::Section;
 /// Executes `f` at one lower Exception Level on the given `stack` memory
 ///
 /// `f` will inherit the current Interrupt Mask Bits (DAIF)
+#[cfg(target_arch = "aarch64")]
 pub fn drop_exception_level(f: extern "C" fn() -> !, stack: Stack) -> ! {
     /// This function is the first thing that runs at the lower EL and serves
     /// as a "trampoline" into the user-defined entry point `f`. It does the
@@ -110,6 +110,7 @@ pub fn drop_exception_level(f: extern "C" fn() -> !, stack: Stack) -> ! {
 #[unsafe(naked)]
 #[unsafe(no_mangle)]
 #[unsafe(link_section = ".text._start")]
+#[cfg(target_arch = "aarch64")]
 pub unsafe extern "C" fn _default_start() -> ! {
     core::arch::naked_asm!(
         r#"
@@ -146,6 +147,7 @@ pub unsafe extern "C" fn _default_start() -> ! {
 /// This algorithm is as described by Arm in
 /// [Learn the Architecture - Booting the Cortex-R82 Guide](https://developer.arm.com/documentation/109917/0002/EL2-boot-steps?lang=en)
 #[unsafe(naked)]
+#[cfg(target_arch = "aarch64")]
 pub extern "C" fn get_cpuid() -> u64 {
     core::arch::naked_asm!(
         r#"
@@ -165,6 +167,7 @@ pub extern "C" fn get_cpuid() -> u64 {
 /// Called by `_default_start`, or by your start-up routine.
 ///
 /// Does some Rust based initialisation, then calls `_rust_main`.
+#[cfg(target_arch = "aarch64")]
 extern "C" fn rust_start() -> ! {
     unsafe extern "Rust" {
         fn _rust_main() -> !;
@@ -178,6 +181,7 @@ extern "C" fn rust_start() -> ! {
 }
 
 /// Set up the Vector Base Address Register (VBAR) for the current EL
+#[cfg(target_arch = "aarch64")]
 extern "C" fn set_vbar() {
     let el = registers::CurrentEL.read(registers::CurrentEL::EL);
 
@@ -228,7 +232,8 @@ pub struct StackedRegisters {
 
 // NOTE this size must match stack space reserved in the prologue of the
 // exception handlers
-const _: () = assert!(8 * 24 == mem::size_of::<StackedRegisters>());
+#[cfg(target_arch = "aarch64")]
+const _: () = assert!(8 * 24 == core::mem::size_of::<StackedRegisters>());
 
 /// Registers exception handlers
 ///

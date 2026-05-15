@@ -21,6 +21,7 @@ jobs:
         target: [
           aarch64-unknown-none-softfloat,
           aarch64-unknown-none,
+          x86_64-unknown-linux-gnu,
         ]
         variant: [
           "",           # debug
@@ -103,6 +104,7 @@ jobs:
         target: [
           aarch64-unknown-none-softfloat,
           aarch64-unknown-none,
+          x86_64-unknown-linux-gnu
         ]
 
     runs-on: ubuntu-latest
