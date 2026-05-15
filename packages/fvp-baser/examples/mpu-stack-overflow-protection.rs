@@ -113,6 +113,8 @@ fn setup_stack_as_read_write() {
 
 fn enable_mpu() {
     registers::SCTLR_EL2.modify(registers::SCTLR_EL2::M::Enable);
+    // Arm "Booting the Cortex-R82 Guide" (109917_0002_01_en) notes an ISB is required here
+    aarch64_cpu::asm::barrier::isb(aarch64_cpu::asm::barrier::SY);
     // prevent memory operations after the preceding write from being
     // moved/re-ordered before the write
     atomic::fence(atomic::Ordering::Release);
