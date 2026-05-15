@@ -6,15 +6,17 @@ version = 4
 name = "aarch64-cpu"
 version = "11.2.0"
 dependencies = [
+ "arm-targets",
  "critical-section",
  "tock-registers",
 ]
 
 [[package]]
-name = "aarch64-rt"
-version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b64de198c6b65a80f7b8e799c2c9b957de30ef161d676bbc4b52943313bc4f27"
+name = "aarch64-pmsa-rt"
+version = "0.1.0"
+dependencies = [
+ "aarch64-cpu",
+]
 
 [[package]]
 name = "arm-fvp-base-pac"
@@ -81,6 +83,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "arm-targets"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "639ca04328cd85faa54abaa192026d86fe49e278717820c2e92baa232ea7b0ec"
+
+[[package]]
 name = "arm-tzc"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -96,12 +104,14 @@ name = "armv8-r"
 version = "0.0.0"
 dependencies = [
  "aarch64-cpu",
- "aarch64-rt",
+ "aarch64-pmsa-rt",
  "arm-fvp-base-pac",
+ "arm-generic-timer",
  "arm-gic",
  "critical-section",
  "defmt",
  "semihosting",
+ "tock-registers",
 ]
 
 [[package]]
@@ -215,9 +225,9 @@ dependencies = [
 
 [[package]]
 name = "quote"
-version = "1.0.45"
+version = "1.0.44"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "41f2619966050689382d2b44f664f4bc593e129785a36d6ee376ddf37259b924"
+checksum = "21b2ebcf727b7760c461f091f9f0f539b77b8e87f2fd88131e7f1b433b3cece4"
 dependencies = [
  "proc-macro2",
 ]
@@ -233,9 +243,9 @@ dependencies = [
 
 [[package]]
 name = "semihosting"
-version = "0.1.25"
+version = "0.1.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f8e4abf97879f4e80db69a9fba7bd64998e9bdad25f58ef045a778e191172fd4"
+checksum = "e896488941756e5de3ee8449495464dbbf2201c85d2d1ace47d4fb81c74b99ec"
 
 [[package]]
 name = "spin"
@@ -288,18 +298,18 @@ checksum = "e6e4313cd5fcd3dad5cafa179702e2b244f760991f45397d14d4ebf38247da75"
 
 [[package]]
 name = "zerocopy"
-version = "0.8.46"
+version = "0.8.39"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5c5030500cb2d66bdfbb4ebc9563be6ce7005a4b5d0f26be0c523870fe372ca6"
+checksum = "db6d35d663eadb6c932438e763b262fe1a70987f9ae936e60158176d710cae4a"
 dependencies = [
  "zerocopy-derive",
 ]
 
 [[package]]
 name = "zerocopy-derive"
-version = "0.8.46"
+version = "0.8.39"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a5f86989a046a79640b9d8867c823349a139367bda96549794fcc3313ce91f4e"
+checksum = "4122cd3169e94605190e77839c9a40d40ed048d305bfdc146e7df40ab0f3e517"
 dependencies = [
  "proc-macro2",
  "quote",

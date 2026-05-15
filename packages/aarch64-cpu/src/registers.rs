@@ -26,6 +26,8 @@ mod clidr_el1;
 mod cntfrq_el0;
 mod cnthctl_el2;
 mod cnthp_ctl_el2;
+mod cnthp_cval_el2;
+mod cnthp_tval_el2;
 mod cntkctl_el1;
 mod cntp_ctl_el0;
 mod cntp_cval_el0;
@@ -116,8 +118,20 @@ mod mdcr_el2;
 mod mdscr_el1;
 mod midr_el1;
 mod mpidr_el1;
+mod mpuir_el1;
+mod mpuir_el2;
 mod oslar_el1;
 mod par_el1;
+#[cfg(arm_architecture = "v8-r")]
+mod prbar_el1;
+#[cfg(arm_architecture = "v8-r")]
+mod prbar_el2;
+#[cfg(arm_architecture = "v8-r")]
+mod prlar_el1;
+#[cfg(arm_architecture = "v8-r")]
+mod prlar_el2;
+mod prselr_el1;
+mod prselr_el2;
 mod rvbar_el1;
 mod rvbar_el2;
 mod rvbar_el3;
@@ -172,6 +186,8 @@ pub use clidr_el1::CLIDR_EL1;
 pub use cntfrq_el0::CNTFRQ_EL0;
 pub use cnthctl_el2::CNTHCTL_EL2;
 pub use cnthp_ctl_el2::CNTHP_CTL_EL2;
+pub use cnthp_cval_el2::CNTHP_CVAL_EL2;
+pub use cnthp_tval_el2::CNTHP_TVAL_EL2;
 pub use cntkctl_el1::CNTKCTL_EL1;
 pub use cntp_ctl_el0::CNTP_CTL_EL0;
 pub use cntp_cval_el0::CNTP_CVAL_EL0;
@@ -262,8 +278,20 @@ pub use mdcr_el2::MDCR_EL2;
 pub use mdscr_el1::MDSCR_EL1;
 pub use midr_el1::MIDR_EL1;
 pub use mpidr_el1::MPIDR_EL1;
+pub use mpuir_el1::MPUIR_EL1;
+pub use mpuir_el2::MPUIR_EL2;
 pub use oslar_el1::OSLAR_EL1;
 pub use par_el1::PAR_EL1;
+#[cfg(arm_architecture = "v8-r")]
+pub use prbar_el1::PRBAR_EL1;
+#[cfg(arm_architecture = "v8-r")]
+pub use prbar_el2::PRBAR_EL2;
+#[cfg(arm_architecture = "v8-r")]
+pub use prlar_el1::PRLAR_EL1;
+#[cfg(arm_architecture = "v8-r")]
+pub use prlar_el2::PRLAR_EL2;
+pub use prselr_el1::PRSELR_EL1;
+pub use prselr_el2::PRSELR_EL2;
 pub use rvbar_el1::RVBAR_EL1;
 pub use rvbar_el2::RVBAR_EL2;
 pub use rvbar_el3::RVBAR_EL3;

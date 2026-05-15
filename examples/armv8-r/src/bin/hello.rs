@@ -4,7 +4,7 @@
 use core::sync::atomic::{self, AtomicU64};
 
 use aarch64_cpu::registers::{self, Readable};
-use aarch64_rt::{ExceptionHandlers, entry, exception_handlers};
+use aarch64_pmsa_rt::{ExceptionHandlers, entry, exception_handlers};
 use semihosting::{println, process};
 
 static X: AtomicU64 = AtomicU64::new(0);
@@ -12,7 +12,7 @@ static Y: AtomicU64 = AtomicU64::new(1);
 
 entry!(main);
 
-fn main(_arg0: u64, _arg1: u64, _arg2: u64, _arg3: u64) -> ! {
+fn main() -> ! {
     let el = registers::CurrentEL.read(registers::CurrentEL::EL);
     println!("Hello, world! running from EL{el}");
 
