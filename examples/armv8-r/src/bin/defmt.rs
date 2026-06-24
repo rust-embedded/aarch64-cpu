@@ -1,7 +1,7 @@
 #![no_main]
 #![no_std]
 
-use aarch64_rt::{ExceptionHandlers, RegisterStateRef, entry, exception_handlers};
+use aarch64_pmsa_rt::{ExceptionHandlers, StackedRegisters, entry, exception_handlers};
 use semihosting::{println, process};
 
 use armv8_r::{
@@ -10,12 +10,13 @@ use armv8_r::{
     gic::{Gic, IntId},
 };
 
-entry!(main);
+// default stack size (4 KiB) is too little and results in a stack overflow
+entry!(main, stack_size = 8 * 1024);
 
 const INTID_SGI0: IntId = IntId::sgi(0);
 
-fn main(_arg0: u64, _arg1: u64, _arg2: u64, _arg3: u64) -> ! {
-    let Peripherals { mut gic } = Peripherals::take();
+fn main() -> ! {
+    let Peripherals { mut gic, .. } = Peripherals::take();
 
     gic.set_interrupt_priority(INTID_SGI0, 1);
 
@@ -48,7 +49,7 @@ impl defmt::Format for SendSgi {
 exception_handlers!(Exceptions);
 struct Exceptions;
 impl ExceptionHandlers for Exceptions {
-    extern "C" fn irq_current(_register_state: RegisterStateRef<'_>) {
+    extern "C" fn irq_current(_context: &StackedRegisters) {
         let _guard = Nesting::increase();
         println!("{Nesting}> irq_current()");
         while let Some(int_id) = Gic::get_and_acknowledge_interrupt() {

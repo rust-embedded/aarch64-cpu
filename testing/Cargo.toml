@@ -1,0 +1,14 @@
+[package]
+edition = "2024"
+name = "testing"
+publish = false
+
+[lib]
+doctest = false
+
+[dependencies]
+pretty_assertions = "1.4.1"
+rustversion = "1.0.22"
+
+[workspace]
+# this is not cross compiled so put it in its own workspace

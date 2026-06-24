@@ -1,0 +1,11 @@
+[package]
+edition = "2024"
+name = "aarch64-pmsa-rt"
+version = "0.1.0"
+
+[lib]
+doctest = false
+test = false
+
+[dependencies]
+aarch64-cpu = { path = "../aarch64-cpu", version = "11.2.0" }

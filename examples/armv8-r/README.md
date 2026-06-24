@@ -88,6 +88,29 @@ INFO  >>> 42 <<<
 INFO  SGI0 handler
 ```
 
+### `timer-cval` and `timer-tval`
+
+These two programs use Arm's Generic Timer, specifically the physical EL1 timer, to periodically fire an interrupt.
+See the crate-level doc comment in each example for an explanation on how they arm the timer with different approaches.
+
+``` console
+$ cargo run --bin timer-cval
+tick(0) at 60000194988
+tick(1) at 120000194988
+tick(2) at 180000194988
+tick(3) at 240000194988
+(.. continues ..)
+```
+
+``` console
+$ cargo run --bin timer-tval
+tick(0) at 937695424
+tick(1) at 60937731528
+tick(2) at 120937767608
+tick(3) at 180937803240
+(.. continues ..)
+```
+
 ## License
 
 Licensed under either of

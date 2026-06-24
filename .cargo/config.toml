@@ -1,0 +1,30 @@
+[target.'cfg(all(target_arch = "aarch64", target_os = "none"))']
+# QEMU runners (version must be >=7.1 for neoverse-v1 CPU support)
+runner = [
+    "qemu-system-aarch64",
+
+    # this CPU implements the ARMv8.4-A and ISA it's equivalent to the
+    # baseline AArch64 R-profile ISA
+    "-cpu", "neoverse-v1",
+
+    # choose which Exception Level to boot at
+    # "-machine", "virt",                   # boot in EL1
+    "-machine", "virt,virtualization=on", # boot in EL2
+    # "-machine", "virt,secure=on",         # boot in EL3
+
+    "-nographic",
+    "-semihosting",
+
+    # instantiate a SMP (multi-core) system with two cores
+    # NOTE unless booting in EL3, QEMU keeps secondary cores halted out of reset
+    "-smp", "2",
+
+    # starts GDB server and halts core at entry point
+    # "-gdb", "tcp::12345", "-S",
+
+    "-kernel",
+]
+
+# FVP runners
+# runner = "FVP_BaseR_AEMv8R -f FVP_BaseR_AEMv8R.cfg"     # single-core
+# runner = "FVP_BaseR_AEMv8R -f FVP_BaseR_AEMv8R_smp.cfg" # SMP with two cores

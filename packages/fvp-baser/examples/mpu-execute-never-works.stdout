@@ -1,0 +1,6 @@
+running at EL2
+MPU has been enabled
+calling function located in eXecute Never section
+MPU fault raised
+
+Info: /OSCI/SystemC: Simulation stopped by user.
