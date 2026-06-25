@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [11.2.1](https://github.com/rust-embedded/aarch64-cpu/compare/aarch64-cpu-v11.2.0...aarch64-cpu-v11.2.1) - 2026-06-25
+
+### Other
+
+- Add MPU support (along with improved Timer APIs)
+- Move aarch64-cpu package from / into /packages/aarch64-cpu
+
 - Noted change from Cortex-A Team to Arm Team in README
 - Added Armv8-R AArch64 example program
 

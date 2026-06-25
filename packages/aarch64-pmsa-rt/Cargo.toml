@@ -1,7 +1,7 @@
 [package]
 edition = "2024"
 name = "aarch64-pmsa-rt"
-version = "0.1.0"
+version = "0.1.1"
 description = "A startup library for AArch64 systems that implement a PMSA (Protected Memory Systems Architecture)"
 homepage = "https://github.com/rust-embedded/aarch64-cpu"
 repository = "https://github.com/rust-embedded/aarch64-cpu"
@@ -16,4 +16,4 @@ doctest = false
 test = false
 
 [dependencies]
-aarch64-cpu = { path = "../aarch64-cpu", version = "11.2.0" }
+aarch64-cpu = { path = "../aarch64-cpu", version = "11.2.1" }
