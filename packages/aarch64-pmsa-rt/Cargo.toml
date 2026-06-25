@@ -2,6 +2,14 @@
 edition = "2024"
 name = "aarch64-pmsa-rt"
 version = "0.1.0"
+description = "A startup library for AArch64 systems that implement a PMSA (Protected Memory Systems Architecture)"
+homepage = "https://github.com/rust-embedded/aarch64-cpu"
+repository = "https://github.com/rust-embedded/aarch64-cpu"
+readme = "README.md"
+keywords = ["arm", "aarch64"]
+categories = ["embedded", "hardware-support", "no-std"]
+license = "MIT/Apache-2.0"
+
 
 [lib]
 doctest = false
