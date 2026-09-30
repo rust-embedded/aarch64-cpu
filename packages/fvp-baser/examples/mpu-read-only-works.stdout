@@ -1,0 +1,7 @@
+running at EL2
+MPU has been enabled
+attempting to overwrite entry point
+contents before write: 0xd5381040
+MPU fault raised
+
+Info: /OSCI/SystemC: Simulation stopped by user.

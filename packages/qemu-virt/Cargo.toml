@@ -1,0 +1,10 @@
+[package]
+name = "qemu-virt"
+edition = "2024"
+publish = false # test helper
+
+[dev-dependencies]
+aarch64-cpu.workspace = true
+semihosting.workspace = true
+
+aarch64-pmsa-rt.path = "../aarch64-pmsa-rt"

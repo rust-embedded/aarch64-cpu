@@ -6,3 +6,6 @@ runner = "FVP_BaseR_AEMv8R -f fvp_cfg.txt"
 
 [unstable]
 build-std = ["core", "compiler_builtins"]
+
+[env]
+DEFMT_LOG = "info"

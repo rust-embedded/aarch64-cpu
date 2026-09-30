@@ -1,0 +1,33 @@
+[package]
+edition = "2024"
+name = "fvp-baser"
+publish = false # test helper
+
+# these tests can only be compiled to the nightly-only aarch64v8r-unknown-none
+# target so put them behind a Cargo feature so that `just clippy` does not
+# check them by default against a stable target (i.e. aarch64-unknown-none)
+[[example]]
+name = "mpu-execute-never-works"
+required-features = ["v8-r"]
+
+[[example]]
+name = "mpu-no-overlap"
+required-features = ["v8-r"]
+
+[[example]]
+name = "mpu-read-only-works"
+required-features = ["v8-r"]
+
+[[example]]
+name = "mpu-stack-overflow-protection"
+required-features = ["v8-r"]
+
+[dev-dependencies]
+aarch64-cpu.path = "../aarch64-cpu"
+aarch64-cpu.features = ["critical-section-single-core"]
+semihosting.workspace = true
+
+aarch64-pmsa-rt.path = "../aarch64-pmsa-rt"
+
+[features]
+v8-r = []
