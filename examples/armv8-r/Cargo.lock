@@ -20,15 +20,16 @@ dependencies = [
 
 [[package]]
 name = "arm-fvp-base-pac"
-version = "0.1.4"
-source = "git+https://github.com/ArmFirmwareCrates/arm-fvp-base-pac/?rev=9547f29c26cece16434d536b05ca50007e24c0aa#9547f29c26cece16434d536b05ca50007e24c0aa"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "de17d56b7c436c38eaa33b9b9debd4ebb4edac29e5bb8dbc0e0c17ad378a64c6"
 dependencies = [
  "arm-generic-timer",
  "arm-gic",
  "arm-pl011-uart",
  "arm-sp805",
  "arm-tzc",
- "bitflags 2.11.0",
+ "bitflags 2.13.2",
  "safe-mmio",
  "spin",
  "zerocopy",
@@ -36,22 +37,26 @@ dependencies = [
 
 [[package]]
 name = "arm-generic-timer"
-version = "0.1.1"
+version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eebe26eb90fa301b9bd2c44206bf867930fe1a3008b5e01939916908202a52c5"
+checksum = "68dbd1febf2fb4eadafc65a69c3bf0875115d95c1b73639068807df3bb187830"
 dependencies = [
- "bitflags 2.11.0",
+ "arm-sysregs",
+ "bitflags 2.13.2",
+ "embedded-hal",
+ "embedded-hal-timer",
  "safe-mmio",
  "zerocopy",
 ]
 
 [[package]]
 name = "arm-gic"
-version = "0.7.2"
+version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c044ecf8760dd8ee5aa92c49cf7534942d289fb1f0247af92b5fbab8ab18a912"
+checksum = "aae38b5192f8463cef6c94ec9804774c2b106b16b0bb7c41401f9457d5e99229"
 dependencies = [
- "bitflags 2.11.0",
+ "arm-sysregs",
+ "bitflags 2.13.2",
  "safe-mmio",
  "thiserror",
  "zerocopy",
@@ -59,11 +64,11 @@ dependencies = [
 
 [[package]]
 name = "arm-pl011-uart"
-version = "0.4.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b62040eef329ede76c8b2af149362b0fd42ec9d8c436d9eb9d47db35b71cb300"
+checksum = "da0601ab96b18e55589d286dc635d1aac547e266aeaf3393813bb37c79318a71"
 dependencies = [
- "bitflags 2.11.0",
+ "bitflags 2.13.2",
  "embedded-hal-nb",
  "embedded-io",
  "safe-mmio",
@@ -73,13 +78,67 @@ dependencies = [
 
 [[package]]
 name = "arm-sp805"
-version = "0.1.2"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "952e2661eff687e263d0bb6acef282092ee729eaea3586f904046f74b49bbe8d"
+checksum = "a973638999d9c50b4255e5d1b4c498c6aea297f897d9812a68ff7e447681f014"
 dependencies = [
- "bitflags 2.11.0",
+ "bitflags 2.13.2",
  "safe-mmio",
  "zerocopy",
+]
+
+[[package]]
+name = "arm-sysregs"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "eea2d77c3eac6be0a300ba179e7bf051ffaec797c39dee0b631c21668b12e1f3"
+dependencies = [
+ "arm-sysregs-aarch32",
+ "arm-sysregs-common",
+ "arm-sysregs-el0",
+ "arm-sysregs-el1",
+]
+
+[[package]]
+name = "arm-sysregs-aarch32"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "aeac85b36432f9427827c31c2da2b42fe4928e35b3dbedbe9c9ded5e4d013789"
+dependencies = [
+ "arm-sysregs-common",
+ "bitflags 2.13.2",
+]
+
+[[package]]
+name = "arm-sysregs-common"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "11447113c834b1cb206262297477a467c090a3768765bef861858b6098dcac39"
+dependencies = [
+ "num_enum",
+ "pastey",
+]
+
+[[package]]
+name = "arm-sysregs-el0"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a680f4741d246b3f72f977da72f7df76cb9c3227e565acad801ca3c504947d92"
+dependencies = [
+ "arm-sysregs-aarch32",
+ "arm-sysregs-common",
+ "bitflags 2.13.2",
+]
+
+[[package]]
+name = "arm-sysregs-el1"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5dcc832aff5e63bad65c4cdcb17a7a5c07a711a4ce365d7a69785efb3a64fc47"
+dependencies = [
+ "arm-sysregs-common",
+ "arm-sysregs-el0",
+ "bitflags 2.13.2",
 ]
 
 [[package]]
@@ -90,11 +149,11 @@ checksum = "639ca04328cd85faa54abaa192026d86fe49e278717820c2e92baa232ea7b0ec"
 
 [[package]]
 name = "arm-tzc"
-version = "0.1.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "832ef75000f5bad7a50f10d0e3a1ee95ac37988e68f25329157b5aff8dd0842b"
+checksum = "024e9392429e7446ba6f5122047754078aa48024f5ee81d41592f991419b27d1"
 dependencies = [
- "bitflags 2.11.0",
+ "bitflags 2.13.2",
  "safe-mmio",
  "zerocopy",
 ]
@@ -122,9 +181,9 @@ checksum = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
 
 [[package]]
 name = "bitflags"
-version = "2.11.0"
+version = "2.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "843867be96c8daad0d758b57df9392b6d8d271134fce549de6ce169ff98a92af"
+checksum = "3ded4057c258ba199e2d26386d3af3780957ecaee6c4ef4041c6b4b8b97c0b06"
 
 [[package]]
 name = "critical-section"
@@ -152,7 +211,7 @@ dependencies = [
  "proc-macro-error2",
  "proc-macro2",
  "quote",
- "syn",
+ "syn 2.0.117",
 ]
 
 [[package]]
@@ -181,6 +240,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "embedded-hal-timer"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b10185c0db21e306e154126b7b38fcb8de3d966c9c10de42afb2b9e8282662ba"
+
+[[package]]
 name = "embedded-io"
 version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -191,6 +256,33 @@ name = "nb"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8d5439c4ad607c3c23abf66de8c8bf57ba8adcd1f129e699851a6e43935d339d"
+
+[[package]]
+name = "num_enum"
+version = "0.7.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5d0bca838442ec211fa11de3a8b0e0e8f3a4522575b5c4c06ed722e005036f26"
+dependencies = [
+ "num_enum_derive",
+ "rustversion",
+]
+
+[[package]]
+name = "num_enum_derive"
+version = "0.7.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "680998035259dcfcafe653688bf2aa6d3e2dc05e98be6ab46afb089dc84f1df8"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.117",
+]
+
+[[package]]
+name = "pastey"
+version = "0.2.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2ee67f1008b1ba2321834326597b8e186293b049a023cdef258527550b9935b4"
 
 [[package]]
 name = "proc-macro-error-attr2"
@@ -211,7 +303,7 @@ dependencies = [
  "proc-macro-error-attr2",
  "proc-macro2",
  "quote",
- "syn",
+ "syn 2.0.117",
 ]
 
 [[package]]
@@ -233,10 +325,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "safe-mmio"
-version = "0.2.7"
+name = "rustversion"
+version = "1.0.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a0a69f884a1511aa811aa94e04559414a66b18ca63f50f84ca31e304f38bad0d"
+checksum = "cf54715a573b99ac80df0bc206da022bcd442c974952c7b9720069370852e21f"
+
+[[package]]
+name = "safe-mmio"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e885ed64c91774b671612cb99dda2ede3738b0aa2d39a85a1471b20bf09eabe0"
 dependencies = [
  "zerocopy",
 ]
@@ -249,9 +347,9 @@ checksum = "e896488941756e5de3ee8449495464dbbf2201c85d2d1ace47d4fb81c74b99ec"
 
 [[package]]
 name = "spin"
-version = "0.10.0"
+version = "0.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d5fe4ccb98d9c292d56fec89a5e07da7fc4cf0dc11e156b41793132775d3e591"
+checksum = "0134f9043ed38b087ac4f7d4af44c79e2c9e5094421fe3164f435ce585953b10"
 
 [[package]]
 name = "syn"
@@ -265,23 +363,34 @@ dependencies = [
 ]
 
 [[package]]
-name = "thiserror"
-version = "2.0.18"
+name = "syn"
+version = "3.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4288b5bcbc7920c07a1149a35cf9590a2aa808e0bc1eafaade0b80947865fbc4"
+checksum = "8593e8e72159ed2257d083c7a454a85cbf854f37a0966d8d483aff8c8a3ebcee"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "unicode-ident",
+]
+
+[[package]]
+name = "thiserror"
+version = "2.0.21"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "09e52cb86a36cede5cb101bf8908837b3e4c6e5e59fe7fd85c23fb56200d189e"
 dependencies = [
  "thiserror-impl",
 ]
 
 [[package]]
 name = "thiserror-impl"
-version = "2.0.18"
+version = "2.0.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ebc4ee7f67670e9b64d05fa4253e753e016c6c95ff35b89b7941d6b856dec1d5"
+checksum = "fe5197923287db20a58125f0bc85c062f7f2c892de97b18c356f9efb14b28524"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn",
+ "syn 3.0.6",
 ]
 
 [[package]]
@@ -298,20 +407,20 @@ checksum = "e6e4313cd5fcd3dad5cafa179702e2b244f760991f45397d14d4ebf38247da75"
 
 [[package]]
 name = "zerocopy"
-version = "0.8.39"
+version = "0.8.60"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "db6d35d663eadb6c932438e763b262fe1a70987f9ae936e60158176d710cae4a"
+checksum = "6400fc4bb7426f6faac3fb07566122bb18622e3022bd2c36426a92ed489b1dbe"
 dependencies = [
  "zerocopy-derive",
 ]
 
 [[package]]
 name = "zerocopy-derive"
-version = "0.8.39"
+version = "0.8.60"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4122cd3169e94605190e77839c9a40d40ed048d305bfdc146e7df40ab0f3e517"
+checksum = "99c27cc7525bad4df59a45e073c45b2c2aa820efb588234cc23a547ec69a34db"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn",
+ "syn 2.0.117",
 ]

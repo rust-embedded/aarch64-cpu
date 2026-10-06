@@ -1,7 +1,7 @@
 use core::ptr::NonNull;
 
 use arm_fvp_base_pac::{PhysicalInstance, UniqueMmioPointer};
-use arm_generic_timer::{CntControlBase, GenericTimerControl};
+use arm_generic_timer::memory_mapped::{CntControlBase, GenericTimerControl};
 use arm_gic::IntId;
 
 /// The interrupt ID tied to our physical timer
