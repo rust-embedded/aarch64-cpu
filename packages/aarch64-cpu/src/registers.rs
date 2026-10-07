@@ -122,6 +122,7 @@ mod mpuir_el1;
 mod mpuir_el2;
 mod oslar_el1;
 mod par_el1;
+mod pmuserenr_el0;
 #[cfg(arm_architecture = "v8-r")]
 mod prbar_el1;
 #[cfg(arm_architecture = "v8-r")]
@@ -282,6 +283,7 @@ pub use mpuir_el1::MPUIR_EL1;
 pub use mpuir_el2::MPUIR_EL2;
 pub use oslar_el1::OSLAR_EL1;
 pub use par_el1::PAR_EL1;
+pub use pmuserenr_el0::PMUSERENR_EL0;
 #[cfg(arm_architecture = "v8-r")]
 pub use prbar_el1::PRBAR_EL1;
 #[cfg(arm_architecture = "v8-r")]
