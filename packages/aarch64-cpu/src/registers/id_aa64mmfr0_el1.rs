@@ -17,11 +17,13 @@ register_bitfields! {u64,
         /// Support for 4KiB memory translation granule size. Defined values are:
         ///
         /// 0000 4KiB granule supported.
+        /// 0001 4KiB granule supports 52-bit input addresses and can describe 52-bit output addresses. (Applies when FEAT_LPA2 is implemented)
         /// 1111 4KiB granule not supported.
         ///
         /// All other values are reserved.
         TGran4  OFFSET(28) NUMBITS(4) [
             Supported = 0b0000,
+            SupportedWith52BitAddresses = 0b0001,
             NotSupported = 0b1111
         ],
 
