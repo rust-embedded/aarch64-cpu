@@ -5,7 +5,7 @@
 // Author(s):
 //   - Callum Thomson <callumthom11@gmail.com>
 
-//! Hypervisor Auxiliary Control Register - EL1
+//! Hypervisor Auxiliary Control Register - EL2
 
 use tock_registers::interfaces::{Readable, Writeable};
 
