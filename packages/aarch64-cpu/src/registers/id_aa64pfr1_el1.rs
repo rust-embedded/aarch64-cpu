@@ -83,8 +83,8 @@ register_bitfields! {u64,
 
         /// RAS Extension fractional field
         RAS_frac OFFSET(12) NUMBITS(4) [
-            Implmented = 0b0000,
-            ImplmentedExtraRegisters = 0b0001,
+            Implemented = 0b0000,
+            ImplementedExtraRegisters = 0b0001,
         ],
 
         /// Support for the Memory Tagging Extension.

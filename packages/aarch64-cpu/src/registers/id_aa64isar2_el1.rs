@@ -16,8 +16,8 @@ register_bitfields! {u64,
     pub ID_AA64ISAR2_EL1 [
         /// Indicates support for address translation instructions that perform stage 1 translation without checking stage 1 permissions
         ATS1A OFFSET(60) NUMBITS(4) [
-            NotImplmented = 0b0000,
-            Implmented = 0b0001,
+            NotImplemented = 0b0000,
+            Implemented = 0b0001,
         ],
 
         /// Indicates support for advanced SIMD and SVE2 lookup instruction
@@ -36,7 +36,7 @@ register_bitfields! {u64,
         /// RPRFM hint instruction
         RPRFM OFFSET(48) NUMBITS(4) [
             NotImplemented = 0b0000,
-            Implmented = 0b0001,
+            Implemented = 0b0001,
         ],
 
         /// Indicates support for producer-consumer data placement hints
@@ -54,7 +54,7 @@ register_bitfields! {u64,
         /// Indicates support for system instructions that can take 128-bit inputs
         SYSINSTR_128 OFFSET(36) NUMBITS(4) [
             NotImplemented = 0b0000,
-            Implmented = 0b0001,
+            Implemented = 0b0001,
         ],
 
         /// Indicates support for instructions to access 128-bit system registers
@@ -66,7 +66,7 @@ register_bitfields! {u64,
         /// Indicates support for the CLRBHB instruction
         CLRBHB OFFSET(28) NUMBITS(4) [
             NotImplemented = 0b0000,
-            Implmented = 0b0001,
+            Implemented = 0b0001,
         ],
 
         /// Indicates which bit is used to determine the size of the PAC field
@@ -78,13 +78,13 @@ register_bitfields! {u64,
         /// Support for the BC instruction
         BC OFFSET(20) NUMBITS(4) [
             NotImplemented = 0b0000,
-            Implmented = 0b0001,
+            Implemented = 0b0001,
         ],
 
         /// Support for Memory Copy and Memory Set instructions
         MOPS OFFSET(16) NUMBITS(4) [
             NotImplemented = 0b0000,
-            Implmented = 0b0001,
+            Implemented = 0b0001,
         ],
 
         /// Indicates support for QARMA3 for address authentication
@@ -101,7 +101,7 @@ register_bitfields! {u64,
         /// Indicates support for QARMA3 for generic code authentication
         GPA3 OFFSET(8) NUMBITS(4) [
             NotImplemented = 0b0000,
-            Implmented = 0b0001,
+            Implemented = 0b0001,
         ],
 
         /// Support for 12 bits of mantissa in single-precision reciprocal and reciprocal square root instructions
@@ -120,7 +120,7 @@ register_bitfields! {u64,
 
 impl Readable for Reg {
     type T = u64;
-    type R = ();
+    type R = ID_AA64ISAR2_EL1::Register;
 
     sys_coproc_read_raw!(u64, "ID_AA64ISAR2_EL1", "x");
 }

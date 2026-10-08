@@ -5,7 +5,7 @@
 // Author(s):
 //   - Callum Thomson <callumthom11@gmail.com>
 
-//! Auxiliary Control Masking Register - EL1
+//! Auxiliary Control Masking Register - EL2
 
 use tock_registers::interfaces::{Readable, Writeable};
 

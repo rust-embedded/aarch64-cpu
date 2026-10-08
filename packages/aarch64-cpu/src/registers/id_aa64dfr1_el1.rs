@@ -17,7 +17,7 @@ pub struct Reg;
 
 register_bitfields! {u64,
     pub ID_AA64DFR1_EL1 [
-        /// Number of breakpoint that support address linking, minus 1
+        /// Number of breakpoints that support address linking, minus 1
         ABL_CMPs OFFSET(56) NUMBITS(8) [],
 
         /// Behaviour of the cycle counter when event counting is frozen by a Statistical Profiling management event
@@ -40,21 +40,21 @@ register_bitfields! {u64,
 
         /// Address Breakpoint Linking Extension
         ABLE OFFSET(40) NUMBITS(4) [
-            NotImplmented = 0b0000,
-            Implmented = 0b0001,
+            NotImplemented = 0b0000,
+            Implemented = 0b0001,
         ],
 
         /// PMU fixed-function instruction counter
         PMICNTR OFFSET(36) NUMBITS(4) [
-            NotImplmented = 0b0000,
-            Implmented = 0b0001,
+            NotImplemented = 0b0000,
+            Implemented = 0b0001,
         ],
 
         /// System PMU extension
         SPMU OFFSET(32) NUMBITS(4) [
             NotImplemented = 0b0000,
-            Implmented = 0b0001,
-            ImplmentedWithSPMZR = 0b0010,
+            Implemented = 0b0001,
+            ImplementedWithSPMZR = 0b0010,
         ],
 
         /// Context-aware breakpoints
@@ -73,7 +73,7 @@ register_bitfields! {u64,
 
 impl Readable for Reg {
     type T = u64;
-    type R = ();
+    type R = ID_AA64DFR1_EL1::Register;
 
     sys_coproc_read_raw!(u64, "ID_AA64DFR1_EL1", "x");
 }

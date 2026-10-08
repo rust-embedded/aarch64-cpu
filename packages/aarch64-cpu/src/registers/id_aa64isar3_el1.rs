@@ -5,7 +5,7 @@
 // Author(s):
 //   - Callum Thomson <callumthom11@gmail.com>
 
-//! AArch64 Instruction Set Attribute Register 3- EL1
+//! AArch64 Instruction Set Attribute Register 3 - EL1
 
 use tock_registers::interfaces::Readable;
 use tock_registers::register_bitfields;
@@ -26,13 +26,13 @@ register_bitfields! {u64,
             Implemented = 0b0001,
         ],
 
-        /// Support for `DC ZGBVA` and `DC GBVA``
+        /// Support for `DC ZGBVA` and `DC GBVA`
         MTETC OFFSET(36) NUMBITS(4) [
             NotImplemented = 0b0000,
             Implemented = 0b0001,
         ],
 
-        /// Indicates support for independant control of EL0 PAC and disabling BTI landing pad on PAC instructions
+        /// Indicates support for independent control of EL0 PAC and disabling BTI landing pad on PAC instructions
         PAC_frac2 OFFSET(32) NUMBITS(4) [
             NotImplemented = 0b0000,
             Implemented = 0b0001,
@@ -92,7 +92,7 @@ register_bitfields! {u64,
 
 impl Readable for Reg {
     type T = u64;
-    type R = ();
+    type R = ID_AA64ISAR3_EL1::Register;
 
     sys_coproc_read_raw!(u64, "ID_AA64ISAR3_EL1", "x");
 }

@@ -24,14 +24,14 @@ register_bitfields! {u64,
 
 impl Readable for Reg {
     type T = u64;
-    type R = ();
+    type R = OSDLR_EL1::Register;
 
     sys_coproc_read_raw!(u64, "OSDLR_EL1", "x");
 }
 
 impl Writeable for Reg {
     type T = u64;
-    type R = ();
+    type R = OSDLR_EL1::Register;
 
     sys_coproc_write_raw!(u64, "OSDLR_EL1", "x");
 }
