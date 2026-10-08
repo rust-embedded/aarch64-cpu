@@ -4,9 +4,9 @@ use aarch64_cpu::registers::{self, ReadWriteable as _, Readable as _};
 use arm_fvp_base_pac::PhysicalInstance;
 pub use arm_gic::IntId;
 use arm_gic::{
-    UniqueMmioPointer,
+    InterruptGroup, UniqueMmioPointer,
     gicv3::{
-        GicCpuInterface, GicV3, InterruptGroup, SgiTarget, SgiTargetGroup,
+        GicCpuInterface, GicV3, SgiTarget, SgiTargetGroup,
         registers::{Gicd, GicrSgi},
     },
 };
@@ -25,9 +25,7 @@ impl Gic {
             let gicd =
                 unsafe { UniqueMmioPointer::new(NonNull::new(gicd.pa() as *mut _).unwrap()) };
             let gicr = NonNull::new(gicr.pa() as *mut _).unwrap();
-
-            let is_gicv4 = false; // only has GICv3
-            unsafe { GicV3::new(gicd, gicr, NUM_CORES, is_gicv4) }
+            unsafe { GicV3::new(gicd, gicr, NUM_CORES).expect("GicV3::new") }
         };
         // this also enables "interrupt group 1"
         gic.setup(BOOT_CORE);

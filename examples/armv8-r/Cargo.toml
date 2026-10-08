@@ -7,12 +7,9 @@ default-run = "hello"
 
 [dependencies]
 aarch64-pmsa-rt = { path = "../../packages/aarch64-pmsa-rt" }
-# Use a git hash until a release is put out
-arm-fvp-base-pac = { git = "https://github.com/ArmFirmwareCrates/arm-fvp-base-pac/", rev = "9547f29c26cece16434d536b05ca50007e24c0aa", features = [
-    "base-r",
-] }
-arm-generic-timer = "0.1.1"
-arm-gic = "0.7.2"
+arm-fvp-base-pac = { version = "0.4", features = ["base-r"] }
+arm-generic-timer = "0.3"
+arm-gic = "0.10"
 aarch64-cpu = { path = "../../packages/aarch64-cpu", features = [
     "critical-section-single-core",
 ] }
