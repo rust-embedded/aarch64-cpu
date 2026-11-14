@@ -7,18 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Noted change from Cortex-A Team to Arm Team in README
-- Added Armv8-R AArch64 example program
+## [12.0.0](https://github.com/rust-embedded/aarch64-cpu/compare/aarch64-cpu-v11.2.0...aarch64-cpu-v12.0.0) - 2026-11-14
 
-### Changed (breaking)
+### Breaking!
 
-- Updated `tock-registers` from 0.10 to 0.12, moving off its deprecated `interfaces` API.
+- Update tock-registers dependency to 0.12 - fixes MMIO soundness bugs (not in this crate) so be sure to upgrade!
+- Convert registers declarations to tock-registers 0.12 format, moving off its deprecated `interfaces` API.
   - `registers::{Readable, Writeable, ReadWriteable}` are replaced by `registers::{Read, Write}`.
     `modify()` is now provided by `Write` (it requires the register to also implement `Read`).
   - Register accessors now implement `tock_registers::Register` and are `Copy`; `get()`/`set()`
     take `self` by value.
   - `ESR_EL2` now uses its bitfield type for writes too, so `ESR_EL2.write()`/`modify()` take
-    `ESR_EL2::*` field values (raw `set()` is unaffected).
+    `ESR_EL2::*` field values instead of raw `u64`.
+- Remove unused HVC64 and SMC64 values from ESR_EL1
+
+### Added
+
+- Re-export FieldValue and TryFromValue
+- Add CPTR_EL2 fields for HCR_EL2.E2H==0
+- Add ID_AA64MMFR3_EL1
+- Add ID_AA64SMFR0_EL1
+- Add ID_AA64MMFR4_EL1
+- Add missing TGran4 value
+- Add DAIFSet and DAIFClr register definitions
+- Add MPU support (along with improved Timer APIs)
+- Add aarch64-pmsa-rt (Protected Memory Standard Architecture runtime support)
+- Add Armv8-R AArch64 example program
+
+### Other
+
+- Update PMUSERENR_EL0 flag names
+- Add ARM FVP testing on CI
 
 ## [11.2.0](https://github.com/rust-embedded/aarch64-cpu/compare/v11.1.0...v11.2.0) - 2025-11-29
 
