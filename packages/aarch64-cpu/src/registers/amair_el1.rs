@@ -10,21 +10,20 @@
 //! Provides IMPLEMENTATION DEFINED memory attributes for the stage 1 translation tables.
 //! This register is used to define memory attributes that are not defined in the MAIR_EL1 register.
 
-use tock_registers::interfaces::{Readable, Writeable};
+use tock_registers::{Read, Register, Write};
 
+#[derive(Clone, Copy)]
 pub struct Reg;
 
-impl Readable for Reg {
-    type T = u64;
-    type R = ();
+impl Register for Reg {
+    type DataType = u64;
+}
 
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "S3_0_C10_C3_0", "x");
 }
 
-impl Writeable for Reg {
-    type T = u64;
-    type R = ();
-
+impl Write for Reg {
     sys_coproc_write_raw!(u64, "S3_0_C10_C3_0", "x");
 }
 

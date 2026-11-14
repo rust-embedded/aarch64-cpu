@@ -11,10 +11,7 @@
 //! Provides controls for traps of MRS and MRC reads of debug, trace, PMU, and Statistical Profiling
 //! System registers.
 
-use tock_registers::{
-    interfaces::{Readable, Writeable},
-    register_bitfields,
-};
+use tock_registers::{register_bitfields, Read, Register, Write};
 
 register_bitfields! {u64,
     pub HDFGRTR_EL2 [
@@ -140,19 +137,18 @@ register_bitfields! {u64,
     ]
 }
 
+#[derive(Clone, Copy)]
 pub struct Reg;
 
-impl Readable for Reg {
-    type T = u64;
-    type R = HDFGRTR_EL2::Register;
+impl Register for Reg {
+    type DataType = HDFGRTR_EL2::Register;
+}
 
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "S3_4_C3_C1_4", "x");
 }
 
-impl Writeable for Reg {
-    type T = u64;
-    type R = HDFGRTR_EL2::Register;
-
+impl Write for Reg {
     sys_coproc_write_raw!(u64, "S3_4_C3_C1_4", "x");
 }
 

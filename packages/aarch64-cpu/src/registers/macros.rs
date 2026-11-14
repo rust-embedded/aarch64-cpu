@@ -9,7 +9,7 @@ macro_rules! __read_raw {
     ($width:ty, $asm_instr:tt, $asm_reg_name:tt, $asm_width:tt) => {
         /// Reads the raw bits of the CPU register.
         #[inline]
-        fn get(&self) -> $width {
+        fn get(self) -> $width {
             match () {
                 #[cfg(target_arch = "aarch64")]
                 () => {
@@ -32,7 +32,7 @@ macro_rules! __write_raw {
         /// Writes raw bits to the CPU register.
         #[cfg_attr(not(target_arch = "aarch64"), allow(unused_variables))]
         #[inline]
-        fn set(&self, value: $width) {
+        fn set(self, value: $width) {
             match () {
                 #[cfg(target_arch = "aarch64")]
                 () => {

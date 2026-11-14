@@ -9,10 +9,7 @@
 //!
 //! The control register for stage 1 of the EL1&0 translation regime.
 
-use tock_registers::{
-    interfaces::{Readable, Writeable},
-    register_bitfields,
-};
+use tock_registers::{register_bitfields, Read, Register, Write};
 
 register_bitfields! {u64,
     pub TCR_EL1 [
@@ -342,19 +339,18 @@ register_bitfields! {u64,
     ]
 }
 
+#[derive(Clone, Copy)]
 pub struct Reg;
 
-impl Readable for Reg {
-    type T = u64;
-    type R = TCR_EL1::Register;
+impl Register for Reg {
+    type DataType = TCR_EL1::Register;
+}
 
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "TCR_EL1", "x");
 }
 
-impl Writeable for Reg {
-    type T = u64;
-    type R = TCR_EL1::Register;
-
+impl Write for Reg {
     sys_coproc_write_raw!(u64, "TCR_EL1", "x");
 }
 

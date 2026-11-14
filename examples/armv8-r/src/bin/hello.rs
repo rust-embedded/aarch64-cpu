@@ -3,7 +3,7 @@
 
 use core::sync::atomic::{self, AtomicU64};
 
-use aarch64_cpu::registers::{self, Readable};
+use aarch64_cpu::registers::{self, Read};
 use aarch64_pmsa_rt::{ExceptionHandlers, entry, exception_handlers};
 use semihosting::{println, process};
 

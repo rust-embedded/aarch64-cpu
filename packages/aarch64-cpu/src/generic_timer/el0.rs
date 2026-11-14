@@ -2,7 +2,7 @@
 
 use crate::registers;
 
-use tock_registers::interfaces::{Readable, Writeable};
+use tock_registers::{Read, Write};
 
 /// Represents our Physical Timer when we are running at EL0.
 ///

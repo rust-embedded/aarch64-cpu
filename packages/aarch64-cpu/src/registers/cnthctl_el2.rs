@@ -11,10 +11,7 @@
 //! access from Non-secure EL1 to the physical counter and the Non-secure EL1
 //! physical timer.
 
-use tock_registers::{
-    interfaces::{Readable, Writeable},
-    register_bitfields,
-};
+use tock_registers::{register_bitfields, Read, Register, Write};
 
 // When HCR_EL2.E2H == 0:
 // TODO: Figure out how we can differentiate depending on HCR_EL2.E2H state
@@ -54,19 +51,18 @@ register_bitfields! {u64,
     ]
 }
 
+#[derive(Clone, Copy)]
 pub struct Reg;
 
-impl Readable for Reg {
-    type T = u64;
-    type R = CNTHCTL_EL2::Register;
+impl Register for Reg {
+    type DataType = CNTHCTL_EL2::Register;
+}
 
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "CNTHCTL_EL2", "x");
 }
 
-impl Writeable for Reg {
-    type T = u64;
-    type R = CNTHCTL_EL2::Register;
-
+impl Write for Reg {
     sys_coproc_write_raw!(u64, "CNTHCTL_EL2", "x");
 }
 

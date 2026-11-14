@@ -9,7 +9,7 @@
 
 use core::sync::atomic;
 
-use aarch64_cpu::registers::{self, ReadWriteable as _, Readable as _, Writeable as _};
+use aarch64_cpu::registers::{self, Read as _, Write as _};
 use aarch64_pmsa_rt::{ExceptionHandlers, Section, StackedRegisters, entry, exception_handlers};
 use semihosting::{eprintln, println, process};
 

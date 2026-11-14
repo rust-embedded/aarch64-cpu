@@ -16,10 +16,7 @@
 //! controls the generation of an event stream from the virtual counter, and access from EL0 to the
 //! physical counter, virtual counter, EL1 physical timers, and the virtual timer.
 
-use tock_registers::{
-    interfaces::{Readable, Writeable},
-    register_bitfields,
-};
+use tock_registers::{register_bitfields, Read, Register, Write};
 
 register_bitfields! {u64,
     pub CNTKCTL_EL1 [
@@ -194,19 +191,18 @@ register_bitfields! {u64,
     ]
 }
 
+#[derive(Clone, Copy)]
 pub struct Reg;
 
-impl Readable for Reg {
-    type T = u64;
-    type R = CNTKCTL_EL1::Register;
+impl Register for Reg {
+    type DataType = CNTKCTL_EL1::Register;
+}
 
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "CNTKCTL_EL1", "x");
 }
 
-impl Writeable for Reg {
-    type T = u64;
-    type R = CNTKCTL_EL1::Register;
-
+impl Write for Reg {
     sys_coproc_write_raw!(u64, "CNTKCTL_EL1", "x");
 }
 

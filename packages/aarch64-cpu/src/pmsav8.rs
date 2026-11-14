@@ -1,6 +1,6 @@
 //! Support for the PMSAv8-64 EL1 and EL2 MPUs
 
-use tock_registers::interfaces::{Readable, Writeable};
+use tock_registers::{Read, Write};
 
 use crate::{asm::barrier, registers};
 

@@ -6,7 +6,7 @@
 
 use core::arch::asm;
 
-use aarch64_cpu::registers::{self, Readable as _};
+use aarch64_cpu::registers::{self, Read as _};
 use aarch64_pmsa_rt::{
     ExceptionHandlers, StackedRegisters, alloc_stack, drop_exception_level, entry,
     exception_handlers,

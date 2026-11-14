@@ -9,14 +9,16 @@
 //!
 //! Provides top level information about the debug system in AArch64.
 
-use tock_registers::interfaces::Readable;
+use tock_registers::{Read, Register};
 
+#[derive(Clone, Copy)]
 pub struct Reg;
 
-impl Readable for Reg {
-    type T = u64;
-    type R = ();
+impl Register for Reg {
+    type DataType = u64;
+}
 
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "ID_AA64DFR1_EL1", "x");
 }
 

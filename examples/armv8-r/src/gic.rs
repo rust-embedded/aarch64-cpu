@@ -1,6 +1,6 @@
 use core::ptr::NonNull;
 
-use aarch64_cpu::registers::{self, ReadWriteable as _, Readable as _};
+use aarch64_cpu::registers::{self, Read as _, Write as _};
 use arm_fvp_base_pac::PhysicalInstance;
 pub use arm_gic::IntId;
 use arm_gic::{

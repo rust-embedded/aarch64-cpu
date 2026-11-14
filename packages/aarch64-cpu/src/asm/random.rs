@@ -30,7 +30,7 @@ impl ArmRng {
     #[inline]
     pub fn new() -> Option<Self> {
         use crate::registers::ID_AA64ISAR0_EL1;
-        use tock_registers::interfaces::Readable;
+        use tock_registers::Read;
 
         if ID_AA64ISAR0_EL1.is_set(ID_AA64ISAR0_EL1::RNDR) {
             Some(ArmRng)

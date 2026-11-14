@@ -2,7 +2,7 @@
 
 use super::{El0PhysicalTimer, El0VirtualTimer, GenericTimer};
 use crate::registers;
-use tock_registers::interfaces::Writeable;
+use tock_registers::Write;
 
 /// Represents our Physical Timer when we are running at EL1.
 pub struct El1PhysicalTimer(pub(crate) El0PhysicalTimer);

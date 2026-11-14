@@ -348,4 +348,53 @@ pub use vttbr_el2::VTTBR_EL2;
 #[doc(inline)]
 pub use tock_registers::fields::{FieldValue, TryFromValue};
 #[doc(inline)]
-pub use tock_registers::interfaces::{ReadWriteable, Readable, Writeable};
+pub use tock_registers::{Read, Write};
+
+#[cfg(test)]
+mod tests {
+    //! Compile-time checks that register accessors implement the `tock-registers` 0.12 traits.
+
+    use super::*;
+    use tock_registers::{DataType, Register};
+
+    fn assert_read_write<Accessor: Read + Write>(_accessor: Accessor) {}
+    fn assert_read_only<Accessor: Read>(_accessor: Accessor) {}
+    fn assert_write_only<Accessor: Write>(_accessor: Accessor) {}
+    fn assert_data_type<Accessor: Register<DataType = Expected>, Expected: DataType>(
+        _accessor: Accessor,
+    ) {
+    }
+
+    #[test]
+    fn accessors_implement_read_and_write() {
+        assert_read_write(DAIF);
+        assert_read_write(SCTLR_EL1);
+        assert_read_write(TPIDR_EL0);
+        assert_read_write(ESR_EL2);
+        assert_read_only(CurrentEL);
+        assert_read_only(MIDR_EL1);
+        assert_write_only(DAIFSet);
+        assert_write_only(DAIFClr);
+        assert_write_only(OSLAR_EL1);
+    }
+
+    #[test]
+    fn accessors_use_bitfield_or_raw_data_types() {
+        assert_data_type::<_, DAIF::Register>(DAIF);
+        // ESR_EL2 used `()` for writes before the port; it now shares its bitfield type.
+        assert_data_type::<_, ESR_EL2::Register>(ESR_EL2);
+        // Registers without bitfields expose plain `u64`.
+        assert_data_type::<_, u64>(TPIDR_EL0);
+        assert_data_type::<_, u64>(SP_EL0);
+    }
+
+    /// Never called (the accessors execute AArch64 instructions); it only has to type-check.
+    #[allow(dead_code)]
+    fn field_writes_type_check() {
+        ESR_EL2.write(ESR_EL2::EC::Unknown);
+        ESR_EL2.modify(ESR_EL2::IL::SET);
+        DAIF.modify(DAIF::I::Masked + DAIF::F::Masked);
+        DAIFSet.write(DAIFSet::I::SET);
+        let _is_masked: bool = DAIF.is_set(DAIF::I);
+    }
+}

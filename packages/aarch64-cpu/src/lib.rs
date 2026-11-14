@@ -10,8 +10,8 @@
 //! ## Usage
 //!
 //! Please note that for using this crate's [register definitions](src/registers) (as provided by
-//! `aarch64_cpu::registers::*`), you need to also import [`Readable`](registers::Readable) and
-//! [`Writeable`](registers::Writeable).
+//! `aarch64_cpu::registers::*`), you need to also import [`Read`](registers::Read) and
+//! [`Write`](registers::Write).
 //!
 //! ### Example
 //!

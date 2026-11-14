@@ -6,7 +6,7 @@
 
 use aarch64_cpu::{
     asm,
-    registers::{self, Readable},
+    registers::{self, Read},
 };
 use aarch64_pmsa_rt::{ExceptionHandlers, entry, exception_handlers};
 use semihosting::{println, process};

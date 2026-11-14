@@ -10,6 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Noted change from Cortex-A Team to Arm Team in README
 - Added Armv8-R AArch64 example program
 
+### Changed (breaking)
+
+- Updated `tock-registers` from 0.10 to 0.12, moving off its deprecated `interfaces` API.
+  - `registers::{Readable, Writeable, ReadWriteable}` are replaced by `registers::{Read, Write}`.
+    `modify()` is now provided by `Write` (it requires the register to also implement `Read`).
+  - Register accessors now implement `tock_registers::Register` and are `Copy`; `get()`/`set()`
+    take `self` by value.
+  - `ESR_EL2` now uses its bitfield type for writes too, so `ESR_EL2.write()`/`modify()` take
+    `ESR_EL2::*` field values (raw `set()` is unaffected).
+
 ## [11.2.0](https://github.com/rust-embedded/aarch64-cpu/compare/v11.1.0...v11.2.0) - 2025-11-29
 
 ### Added

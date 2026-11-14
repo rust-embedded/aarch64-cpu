@@ -13,10 +13,7 @@
 //! The fields below describe the layout when `HCR_EL2.E2H` is 0. When `HCR_EL2.E2H` is 1
 //! the register uses the `CPACR_EL1`-like `FPEN`/`ZEN`/`SMEN` layout instead.
 
-use tock_registers::{
-    interfaces::{Readable, Writeable},
-    register_bitfields,
-};
+use tock_registers::{register_bitfields, Read, Register, Write};
 
 register_bitfields! {u64,
     pub CPTR_EL2 [
@@ -104,19 +101,18 @@ register_bitfields! {u64,
     ]
 }
 
+#[derive(Clone, Copy)]
 pub struct Reg;
 
-impl Readable for Reg {
-    type T = u64;
-    type R = CPTR_EL2::Register;
+impl Register for Reg {
+    type DataType = CPTR_EL2::Register;
+}
 
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "CPTR_EL2", "x");
 }
 
-impl Writeable for Reg {
-    type T = u64;
-    type R = CPTR_EL2::Register;
-
+impl Write for Reg {
     sys_coproc_write_raw!(u64, "CPTR_EL2", "x");
 }
 
