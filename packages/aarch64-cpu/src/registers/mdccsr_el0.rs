@@ -11,7 +11,7 @@
 //! transferring commands and data to a debug target. See DBGDTR_EL0 for additional architectural
 //! mappings. It is a component of the Debug Communications Channel.
 
-use tock_registers::{interfaces::Readable, register_bitfields};
+use tock_registers::{register_bitfields, Read, Register};
 
 register_bitfields! {u64,
     pub MDCCSR_EL0 [
@@ -29,12 +29,14 @@ register_bitfields! {u64,
     ]
 }
 
+#[derive(Clone, Copy)]
 pub struct Reg;
 
-impl Readable for Reg {
-    type T = u64;
-    type R = MDCCSR_EL0::Register;
+impl Register for Reg {
+    type DataType = MDCCSR_EL0::Register;
+}
 
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "MDCCSR_EL0", "x");
 }
 

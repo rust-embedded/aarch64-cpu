@@ -10,10 +10,7 @@
 //! Holds the Process Context ID (PCID) for the current process.
 //! This register is used to identify the current process context.
 
-use tock_registers::{
-    interfaces::{Readable, Writeable},
-    register_bitfields,
-};
+use tock_registers::{register_bitfields, Read, Register, Write};
 
 register_bitfields! {u64,
     pub CONTEXTIDR_EL1 [
@@ -32,19 +29,18 @@ register_bitfields! {u64,
     ]
 }
 
+#[derive(Clone, Copy)]
 pub struct Reg;
 
-impl Readable for Reg {
-    type T = u64;
-    type R = CONTEXTIDR_EL1::Register;
+impl Register for Reg {
+    type DataType = CONTEXTIDR_EL1::Register;
+}
 
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "S3_0_C13_C0_1", "x");
 }
 
-impl Writeable for Reg {
-    type T = u64;
-    type R = CONTEXTIDR_EL1::Register;
-
+impl Write for Reg {
     sys_coproc_write_raw!(u64, "S3_0_C13_C0_1", "x");
 }
 

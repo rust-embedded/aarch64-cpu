@@ -10,10 +10,7 @@
 //! Transfers 64 bits of data between the PE and an external debugger. Can transfer both ways using
 //! only a single register.
 
-use tock_registers::{
-    interfaces::{Readable, Writeable},
-    register_bitfields,
-};
+use tock_registers::{register_bitfields, Read, Register, Write};
 
 register_bitfields! {u64,
     pub DBGDTR_EL0 [
@@ -39,19 +36,18 @@ register_bitfields! {u64,
     ]
 }
 
+#[derive(Clone, Copy)]
 pub struct Reg;
 
-impl Readable for Reg {
-    type T = u64;
-    type R = DBGDTR_EL0::Register;
+impl Register for Reg {
+    type DataType = DBGDTR_EL0::Register;
+}
 
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "DBGDTR_EL0", "x");
 }
 
-impl Writeable for Reg {
-    type T = u64;
-    type R = DBGDTR_EL0::Register;
-
+impl Write for Reg {
     sys_coproc_write_raw!(u64, "DBGDTR_EL0", "x");
 }
 

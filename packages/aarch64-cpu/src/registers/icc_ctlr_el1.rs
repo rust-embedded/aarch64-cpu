@@ -10,7 +10,7 @@
 //! Controls aspects of the behavior of the GIC CPU interface and provides information
 //! about the features implemented.
 
-use tock_registers::{interfaces::Readable, register_bitfields};
+use tock_registers::{register_bitfields, Read, Register};
 
 register_bitfields! {u64,
     pub ICC_CTLR_EL1 [
@@ -19,12 +19,14 @@ register_bitfields! {u64,
     ]
 }
 
+#[derive(Clone, Copy)]
 pub struct Reg;
 
-impl Readable for Reg {
-    type T = u64;
-    type R = ICC_CTLR_EL1::Register;
+impl Register for Reg {
+    type DataType = ICC_CTLR_EL1::Register;
+}
 
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "ICC_CTLR_EL1", "x");
 }
 

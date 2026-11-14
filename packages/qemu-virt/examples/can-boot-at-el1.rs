@@ -4,7 +4,7 @@
 #![no_std]
 #![no_main]
 
-use aarch64_cpu::registers::{self, Readable};
+use aarch64_cpu::registers::{self, Read};
 use aarch64_pmsa_rt::{ExceptionHandlers, entry, exception_handlers};
 use semihosting::{println, process};
 

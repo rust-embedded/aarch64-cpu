@@ -18,7 +18,7 @@ It might compile with older versions but that may change in any new patch releas
 
 Please note that for using this crate's [register definitions](src/registers) (as provided by
 `aarch64_cpu::registers::*`), you need to also import
-`aarch64_cpu::registers::{Readable, Writeable}`.
+`aarch64_cpu::registers::{Read, Write}`.
 
 ### Example
 

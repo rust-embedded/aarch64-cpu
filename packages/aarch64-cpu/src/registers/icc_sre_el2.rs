@@ -10,10 +10,7 @@
 //! Controls whether the System register interface or the memory-mapped interface
 //! to the GIC CPU interface is used for EL2.
 
-use tock_registers::{
-    interfaces::{Readable, Writeable},
-    register_bitfields,
-};
+use tock_registers::{register_bitfields, Read, Register, Write};
 
 register_bitfields! {u64,
     pub ICC_SRE_EL2 [
@@ -50,19 +47,18 @@ register_bitfields! {u64,
     ]
 }
 
+#[derive(Clone, Copy)]
 pub struct Reg;
 
-impl Readable for Reg {
-    type T = u64;
-    type R = ICC_SRE_EL2::Register;
+impl Register for Reg {
+    type DataType = ICC_SRE_EL2::Register;
+}
 
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "ICC_SRE_EL2", "x");
 }
 
-impl Writeable for Reg {
-    type T = u64;
-    type R = ICC_SRE_EL2::Register;
-
+impl Write for Reg {
     sys_coproc_write_raw!(u64, "ICC_SRE_EL2", "x");
 }
 

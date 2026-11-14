@@ -2,7 +2,7 @@
 mod single_core {
     use core::sync::atomic;
 
-    use crate::registers::{self, Readable, Writeable};
+    use crate::registers::{self, Read, Write};
 
     struct SingleCoreCriticalSection;
 

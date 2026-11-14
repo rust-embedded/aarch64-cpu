@@ -14,7 +14,7 @@
 use core::arch::{asm, naked_asm};
 
 #[cfg(target_arch = "aarch64")]
-use aarch64_cpu::registers::{self, DAIF, Readable as _, Writeable as _};
+use aarch64_cpu::registers::{self, DAIF, Read as _, Write as _};
 
 mod sections;
 

@@ -7,9 +7,18 @@ on:
   pull_request:
 
 jobs:
+  check_formatting:
+    name: Check Formatting
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+    - uses: actions/checkout@v7
+    - run: cargo fmt -- --check
+    - run: cd examples/armv8-r && cargo fmt -- --check
+
   test:
     name: Test
-
+    needs: check_formatting
     strategy:
       fail-fast: false
       matrix:
@@ -18,7 +27,7 @@ jobs:
           macos-latest,
           windows-latest
         ]
-        target: [
+        target: &targets [
           aarch64-unknown-none-softfloat,
           aarch64-unknown-none,
           x86_64-unknown-linux-gnu,
@@ -32,40 +41,33 @@ jobs:
     timeout-minutes: 15
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v6
+    - name: Checkout repository
+      uses: actions/checkout@v7
 
-    - name: Install Rustup (macOS)
-      run: |
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
-      if: runner.os == 'macOS'
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@master
+      with:
+        toolchain: stable
+        targets: ${{ matrix.target }}
 
-    - name: Set Rustup profile to minimal
-      run: rustup set profile minimal
-
-    - name: Install Target Support
-      run: |
-        rustup target add ${{ matrix.target }}
-
-    - name: Print Rust Version
+    - name: Print Rust version
       run: |
         rustc -Vv
         cargo -Vv
 
-    - name: Build Package With All Warnings Denied
+    - name: Build package with all warnings denied
       run: cargo build ${{ matrix.variant }} --target=${{ matrix.target }}
       env:
         RUSTFLAGS: "-D warnings"
 
   unit-tests:
     name: FVP/QEMU based unit tests
-
+    needs: check_formatting
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
 
     - name: Install QEMU
       run: |
@@ -73,8 +75,8 @@ jobs:
         sudo apt-get -y install libpixman-1-0 libfdt1 libglib2.0-0t64
         curl -sSL https://github.com/jonathanpallant/qemu9-for-ubuntu-2404/releases/download/qemu-10.2.2%2Bbuild0/qemu-10.2.2-ubuntu-24.04.tar.gz | sudo tar xvzf - -C /
 
-    - name: Install just
-      run: sudo apt-get install just
+    - name: "Install Just"
+      uses: "taiki-e/install-action@just"
 
     - name: Install FVP
       run: |
@@ -85,39 +87,23 @@ jobs:
     - name: Run Tests
       run: PATH="/tmp/fvp/AEMv8R_base_pkg/models/Linux64_GCC-9.3/:/opt/qemu/bin:$PATH" just test
 
-  check_formatting:
-    name: Check Formatting
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-    steps:
-    - uses: actions/checkout@v6
-    - run: cargo fmt -- --check
-    - run: cd examples/armv8-r && cargo fmt -- --check
-
   clippy:
     name: Clippy
-
-    # Had to duplicate the supported targets list from above
-    # @fixme must be a way to specify it just once?
+    needs: check_formatting
     strategy:
       matrix:
-        target: [
-          aarch64-unknown-none-softfloat,
-          aarch64-unknown-none,
-          x86_64-unknown-linux-gnu
-        ]
-
+        target: *targets
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - run: rustup target add ${{ matrix.target }}
     - run: cargo clippy --target=${{ matrix.target }}
 
   armv8r-examples:
+    name: Build ARMv8-R Examples
+    needs: check_formatting
     runs-on: ubuntu-latest
-    name: Build Armv8-R Examples
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - run: cd examples/armv8-r && cargo build --bins

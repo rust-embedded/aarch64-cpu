@@ -10,10 +10,7 @@
 //!
 //! Provides controls for traps of MSR and MCR writes of System registers
 
-use tock_registers::{
-    interfaces::{Readable, Writeable},
-    register_bitfields,
-};
+use tock_registers::{register_bitfields, Read, Register, Write};
 
 register_bitfields! {u64,
     pub HFGWTR_EL2 [
@@ -134,19 +131,18 @@ register_bitfields! {u64,
     ]
 }
 
+#[derive(Clone, Copy)]
 pub struct Reg;
 
-impl Readable for Reg {
-    type T = u64;
-    type R = HFGWTR_EL2::Register;
+impl Register for Reg {
+    type DataType = HFGWTR_EL2::Register;
+}
 
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "S3_4_C1_C1_5", "x");
 }
 
-impl Writeable for Reg {
-    type T = u64;
-    type R = HFGWTR_EL2::Register;
-
+impl Write for Reg {
     sys_coproc_write_raw!(u64, "S3_4_C1_C1_5", "x");
 }
 

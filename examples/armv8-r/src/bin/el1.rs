@@ -5,7 +5,7 @@
 
 use core::arch::asm;
 
-use aarch64_cpu::registers::{self, Readable};
+use aarch64_cpu::registers::{self, Read};
 use aarch64_pmsa_rt::{ExceptionHandlers, alloc_stack, entry, exception_handlers};
 use semihosting::{eprintln, println, process};
 

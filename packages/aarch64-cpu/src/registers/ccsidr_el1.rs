@@ -9,10 +9,7 @@
 //!
 //! Provides information about the architecture of the currently selected cache.
 
-use tock_registers::{
-    interfaces::{Readable, Writeable},
-    register_bitfields,
-};
+use tock_registers::{register_bitfields, Read, Register, Write};
 
 register_bitfields! {u64,
     pub CCSIDR_EL1 [
@@ -58,7 +55,12 @@ fn has_feature_ccidx() -> bool {
     ID_AA64MMFR2_EL1.read(ID_AA64MMFR2_EL1::CCIDX) != 0
 }
 
+#[derive(Clone, Copy)]
 pub struct Reg;
+
+impl Register for Reg {
+    type DataType = CCSIDR_EL1::Register;
+}
 
 impl Reg {
     /// Reads the [`CCSIDR_EL1`] `NumSets` field, selecting the correct
@@ -102,17 +104,11 @@ impl Reg {
     }
 }
 
-impl Readable for Reg {
-    type T = u64;
-    type R = CCSIDR_EL1::Register;
-
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "CCSIDR_EL1", "x");
 }
 
-impl Writeable for Reg {
-    type T = u64;
-    type R = CCSIDR_EL1::Register;
-
+impl Write for Reg {
     sys_coproc_write_raw!(u64, "CCSIDR_EL1", "x");
 }
 

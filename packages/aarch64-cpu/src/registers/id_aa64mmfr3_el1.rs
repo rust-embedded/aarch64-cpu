@@ -7,10 +7,14 @@
 
 //! AArch64 Memory Model Feature Register 3 - EL1
 
-use tock_registers::interfaces::Readable;
-use tock_registers::register_bitfields;
+use tock_registers::{register_bitfields, Read, Register};
 
+#[derive(Clone, Copy)]
 pub struct Reg;
+
+impl Register for Reg {
+    type DataType = u64;
+}
 
 register_bitfields! {u64,
     pub ID_AA64MMFR3_EL1 [
@@ -115,10 +119,7 @@ register_bitfields! {u64,
     ]
 }
 
-impl Readable for Reg {
-    type T = u64;
-    type R = ();
-
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "ID_AA64MMFR3_EL1", "x");
 }
 

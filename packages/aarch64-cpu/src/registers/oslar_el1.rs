@@ -13,10 +13,7 @@
 //! AArch64 System register `OSLAR_EL1` bits \[31:0\] are architecturally mapped to External
 //! register `OSLAR_EL1[31:0]`. The OS Lock can also be locked or unlocked using `DBGOSLAR`.
 
-use tock_registers::{
-    interfaces::{Readable, Writeable},
-    register_bitfields,
-};
+use tock_registers::{register_bitfields, Read, Register, Write};
 
 register_bitfields! {u64,
     pub OSLAR_EL1 [
@@ -29,19 +26,18 @@ register_bitfields! {u64,
     ]
 }
 
+#[derive(Clone, Copy)]
 pub struct Reg;
 
-impl Readable for Reg {
-    type T = u64;
-    type R = OSLAR_EL1::Register;
+impl Register for Reg {
+    type DataType = OSLAR_EL1::Register;
+}
 
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "OSLAR_EL1", "x");
 }
 
-impl Writeable for Reg {
-    type T = u64;
-    type R = OSLAR_EL1::Register;
-
+impl Write for Reg {
     sys_coproc_write_raw!(u64, "OSLAR_EL1", "x");
 }
 

@@ -9,14 +9,16 @@
 //!
 //! Holds the 64-bit physical count value.
 
-use tock_registers::interfaces::Readable;
+use tock_registers::{Read, Register};
 
+#[derive(Clone, Copy)]
 pub struct Reg;
 
-impl Readable for Reg {
-    type T = u64;
-    type R = ();
+impl Register for Reg {
+    type DataType = u64;
+}
 
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "CNTPCT_EL0", "x");
 }
 

@@ -10,7 +10,7 @@ use core::{
 
 use aarch64_cpu::{
     pmsav8,
-    registers::{self, Readable as _},
+    registers::{self, Read as _},
 };
 use aarch64_pmsa_rt::{ExceptionHandlers, Section, entry, exception_handlers};
 use armv8_r::Peripherals;

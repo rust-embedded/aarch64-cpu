@@ -11,14 +11,16 @@
 //! transferring commands and data to a debug target. See DBGDTR_EL0 for additional architectural
 //! mappings. It is a component of the Debug Communications Channel.
 
-use tock_registers::interfaces::Readable;
+use tock_registers::{Read, Register};
 
+#[derive(Clone, Copy)]
 pub struct Reg;
 
-impl Readable for Reg {
-    type T = u64;
-    type R = ();
+impl Register for Reg {
+    type DataType = u64;
+}
 
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "DBGDTRRX_EL0", "x");
 }
 

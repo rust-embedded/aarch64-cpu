@@ -12,7 +12,7 @@
 //!
 //! This avoids the read-modify-write hazard of using `MSR DAIF, <Xt>` directly.
 
-use tock_registers::{interfaces::Writeable, register_bitfields};
+use tock_registers::{register_bitfields, Register, Write};
 
 register_bitfields! {u64,
     pub DAIFClr [
@@ -56,15 +56,17 @@ register_bitfields! {u64,
     ]
 }
 
+#[derive(Clone, Copy)]
 pub struct Reg;
 
-impl Writeable for Reg {
-    type T = u64;
-    type R = DAIFClr::Register;
+impl Register for Reg {
+    type DataType = DAIFClr::Register;
+}
 
+impl Write for Reg {
     #[cfg(target_arch = "aarch64")]
     #[inline]
-    fn set(&self, value: u64) {
+    fn set(self, value: u64) {
         // MSR DAIFClr takes a 4-bit immediate operand, so we must match on all
         // possible values and emit the corresponding instruction with a constant
         // immediate.
@@ -91,7 +93,7 @@ impl Writeable for Reg {
     }
 
     #[cfg(not(target_arch = "aarch64"))]
-    fn set(&self, _value: u64) {
+    fn set(self, _value: u64) {
         unimplemented!()
     }
 }

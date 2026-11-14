@@ -19,7 +19,7 @@ semihosting = { version = "0.1.24", default-features = false, features = [
     "panic-handler",
     "stdio",
 ] }
-tock-registers = { version = "0.10.0", default-features = false }
+tock-registers = { version = "0.12.0", default-features = false }
 
 [workspace]
 

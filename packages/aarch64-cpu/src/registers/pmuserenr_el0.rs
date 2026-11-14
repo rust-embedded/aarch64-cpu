@@ -15,10 +15,14 @@
 //! to EL1, or to EL2 when it is implemented and enabled for the current Security state and
 //! HCR_EL2.TGE is 1, and reported using EC syndrome value 0x18.
 
-use tock_registers::interfaces::{Readable, Writeable};
-use tock_registers::register_bitfields;
+use tock_registers::{register_bitfields, Read, Register, Write};
 
+#[derive(Clone, Copy)]
 pub struct Reg;
+
+impl Register for Reg {
+    type DataType = PMUSERENR_EL0::Register;
+}
 
 register_bitfields! {u64,
     pub PMUSERENR_EL0 [
@@ -91,17 +95,11 @@ register_bitfields! {u64,
     ]
 }
 
-impl Readable for Reg {
-    type T = u64;
-    type R = PMUSERENR_EL0::Register;
-
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "PMUSERENR_EL0", "x");
 }
 
-impl Writeable for Reg {
-    type T = u64;
-    type R = PMUSERENR_EL0::Register;
-
+impl Write for Reg {
     sys_coproc_write_raw!(u64, "PMUSERENR_EL0", "x");
 }
 
