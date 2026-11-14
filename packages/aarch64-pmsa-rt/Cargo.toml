@@ -8,6 +8,7 @@ readme = "README.md"
 keywords = ["arm", "aarch64"]
 categories = ["embedded", "hardware-support", "no-std"]
 license = "MIT/Apache-2.0"
+publish = false
 
 [lib]
 doctest = false
