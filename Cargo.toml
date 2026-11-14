@@ -3,7 +3,7 @@ members = ["packages/*"]
 resolver = "3"
 
 [workspace.dependencies]
-aarch64-cpu = { path = "packages/aarch64-cpu", version = "11.2.0" }
+aarch64-cpu = { path = "packages/aarch64-cpu", version = "12.0.0" }
 semihosting = { version = "0.1.24", default-features = false, features = [
     "panic-handler",
     "stdio",
