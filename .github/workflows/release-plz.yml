@@ -9,6 +9,14 @@ on:
     branches:
       - main
 
+env:
+  # Temporary: release-plz-action@v0.5 always installs upstream cargo-semver-checks 0.51, which
+  # cannot parse aarch64-cpu's rustdoc JSON (obi1kenobi/cargo-semver-checks#108). Until that is
+  # fixed upstream, run the action's steps here with a patched cargo-semver-checks instead.
+  SEMVER_CHECKS_REPO: https://github.com/berkus/cargo-semver-checks
+  SEMVER_CHECKS_REV: 27ecd67ad9d773735e1bbde3a2b7c2f6ccd08f8e
+  RELEASE_PLZ_VERSION: 0.4.3 # what release-plz-action@v0.5 installs by default
+
 jobs:
   release-plz:
     name: Release-plz
@@ -20,8 +28,41 @@ jobs:
           fetch-depth: 0
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
-      - name: Run release-plz
-        uses: MarcoIeni/release-plz-action@v0.5
+
+      # Building cargo-semver-checks takes several minutes, so cache the binary per fork commit.
+      - name: Cache patched cargo-semver-checks
+        id: semver-checks-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/bin/cargo-semver-checks
+          key: cargo-semver-checks-${{ runner.os }}-${{ env.SEMVER_CHECKS_REV }}
+      - name: Install patched cargo-semver-checks
+        if: steps.semver-checks-cache.outputs.cache-hit != 'true'
+        run: cargo install --locked --git "$SEMVER_CHECKS_REPO" --rev "$SEMVER_CHECKS_REV" cargo-semver-checks
+      - name: Show cargo-semver-checks in use
+        run: command -v cargo-semver-checks && cargo-semver-checks --version
+
+      - name: Install release-plz
+        uses: taiki-e/install-action@v2
+        with:
+          tool: release-plz@${{ env.RELEASE_PLZ_VERSION }}
+      - name: Configure git user from GitHub token
+        uses: release-plz/git-config@59144859caf016f8b817a2ac9b051578729173c4
+
+      - name: Run release-plz release-pr
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          release-plz release-pr \
+            --git-token "$GITHUB_TOKEN" \
+            --repo-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
+            --forge github
+
+      - name: Run release-plz release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: |
+          release-plz release \
+            --git-token "$GITHUB_TOKEN" \
+            --forge github

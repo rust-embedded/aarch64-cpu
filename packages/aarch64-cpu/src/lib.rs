@@ -15,7 +15,7 @@
 //!
 //! ### Example
 //!
-//! Check out https://github.com/rust-embedded/rust-raspberrypi-OS-tutorials for usage examples.
+//! Check out <https://github.com/rust-embedded/rust-raspberrypi-OS-tutorials> for usage examples.
 //! Listed below is a snippet of `rust-raspberrypi-OS-tutorials`'s early boot code.
 //!
 //! ```rust
