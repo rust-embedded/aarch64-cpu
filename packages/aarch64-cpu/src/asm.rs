@@ -10,6 +10,7 @@
 
 pub mod barrier;
 pub mod random;
+pub mod tlbi;
 
 /// The classic no-op
 #[inline(always)]
