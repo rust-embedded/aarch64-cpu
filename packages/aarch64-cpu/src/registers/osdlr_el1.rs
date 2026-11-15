@@ -7,9 +7,9 @@
 
 //! OS Double Lock Register - EL1
 
-use tock_registers::interfaces::{Readable, Writeable};
-use tock_registers::register_bitfields;
+use tock_registers::{register_bitfields, Read, Register, Write};
 
+#[derive(Copy, Clone)]
 pub struct Reg;
 
 register_bitfields! {u64,
@@ -22,17 +22,15 @@ register_bitfields! {u64,
     ]
 }
 
-impl Readable for Reg {
-    type T = u64;
-    type R = OSDLR_EL1::Register;
+impl Register for Reg {
+    type DataType = u64;
+}
 
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "OSDLR_EL1", "x");
 }
 
-impl Writeable for Reg {
-    type T = u64;
-    type R = OSDLR_EL1::Register;
-
+impl Write for Reg {
     sys_coproc_write_raw!(u64, "OSDLR_EL1", "x");
 }
 

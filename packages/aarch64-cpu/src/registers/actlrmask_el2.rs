@@ -7,21 +7,20 @@
 
 //! Auxiliary Control Masking Register - EL2
 
-use tock_registers::interfaces::{Readable, Writeable};
+use tock_registers::{Read, Register, Write};
 
+#[derive(Copy, Clone)]
 pub struct Reg;
 
-impl Readable for Reg {
-    type T = u64;
-    type R = ();
+impl Register for Reg {
+    type DataType = u64;
+}
 
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "ACTLRMASK_EL2", "x");
 }
 
-impl Writeable for Reg {
-    type T = u64;
-    type R = ();
-
+impl Write for Reg {
     sys_coproc_write_raw!(u64, "ACTLRMASK_EL2", "x");
 }
 

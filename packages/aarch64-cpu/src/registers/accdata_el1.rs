@@ -7,10 +7,7 @@
 
 //! Accelerator Data - EL1
 
-use tock_registers::interfaces::{Readable, Writeable};
-use tock_registers::register_bitfields;
-
-pub struct Reg;
+use tock_registers::{register_bitfields, Read, Register, Write};
 
 register_bitfields! {u64,
     pub ACCDATA_EL1 [
@@ -18,17 +15,18 @@ register_bitfields! {u64,
     ]
 }
 
-impl Readable for Reg {
-    type T = u64;
-    type R = ();
+#[derive(Copy, Clone)]
+pub struct Reg;
 
+impl Register for Reg {
+    type DataType = u64;
+}
+
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "ACCDATA_EL1", "x");
 }
 
-impl Writeable for Reg {
-    type T = u64;
-    type R = ();
-
+impl Write for Reg {
     sys_coproc_write_raw!(u64, "ACCDATA_EL1", "x");
 }
 

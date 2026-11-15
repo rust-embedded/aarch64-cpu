@@ -7,10 +7,7 @@
 
 //! AArch64 Instruction Set Attribute Register 2 - EL1
 
-use tock_registers::interfaces::Readable;
-use tock_registers::register_bitfields;
-
-pub struct Reg;
+use tock_registers::{register_bitfields, Read, Register};
 
 register_bitfields! {u64,
     pub ID_AA64ISAR2_EL1 [
@@ -118,10 +115,14 @@ register_bitfields! {u64,
     ]
 }
 
-impl Readable for Reg {
-    type T = u64;
-    type R = ID_AA64ISAR2_EL1::Register;
+#[derive(Copy, Clone)]
+pub struct Reg;
 
+impl Register for Reg {
+    type DataType = u64;
+}
+
+impl Read for Reg {
     sys_coproc_read_raw!(u64, "ID_AA64ISAR2_EL1", "x");
 }
 
