@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "aarch64-cpu"
-version = "11.2.0"
+version = "12.0.0"
 dependencies = [
  "arm-targets",
  "critical-section",
@@ -13,7 +13,7 @@ dependencies = [
 
 [[package]]
 name = "aarch64-pmsa-rt"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "aarch64-cpu",
 ]
@@ -395,9 +395,9 @@ dependencies = [
 
 [[package]]
 name = "tock-registers"
-version = "0.10.1"
+version = "0.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8d2d250f87fb3fb6f225c907cf54381509f47b40b74b1d1f12d2dccbc915bdfe"
+checksum = "fc2477fb5e50cca83e3c38fd91757ffd87382baf2a3e032f10e9b29a9a50474b"
 
 [[package]]
 name = "unicode-ident"

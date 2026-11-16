@@ -4,6 +4,9 @@ target = "aarch64v8r-unknown-none"
 [target.aarch64v8r-unknown-none]
 runner = "FVP_BaseR_AEMv8R -f fvp_cfg.txt"
 
+[target.aarch64v8r-unknown-none-softfloat]
+runner = "FVP_BaseR_AEMv8R -f fvp_cfg.txt"
+
 [unstable]
 build-std = ["core", "compiler_builtins"]
 
