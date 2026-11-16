@@ -5,6 +5,11 @@ use std::{env, fs, path::Path};
 const SCRIPT: &str = "link.x";
 
 fn main() {
+    let target = std::env::var("TARGET").expect("build script TARGET variable");
+    println!(r#"cargo:rustc-check-cfg=cfg(aarch64_softfloat)"#);
+    if target.ends_with("softfloat") {
+        println!(r#"cargo:rustc-cfg=aarch64_softfloat"#);
+    }
     copy_linker_script_into_linker_search_path();
 }
 

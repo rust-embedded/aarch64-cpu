@@ -218,22 +218,39 @@ extern "C" fn set_vbar() {
 #[repr(C)]
 #[repr(align(16))]
 pub struct StackedRegisters {
-    /// X0-X18
-    pub x: [u64; 19],
-    /// X29 AKA Frame Pointer
-    pub x29: usize,
-    /// X30 AKA Procedure Link Register
-    pub x30: u64,
+    // ************************************************************************
+    // This portion saved by __save_registers and restored by __restore_registers
+    // ************************************************************************
+    /// Q0 - Q31 (i.e. NEON/FP state)
+    #[cfg(not(aarch64_softfloat))]
+    pub q: [u128; 32],
+
+    /// FPU Control Register
+    #[cfg(not(aarch64_softfloat))]
+    pub fpcr: u64,
+
+    /// FPU Status Register
+    #[cfg(not(aarch64_softfloat))]
+    pub fpsr: u64,
+
+    /// Callee-saved registers X0 - X18
+    ///
+    /// We add a zero (via XZR) on the end to make it a multiple of 16 bytes
+    pub x: [u64; 20],
+
+    // ************************************************************************
+    // This portion saved/restored by exception-specific prologue and epilogue
+    // ************************************************************************
     /// Exception Link Register
     pub elr: usize,
     /// Saved Program Status Register
     pub spsr: usize,
-}
 
-// NOTE this size must match stack space reserved in the prologue of the
-// exception handlers
-#[cfg(target_arch = "aarch64")]
-const _: () = assert!(8 * 24 == core::mem::size_of::<StackedRegisters>());
+    /// X29 AKA Frame Pointer
+    pub x29: usize,
+    /// X30 AKA Procedure Link Register
+    pub x30: u64,
+}
 
 /// Registers exception handlers
 ///
@@ -243,131 +260,143 @@ const _: () = assert!(8 * 24 == core::mem::size_of::<StackedRegisters>());
 macro_rules! exception_handlers {
     ($handlers:path) => {
         core::arch::global_asm!("
-.macro push_registers el:req
-    // X19-X28 are callee-saved so any code called from here will push them
-    // onto the stack in its prologue; everything else we need to push and
-    // pop ourselves
-    //
-    // To support exception nesting we need to also push and pop ELR and
-    // SPSR at the current EL as a nested exception will overwrite those
-    // system registers
-    //
-    // `!` adds -8*22 to SP _before_ pushing x0, x1 on the stack
-    stp x0,  x1,  [sp, #-(8 * 24)]!
-    stp x2,  x3,  [sp, #8 * 2]
-    stp x4,  x5,  [sp, #8 * 4]
-    stp x6,  x7,  [sp, #8 * 6]
-    stp x8,  x9,  [sp, #8 * 8]
-    stp x10, x11, [sp, #8 * 10]
-    stp x12, x13, [sp, #8 * 12]
-    stp x14, x15, [sp, #8 * 14]
-    stp x16, x17, [sp, #8 * 16]
-    stp x18, x29, [sp, #8 * 18]
-    mrs x0,  elr_\\el
-    stp x30, x0,  [sp, #8 * 20]
-    mrs x1,  spsr_\\el
-    str x1,       [sp, #8 * 22]
-.endm
+            // Macro to generate exception handling prologue
+            //
+            // Must generate 14 instructions or less
+            //
+            // X19-X28 are callee-saved so any code called from here will push them
+            // onto the stack in its prologue; everything else we need to push and
+            // pop ourselves (including FP/NEON state if appropriate).
+            //
+            // To support exception nesting we need to also push and pop ELR and
+            // SPSR at the current EL as a nested exception will overwrite those
+            // system registers
+            //
+            // Note that stack pushes go from high address to low address - i.e. from
+            // the last field in StackRegisters to the first field.
+            //
+            // This macro must exactly match the second half of StackedRegisters
+            .macro push_registers el:req
 
-.macro pop_registers el:req
-    ldp x2,  x3,  [sp, #8 * 2]
-    ldp x4,  x5,  [sp, #8 * 4]
-    ldp x6,  x7,  [sp, #8 * 6]
-    ldp x8,  x9,  [sp, #8 * 8]
-    ldp x10, x11, [sp, #8 * 10]
-    ldp x12, x13, [sp, #8 * 12]
-    ldp x14, x15, [sp, #8 * 14]
-    ldp x16, x17, [sp, #8 * 16]
-    ldp x18, x29, [sp, #8 * 18]
-    ldp x30, x0,  [sp, #8 * 20]
-    msr elr_\\el, x0
-    ldr x1,       [sp, #8 * 22]
-    msr spsr_\\el, x1
-    ldp x0,  x1,  [sp], #8 * 24
-.endm
+                // Get some scratch space (and also store LR and FP)
+                // We need LR to make a function call shortly
+                stp x29,  x30, [sp, #-16]!
 
-.macro exception_vectors el:req
-    // [ARM-R64/D12.2.100] Vector Base Address needs to be 2048-byte aligned
-    .balign 0x800
-    .global _vbar_\\el
-    .section .text._vbar_\\el
-_vbar_\\el:
-    // [ARM-R64/D1.3.1.6] describes the layout; each vector is 0x80 bytes in size
-    // 0x000: 'Current Exception level with SP_EL0' -- these entries are unused
-    nop
-    .balign 0x200
+                // Save CPU status
+                mrs x29,  elr_\\el
+                mrs x30,  spsr_\\el
+                stp x29,  x30,  [sp, #-16]!
 
-    // 0x200: 'Current Exception level with SP_ELx, x > 0'
-vbar_sync_current_\\el:
-    push_registers \\el
-    mov x0, sp
-    bl {sync_current}
-    pop_registers \\el
-    eret
-    .balign 0x80
+                // Save other registers/state (uses x29 and x30 as scratch)
+                bl __save_registers
+            .endm
 
-vbar_irq_current_\\el:
-    push_registers \\el
-    mov x0, sp
-    bl {irq_current}
-    pop_registers \\el
-    eret
-    .balign 0x80
+            // Macro to generate exception handling epilogue
+            //
+            // Must generate 14 instructions or less
+            //
+            // Note that stack pops go from low address to high address - i.e. from
+            // the first field in StackRegisters to the last field.
+            //
+            // This macro must exactly match the second half of StackedRegisters, and be in the reverse
+            // order to the push_registers ASM macro
+            .macro pop_registers el:req
+                // Restore registers and FP/NEON state (uses x29 and x30 as scratch)
+                bl __restore_registers
 
-vbar_fiq_current_\\el:
-    push_registers \\el
-    mov x0, sp
-    bl {fiq_current}
-    pop_registers \\el
-    eret
-    .balign 0x80
+                // Restore CPU status
+                ldp x29,   x30,  [sp], #16
+                msr elr_\\el, x29
+                msr spsr_\\el, x30
 
-vbar_serror_current_\\el:
-    push_registers \\el
-    mov x0, sp
-    bl {serror_current}
-    pop_registers \\el
-    eret
-    .balign 0x80
+                // Restore FP and LR
+                ldp x29,   x30,  [sp], #16
+            .endm
 
-    // 0x400: 'Lower Exception level'
-vbar_sync_lower_\\el:
-    push_registers \\el
-    mov x0, sp
-    bl {sync_lower}
-    pop_registers \\el
-    eret
-    .balign 0x80
+            .macro exception_vectors el:req
 
-vbar_irq_lower_\\el:
-    push_registers \\el
-    mov x0, sp
-    bl {irq_lower}
-    pop_registers \\el
-    eret
-    .balign 0x80
+                // [ARM-R64/D12.2.100] Vector Base Address needs to be 2048-byte aligned
+                .balign 0x800
+                .global _vbar_\\el
+                .section .text._vbar_\\el
+            _vbar_\\el:
+                // [ARM-R64/D1.3.1.6] describes the layout; each vector is 0x80 bytes in size
+                // 0x000: 'Current Exception level with SP_EL0' -- these entries are unused
+                nop
+                .balign 0x200
 
-vbar_fiq_lower_\\el:
-    push_registers \\el
-    mov x0, sp
-    bl {fiq_lower}
-    pop_registers \\el
-    eret
-    .balign 0x80
+                // 0x200: 'Current Exception level with SP_ELx, x > 0'
+            vbar_sync_current_\\el:
+                push_registers \\el
+                mov x0, sp
+                bl {sync_current}
+                pop_registers \\el
+                eret
+                .balign 0x80
 
-vbar_serror_lower_\\el:
-    push_registers \\el
-    mov x0, sp
-    bl {serror_lower}
-    pop_registers \\el
-    eret
-    .balign 0x80
-.endm
+            vbar_irq_current_\\el:
+                push_registers \\el
+                mov x0, sp
+                bl {irq_current}
+                pop_registers \\el
+                eret
+                .balign 0x80
 
-    exception_vectors el1
-    exception_vectors el2
-    exception_vectors el3
-",
+            vbar_fiq_current_\\el:
+                push_registers \\el
+                mov x0, sp
+                bl {fiq_current}
+                pop_registers \\el
+                eret
+                .balign 0x80
+
+            vbar_serror_current_\\el:
+                push_registers \\el
+                mov x0, sp
+                bl {serror_current}
+                pop_registers \\el
+                eret
+                .balign 0x80
+
+                // 0x400: 'Lower Exception level'
+            vbar_sync_lower_\\el:
+                push_registers \\el
+                mov x0, sp
+                bl {sync_lower}
+                pop_registers \\el
+                eret
+                .balign 0x80
+
+            vbar_irq_lower_\\el:
+                push_registers \\el
+                mov x0, sp
+                bl {irq_lower}
+                pop_registers \\el
+                eret
+                .balign 0x80
+
+            vbar_fiq_lower_\\el:
+                push_registers \\el
+                mov x0, sp
+                bl {fiq_lower}
+                pop_registers \\el
+                eret
+                .balign 0x80
+
+            vbar_serror_lower_\\el:
+                push_registers \\el
+                mov x0, sp
+                bl {serror_lower}
+                pop_registers \\el
+                eret
+                .balign 0x80
+            .endm
+
+                exception_vectors el1
+                exception_vectors el2
+                exception_vectors el3
+            ",
+            $crate::save_restore!(),
             sync_current = sym <$handlers as $crate::ExceptionHandlers>::sync_current,
             irq_current = sym <$handlers as $crate::ExceptionHandlers>::irq_current,
             fiq_current = sym <$handlers as $crate::ExceptionHandlers>::fiq_current,
@@ -377,6 +406,135 @@ vbar_serror_lower_\\el:
             fiq_lower = sym <$handlers as $crate::ExceptionHandlers>::fiq_lower,
             serror_lower = sym <$handlers as $crate::ExceptionHandlers>::serror_lower,
         );
+    };
+}
+
+#[macro_export]
+#[cfg(not(aarch64_softfloat))]
+macro_rules! save_restore {
+    () => {
+        "
+        .text
+        .global __save_registers
+        .section .text.__save_registers
+        __save_registers:
+            // Integer registers
+            stp x18, xzr, [sp, #-16]!
+            stp x16, x17, [sp, #-16]!
+            stp x14, x15, [sp, #-16]!
+            stp x12, x13, [sp, #-16]!
+            stp x10, x11, [sp, #-16]!
+            stp x8,  x9,  [sp, #-16]!
+            stp x6,  x7,  [sp, #-16]!
+            stp x4,  x5,  [sp, #-16]!
+            stp x2,  x3,  [sp, #-16]!
+            stp x0,  x1,  [sp, #-16]!
+            // FP/NEON status
+            mrs x0,  fpcr
+            mrs x1,  fpsr
+            stp x0,  x1,  [sp, #-16]!
+            // FP/NEON registers
+            stp q30, q31, [sp, #-32]!
+            stp q28, q29, [sp, #-32]!
+            stp q26, q27, [sp, #-32]!
+            stp q24, q25, [sp, #-32]!
+            stp q22, q23, [sp, #-32]!
+            stp q20, q21, [sp, #-32]!
+            stp q18, q19, [sp, #-32]!
+            stp q16, q17, [sp, #-32]!
+            stp q14, q15, [sp, #-32]!
+            stp q12, q13, [sp, #-32]!
+            stp q10, q11, [sp, #-32]!
+            stp q8,  q9,  [sp, #-32]!
+            stp q6,  q7,  [sp, #-32]!
+            stp q4,  q5,  [sp, #-32]!
+            stp q2,  q3,  [sp, #-32]!
+            stp q0,  q1,  [sp, #-32]!
+            ret
+
+        .global __save_registers
+        .section .text.__save_registers
+        __restore_registers:
+            // FP/NEON registers
+            ldp q0,   q1,  [sp], #32
+            ldp q2,   q3,  [sp], #32
+            ldp q4,   q5,  [sp], #32
+            ldp q6,   q7,  [sp], #32
+            ldp q8,   q9,  [sp], #32
+            ldp q10,  q11, [sp], #32
+            ldp q12,  q13, [sp], #32
+            ldp q14,  q15, [sp], #32
+            ldp q16,  q17, [sp], #32
+            ldp q18,  q19, [sp], #32
+            ldp q20,  q21, [sp], #32
+            ldp q22,  q23, [sp], #32
+            ldp q24,  q25, [sp], #32
+            ldp q26,  q27, [sp], #32
+            ldp q28,  q29, [sp], #32
+            ldp q30,  q31, [sp], #32
+            // FP/NEON status
+            ldp x0,   x1,  [sp], #16
+            msr fpcr, x0
+            msr fpsr, x1
+            // Integer registers
+            ldp x0,   x1,  [sp], #16
+            ldp x2,   x3,  [sp], #16
+            ldp x4,   x5,  [sp], #16
+            ldp x6,   x7,  [sp], #16
+            ldp x8,   x9,  [sp], #16
+            ldp x10,  x11, [sp], #16
+            ldp x12,  x13, [sp], #16
+            ldp x14,  x15, [sp], #16
+            ldp x16,  x17, [sp], #16
+            ldp x18,  xzr, [sp], #16
+            ret
+        "
+    };
+}
+
+#[macro_export]
+#[cfg(aarch64_softfloat)]
+macro_rules! save_restore {
+    () => {
+        "
+        .text
+
+        // Save the callee-saved integer registers, X0-X18
+        //
+        // Also saves a padding value to make a round multiple of 16 bytes
+        .global __save_registers
+        .section .text.__save_registers
+        __save_registers:
+            stp x18, xzr, [sp, #-16]!
+            stp x16, x17, [sp, #-16]!
+            stp x14, x15, [sp, #-16]!
+            stp x12, x13, [sp, #-16]!
+            stp x10, x11, [sp, #-16]!
+            stp x8,  x9,  [sp, #-16]!
+            stp x6,  x7,  [sp, #-16]!
+            stp x4,  x5,  [sp, #-16]!
+            stp x2,  x3,  [sp, #-16]!
+            stp x0,  x1,  [sp, #-16]!
+            ret
+
+        // Restore the callee-saved integer registers, X0-X18
+        //
+        // Also pops a padding value to make a round multiple of 16 bytes
+        .global __save_registers
+        .section .text.__save_registers
+        __restore_registers:
+            ldp x0,   x1,  [sp], #16
+            ldp x2,   x3,  [sp], #16
+            ldp x4,   x5,  [sp], #16
+            ldp x6,   x7,  [sp], #16
+            ldp x8,   x9,  [sp], #16
+            ldp x10,  x11, [sp], #16
+            ldp x12,  x13, [sp], #16
+            ldp x14,  x15, [sp], #16
+            ldp x16,  x17, [sp], #16
+            ldp x18,  xzr, [sp], #16
+            ret
+        "
     };
 }
 
